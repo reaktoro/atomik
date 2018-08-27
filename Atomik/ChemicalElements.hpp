@@ -18,40 +18,36 @@
 #pragma once
 
 // C++ includes
-#include <memory>
 #include <string>
+#include <unordered_map>
+
+// Atomik includes
+#include <Atomik/ChemicalElement.hpp>
 
 namespace Atomik {
 
-/// A type used to define a chemical element and its attributes
-class Element
+/// A type used as a database of chemical elements.
+class ChemicalElements
 {
 public:
-    /// Construct a default Element instance
-    Element();
+    /// Construct a default Elements object.
+    ChemicalElements();
 
-    /// Set the name of the element
-    auto setName(std::string name) -> void;
+    /// Return all elements stored in the database of elements.
+    auto elements() const -> const std::unordered_map<std::string, ChemicalElement>&;
 
-    /// Set the molar mass of the element (in units of kg/mol)
-    auto setMolarMass(double value) -> void;
+    /// Return an Element object with given symbol, or empty object if symbol not known.
+    auto get(std::string symbol) const -> ChemicalElement;
 
-    /// Return the name of the element
-    auto name() const -> std::string;
+    /// Append a new custom element into the database of elements.
+    auto append(const ChemicalElement& element) -> void;
 
-    /// Return the molar mass of the element (in units of kg/mol)
-    auto molarMass() const -> double;
+    /// Remove an existing element from the database of elements.
+    auto remove(std::string symbol) -> void;
 
 private:
-    struct Impl;
-
-    std::shared_ptr<Impl> pimpl;
+    /// The chemical elements stored in the database.
+    std::unordered_map<std::string, ChemicalElement> m_elements;
 };
-
-/// Compare two Element instances for less than
-auto operator<(const Element& lhs, const Element& rhs) -> bool;
-
-/// Compare two Element instances for equality
-auto operator==(const Element& lhs, const Element& rhs) -> bool;
 
 } // namespace Atomik
