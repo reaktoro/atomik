@@ -23,24 +23,26 @@
 
 namespace Atomik {
 
-/// A type used to represent a chemical formula of a substance.
-/// The chemical formula of a substance can be represented by a
-/// string  with the following formats:
+/// A type used to represent a chemical formula.
+/// The chemical formula of a formula can be represented by a string with the following formats:
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/// std::string formula1 = "H2O";
-/// std::string formula2 = "CaCl2";
-/// std::string formula3 = "MgCO3";
-/// std::string formula4 = "(CaMg)(CO3)2";
-/// std::string formula5 = "Fe3Al2Si3O12";
-/// std::string formula6 = "Na+";
-/// std::string formula7 = "Ca++";
-/// std::string formula8 = "Fe+++";
-/// std::string formula9 = "CO3--";
+/// ChemicalFormula formula01("H2O");
+/// ChemicalFormula formula02("CaCl2");
+/// ChemicalFormula formula03("MgCO3");
+/// ChemicalFormula formula04("(CaMg)(CO3)2");
+/// ChemicalFormula formula05("Fe3Al2Si3O12");
+/// ChemicalFormula formula06("Na+");
+/// ChemicalFormula formula07("Ca++");
+/// ChemicalFormula formula08("Fe+++");
+/// ChemicalFormula formula09("Fe+3");
+/// ChemicalFormula formula10("CO3--");
+/// ChemicalFormula formula11("CO3-2");
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/// The electric charge of the substance is represented by a suffix
-/// containing as many symbols `+` and `-` as there are charges,
-/// with `+` used for positively charged substances, and `-` for
-/// negatively charged ones.
+/// There are two ways of specifying the electric charge of the substance:
+///   1. as a suffix containing as many symbols `+` and `-` as there are charges (e.g., `Fe+++`, `Ca++`, `CO3--`); or
+///   2. as a suffix containing the symbol `+` or `-` followed by the number of charges (e.g., `Fe+3`, `Ca+2`, `Na+`)
+/// Note that number 1 is optional for the second formart.
+/// In both formats, the symbol `+` is used for positively charged substances, and `-` for negatively charged ones.
 class ChemicalFormula
 {
 public:
