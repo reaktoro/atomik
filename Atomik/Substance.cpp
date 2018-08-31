@@ -20,7 +20,16 @@
 namespace Atomik {
 namespace internal {
 
+/// The default database of elements
 const ElementDatabase default_elementdb;
+
+// Throw a runtime error if the substance name has spaces.
+auto checkSubstanceNameHasNoSpaces(std::string name) -> void
+{
+    // Check the name provided has no spaces
+    if(name.find(' ') != std::string::npos)
+        throw std::runtime_error("***ERROR***: The given substance name `" + name + "` violates the naming rule for substance names, which must have no spaces.");
+}
 
 } // namespace internal
 
@@ -28,13 +37,26 @@ Substance::Substance()
 {}
 
 Substance::Substance(std::string formula)
-: Substance(formula, internal::default_elementdb)
+: Substance(formula, formula, internal::default_elementdb)
 {
 }
 
 Substance::Substance(std::string formula, const ElementDatabase& elementdb)
-: m_formula(formula)
+: Substance(formula, formula, elementdb)
 {
+}
+
+Substance::Substance(std::string name, std::string formula)
+: Substance(name, formula, internal::default_elementdb)
+{
+}
+
+Substance::Substance(std::string name, std::string formula, const ElementDatabase& elementdb)
+: m_name(name), m_formula(formula)
+{
+    // Check if provided name has space and throws a runtime error if true
+    internal::checkSubstanceNameHasNoSpaces(name);
+
     // Initialize the chemical elements of the chemical substance
     m_elements.clear();
     for(const auto& pair : m_formula.elements())
@@ -44,6 +66,11 @@ Substance::Substance(std::string formula, const ElementDatabase& elementdb)
     m_molarmass = 0.0;
     for(const auto& pair : m_elements)
         m_molarmass += std::get<1>(pair) * std::get<0>(pair).atomicWeight();
+}
+
+auto Substance::name() const -> std::string
+{
+    return m_name;
 }
 
 auto Substance::formula() const -> std::string

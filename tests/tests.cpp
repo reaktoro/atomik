@@ -127,7 +127,8 @@ TEST_CASE("Testing Substance class", "[Substance]")
 {
     Substance substance;
 
-    substance = Substance("H2O");
+    substance = Substance("WATER", "H2O");
+    REQUIRE(substance.name() == "WATER");
     REQUIRE(substance.formula() == "H2O");
     REQUIRE(substance.charge() == 0);
     REQUIRE(substance.elements().size() == 2);
@@ -135,7 +136,8 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE(substance.coefficient("H") == 2);
     REQUIRE(substance.coefficient("O") == 1);
 
-    substance = Substance("CaCO3");
+    substance = Substance("CALCIUM-CARBONATE", "CaCO3");
+    REQUIRE(substance.name() == "CALCIUM-CARBONATE");
     REQUIRE(substance.formula() == "CaCO3");
     REQUIRE(substance.charge() == 0);
     REQUIRE(substance.elements().size() == 3);
@@ -145,6 +147,7 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE(substance.coefficient("O") == 3);
 
     substance = Substance("HCO3-");
+    REQUIRE(substance.name() == "HCO3-");
     REQUIRE(substance.formula() == "HCO3-");
     REQUIRE(substance.charge() == -1);
     REQUIRE(substance.elements().size() == 3);
@@ -154,6 +157,7 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE(substance.coefficient("O") == 3);
 
     substance = Substance("H+");
+    REQUIRE(substance.name() == "H+");
     REQUIRE(substance.formula() == "H+");
     REQUIRE(substance.charge() == 1);
     REQUIRE(substance.elements().size() == 1);
@@ -161,6 +165,7 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE(substance.coefficient("H") == 1);
 
     substance = Substance("Na+");
+    REQUIRE(substance.name() == "Na+");
     REQUIRE(substance.formula() == "Na+");
     REQUIRE(substance.charge() == 1);
     REQUIRE(substance.elements().size() == 1);
@@ -168,6 +173,7 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE(substance.coefficient("Na") == 1);
 
     substance = Substance("Cl-");
+    REQUIRE(substance.name() == "Cl-");
     REQUIRE(substance.formula() == "Cl-");
     REQUIRE(substance.charge() == -1);
     REQUIRE(substance.elements().size() == 1);
@@ -175,6 +181,7 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE(substance.coefficient("Cl") == 1);
 
     substance = Substance("CO3--");
+    REQUIRE(substance.name() == "CO3--");
     REQUIRE(substance.formula() == "CO3--");
     REQUIRE(substance.charge() == -2);
     REQUIRE(substance.elements().size() == 2);
@@ -183,6 +190,7 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE(substance.coefficient("O") == 3);
 
     substance = Substance("Fe+++");
+    REQUIRE(substance.name() == "Fe+++");
     REQUIRE(substance.formula() == "Fe+++");
     REQUIRE(substance.charge() == 3);
     REQUIRE(substance.elements().size() == 1);
@@ -190,6 +198,7 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE(substance.coefficient("Fe") == 1);
 
     substance = Substance("(CaMg)(CO3)2");
+    REQUIRE(substance.name() == "(CaMg)(CO3)2");
     REQUIRE(substance.formula() == "(CaMg)(CO3)2");
     REQUIRE(substance.charge() == 0);
     REQUIRE(substance.elements().size() == 4);
@@ -200,6 +209,7 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE(substance.coefficient("O") == 6);
 
     substance = Substance("CH3COOH");
+    REQUIRE(substance.name() == "CH3COOH");
     REQUIRE(substance.formula() == "CH3COOH");
     REQUIRE(substance.charge() == 0);
     REQUIRE(substance.elements().size() == 3);
@@ -207,4 +217,6 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE(substance.coefficient("C") == 2);
     REQUIRE(substance.coefficient("H") == 4);
     REQUIRE(substance.coefficient("O") == 2);
+
+    REQUIRE_THROWS(Substance("CALCIUM CARBONATE", "CaCO3")); // runtime error if substance name has space
 }

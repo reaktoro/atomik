@@ -30,7 +30,7 @@
 namespace Atomik {
 
 /// A type used to represent a chemical substance.
-/// The chemical formula of a substance can be represented by a string with the following formats:
+/// Below are examples of how a Substance object can be created:
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 /// Substance substance01("H2O");
 /// Substance substance02("CaCl2");
@@ -64,6 +64,21 @@ public:
     /// @param formula The chemical formula of the substance (e.g., "H2O", "CaCO3", "CO3--", "CO3-2").
     /// @param elementdb The user-defined database of chemical elements.
     Substance(std::string formula, const ElementDatabase& elementdb);
+
+    /// Construct a Substance object with a given chemical formula and name.
+    /// A default database of chemical elements is used to construct the elements composing the substance.
+    /// @param name The name of the substance (e.g., "WATER", "CALCIUM-CARBONATE").
+    /// @param formula The chemical formula of the substance (e.g., "H2O", "CaCO3", "CO3--", "CO3-2").
+    Substance(std::string name, std::string formula);
+
+    /// Construct a Substance object with a given chemical formula and name.
+    /// @param name The name of the substance (e.g., "WATER", "CALCIUM-CARBONATE").
+    /// @param formula The chemical formula of the substance (e.g., "H2O", "CaCO3", "CO3--", "CO3-2").
+    /// @param elementdb The user-defined database of chemical elements.
+    Substance(std::string name, std::string formula, const ElementDatabase& elementdb);
+
+    /// Return the name of the substance, if provided, otherwise, its chemical formula.
+    auto name() const -> std::string;
 
     /// Return the chemical formula of the substance.
     auto formula() const -> std::string;
