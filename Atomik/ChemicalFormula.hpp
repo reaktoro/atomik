@@ -52,17 +52,14 @@ public:
     /// Construct a ChemicalFormula object with given chemical formula.
     ChemicalFormula(std::string formula);
 
-    /// Initialize the ChemicalFormula object with a given chemical formula.
-    auto initialize(std::string formula) -> void;
-
     /// Return the chemical formula string.
     auto formula() const -> std::string;
 
     /// Return the elements in the chemical formula and their coefficients.
     auto elements() const -> std::map<std::string, double>;
 
-    /// Return the electrical charge of the chemical formula.
-    auto charge() -> double;
+    /// Return the electric charge of the chemical formula.
+    auto charge() const -> double;
 
     /// Return the coefficient of an element symbol in the chemical formula.
     auto coefficient(std::string symbol) const -> double;

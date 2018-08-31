@@ -33,10 +33,8 @@ Substance::Substance(std::string formula)
 }
 
 Substance::Substance(std::string formula, const ElementDatabase& elementdb)
+: m_formula(formula)
 {
-    // Initialize the chemical formula of the chemical substance
-    m_formula.initialize(formula);
-
     // Initialize the chemical elements of the chemical substance
     m_elements.clear();
     for(const auto& pair : m_formula.elements())
@@ -58,14 +56,19 @@ auto Substance::elements() const -> const std::vector<std::tuple<Element, double
     return m_elements;
 }
 
-auto Substance::charge() -> double
+auto Substance::charge() const -> double
 {
     return m_formula.charge();
 }
 
-auto Substance::molarMass() -> double
+auto Substance::molarMass() const -> double
 {
     return m_molarmass;
+}
+
+auto Substance::coefficient(std::string symbol) const -> double
+{
+    return m_formula.coefficient(symbol);
 }
 
 } // namespace Atomik

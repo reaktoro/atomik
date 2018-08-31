@@ -171,11 +171,6 @@ ChemicalFormula::ChemicalFormula()
 
 ChemicalFormula::ChemicalFormula(std::string formula)
 {
-    initialize(formula);
-}
-
-auto ChemicalFormula::initialize(std::string formula) -> void
-{
     m_formula = formula;
     m_elements = internal::parseFormula(formula);
     m_charge = internal::parseCharge(formula);
@@ -191,7 +186,7 @@ auto ChemicalFormula::elements() const -> std::map<std::string, double>
     return m_elements;
 }
 
-auto ChemicalFormula::charge() -> double
+auto ChemicalFormula::charge() const -> double
 {
     return m_charge;
 }

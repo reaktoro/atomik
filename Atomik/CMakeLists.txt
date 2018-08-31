@@ -12,7 +12,7 @@ set(PROJECT_STATIC_LIB ${PROJECT_NAME}${SUFFIX_STATIC_LIBS})
 add_library(AtomikObject OBJECT ${HPP_FILES} ${CPP_FILES})
 
 # Add the root path of this project to the cmake include directories
-target_include_directories(AtomikObject PUBLIC ${CMAKE_SOURCE_DIR})
+target_include_directories(AtomikObject PUBLIC ${PROJECT_SOURCE_DIR})
 
 # Set some properties for the AtomikObject target
 set_property(TARGET AtomikObject PROPERTY POSITION_INDEPENDENT_CODE ON)

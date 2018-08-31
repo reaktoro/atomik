@@ -68,14 +68,17 @@ public:
     /// Return the chemical formula of the substance.
     auto formula() const -> std::string;
 
-    /// Return the chemical elements of the substance and their coefficients.
+    /// Return the elements of the substance and their coefficients.
     auto elements() const -> const std::vector<std::tuple<Element, double>>&;
 
-    /// Return the electrical charge of the substance.
-    auto charge() -> double;
+    /// Return the electric charge of the substance.
+    auto charge() const -> double;
 
     /// Return the molar mass of the substance (in unit of kg/mol).
-    auto molarMass() -> double;
+    auto molarMass() const -> double;
+
+    /// Return the coefficient of an element in the substance.
+    auto coefficient(std::string symbol) const -> double;
 
 private:
     /// The name of the substance.
@@ -84,7 +87,7 @@ private:
     /// The chemical formula of the substance.
     ChemicalFormula m_formula;
 
-    /// The chemical elements of the substance and their coefficients.
+    /// The elements of the substance and their coefficients.
     std::vector<std::tuple<Element, double>> m_elements;
 
     /// The molar mass of the substance (in unit of kg/mol).
