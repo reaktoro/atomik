@@ -43,14 +43,14 @@ struct ElementData
 };
 
 /// A type used to define a chemical element and its attributes.
-class ChemicalElement
+class Element
 {
 public:
     /// Construct a default Element object.
-    ChemicalElement() {}
+    Element() {}
 
     /// Construct an Element object with given data.
-    ChemicalElement(const ElementData& data) : data(data) {}
+    Element(const ElementData& data) : data(data) {}
 
     /// Set the symbol of the chemical element (e.g., "H", "O", "C", "Na").
     auto symbol(std::string value) -> void { data.symbol = value; };
@@ -88,9 +88,9 @@ private:
 };
 
 /// Compare two Element objects for less than.
-auto operator<(const ChemicalElement& lhs, const ChemicalElement& rhs) -> bool;
+auto operator<(const Element& lhs, const Element& rhs) -> bool;
 
 /// Compare two Element objects for equality.
-auto operator==(const ChemicalElement& lhs, const ChemicalElement& rhs) -> bool;
+auto operator==(const Element& lhs, const Element& rhs) -> bool;
 
 } // namespace Atomik

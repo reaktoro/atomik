@@ -15,16 +15,16 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this library. If not, see <http://www.gnu.org/licenses/>.
 
-#include "ChemicalElement.hpp"
+#include "Element.hpp"
 
 namespace Atomik {
 
-auto operator<(const ChemicalElement& lhs, const ChemicalElement& rhs) -> bool
+auto operator<(const Element& lhs, const Element& rhs) -> bool
 {
     return lhs.name() < rhs.name();
 }
 
-auto operator==(const ChemicalElement& lhs, const ChemicalElement& rhs) -> bool
+auto operator==(const Element& lhs, const Element& rhs) -> bool
 {
     return lhs.name() == rhs.name();
 }

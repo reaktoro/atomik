@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this library. If not, see <http://www.gnu.org/licenses/>.
 
-#include "ChemicalElements.hpp"
+#include "ElementDatabase.hpp"
 
 // C++ includes
 #include <vector>
@@ -148,30 +148,30 @@ const std::vector<ElementData> elementsdata =
 
 } // namespace internal
 
-ChemicalElements::ChemicalElements()
+ElementDatabase::ElementDatabase()
 {
     for(const ElementData& data : internal::elementsdata)
         m_elements[data.symbol] = data;
 }
 
-auto ChemicalElements::elements() const -> const std::unordered_map<std::string, ChemicalElement>&
+auto ElementDatabase::elements() const -> const std::unordered_map<std::string, Element>&
 {
      return m_elements;
 }
 
-auto ChemicalElements::get(std::string symbol) const -> ChemicalElement
+auto ElementDatabase::get(std::string symbol) const -> Element
 {
     auto it = m_elements.find(symbol);
-    return it == m_elements.end() ? ChemicalElement() : it->second;
+    return it == m_elements.end() ? Element() : it->second;
 }
 
-auto ChemicalElements::append(const ChemicalElement& element) -> void
+auto ElementDatabase::append(const Element& element) -> void
 {
     if(element.symbol().size())
         m_elements[element.symbol()] = element;
 }
 
-auto ChemicalElements::remove(std::string symbol) -> void
+auto ElementDatabase::remove(std::string symbol) -> void
 {
     auto it = m_elements.find(symbol);
     if(it != m_elements.end())

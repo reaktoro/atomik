@@ -18,7 +18,7 @@
 #pragma once
 
 // Atomik includes
-#include <Atomik/ChemicalElement.hpp>
-#include <Atomik/ChemicalElements.hpp>
+#include <Atomik/Element.hpp>
+#include <Atomik/ElementDatabase.hpp>
 #include <Atomik/ChemicalFormula.hpp>
-#include <Atomik/ChemicalSubstance.hpp>
+#include <Atomik/Substance.hpp>

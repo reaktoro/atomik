@@ -22,32 +22,32 @@
 #include <unordered_map>
 
 // Atomik includes
-#include <Atomik/ChemicalElement.hpp>
+#include <Atomik/Element.hpp>
 
 namespace Atomik {
 
 /// A type used as a database of chemical elements.
-class ChemicalElements
+class ElementDatabase
 {
 public:
     /// Construct a default Elements object.
-    ChemicalElements();
+    ElementDatabase();
 
     /// Return all elements stored in the database of elements.
-    auto elements() const -> const std::unordered_map<std::string, ChemicalElement>&;
+    auto elements() const -> const std::unordered_map<std::string, Element>&;
 
     /// Return an Element object with given symbol, or empty object if symbol not known.
-    auto get(std::string symbol) const -> ChemicalElement;
+    auto get(std::string symbol) const -> Element;
 
     /// Append a new custom element into the database of elements.
-    auto append(const ChemicalElement& element) -> void;
+    auto append(const Element& element) -> void;
 
     /// Remove an existing element from the database of elements.
     auto remove(std::string symbol) -> void;
 
 private:
     /// The chemical elements stored in the database.
-    std::unordered_map<std::string, ChemicalElement> m_elements;
+    std::unordered_map<std::string, Element> m_elements;
 };
 
 } // namespace Atomik
