@@ -106,4 +106,18 @@ auto Substance::coefficient(std::string symbol) const -> double
     return m_formula.coefficient(symbol);
 }
 
+auto operator<(const Substance& lhs, const Substance& rhs) -> bool
+{
+    return lhs.uid() < rhs.uid();
+}
+
+auto operator==(const Substance& lhs, const Substance& rhs) -> bool
+{
+    return lhs.uid() == rhs.uid() &&
+           lhs.name() == rhs.name() &&
+           lhs.formula() == rhs.formula() &&
+           lhs.elements() == rhs.elements() &&
+           lhs.charge() == rhs.charge();
+}
+
 } // namespace Atomik
