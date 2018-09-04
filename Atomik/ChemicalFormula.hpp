@@ -52,6 +52,9 @@ public:
     /// Construct a ChemicalFormula object with given chemical formula.
     ChemicalFormula(std::string formula);
 
+    /// Construct a ChemicalFormula object with given chemical formula.
+    ChemicalFormula(const char* formula);
+
     /// Return the chemical formula string.
     auto str() const -> std::string;
 
@@ -77,5 +80,14 @@ private:
     /// The electrical charge of the chemical formula.
     double m_charge;
 };
+
+/// Compare two ChemicalFormula objects for less than
+auto operator<(const ChemicalFormula& lhs, const ChemicalFormula& rhs) -> bool;
+
+/// Compare two ChemicalFormula objects for equality
+auto operator==(const ChemicalFormula& lhs, const ChemicalFormula& rhs) -> bool;
+
+/// Return true if two chemical formulas have the same charge and elemental composition (e.g., `Ca++` and `Ca+2`).
+auto equivalent(const ChemicalFormula& lhs, const ChemicalFormula& rhs) -> bool;
 
 } // namespace Atomik

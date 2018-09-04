@@ -170,6 +170,10 @@ ChemicalFormula::ChemicalFormula()
 {}
 
 ChemicalFormula::ChemicalFormula(std::string formula)
+: ChemicalFormula(formula.c_str())
+{}
+
+ChemicalFormula::ChemicalFormula(const char* formula)
 {
     m_formula = formula;
     m_elements = internal::parseFormula(formula);
@@ -200,6 +204,21 @@ auto ChemicalFormula::coefficient(std::string symbol) const -> double
 ChemicalFormula::operator std::string() const
 {
     return m_formula;
+}
+
+auto operator<(const ChemicalFormula& lhs, const ChemicalFormula& rhs) -> bool
+{
+    return lhs.str() < rhs.str();
+}
+
+auto operator==(const ChemicalFormula& lhs, const ChemicalFormula& rhs) -> bool
+{
+    return lhs.str() == rhs.str();
+}
+
+auto equivalent(const ChemicalFormula& lhs, const ChemicalFormula& rhs) -> bool
+{
+    return lhs.elements() == rhs.elements() && lhs.charge() == rhs.charge();
 }
 
 } // namespace Atomik
