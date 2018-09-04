@@ -96,7 +96,7 @@ public:
     auto name() const -> std::string;
 
     /// Return the chemical formula of the substance.
-    auto formula() const -> std::string;
+    auto formula() const -> const ChemicalFormula&;
 
     /// Return the elements of the substance and their coefficients.
     auto elements() const -> const std::vector<std::pair<Element, double>>&;

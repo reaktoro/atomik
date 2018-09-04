@@ -53,7 +53,7 @@ public:
     ChemicalFormula(std::string formula);
 
     /// Return the chemical formula string.
-    auto formula() const -> std::string;
+    auto str() const -> std::string;
 
     /// Return the elements in the chemical formula and their coefficients.
     auto elements() const -> std::map<std::string, double>;
@@ -63,6 +63,9 @@ public:
 
     /// Return the coefficient of an element symbol in the chemical formula.
     auto coefficient(std::string symbol) const -> double;
+
+    /// Convert this ChemicalFormula object into a std::string.
+    operator std::string() const;
 
 private:
     /// The chemical formula as a string.

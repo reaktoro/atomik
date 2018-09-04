@@ -81,9 +81,9 @@ auto Substance::name() const -> std::string
     return m_name;
 }
 
-auto Substance::formula() const -> std::string
+auto Substance::formula() const -> const ChemicalFormula&
 {
-    return m_formula.formula();
+    return m_formula;
 }
 
 auto Substance::elements() const -> const std::vector<std::pair<Element, double>>&

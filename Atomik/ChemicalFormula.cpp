@@ -176,7 +176,7 @@ ChemicalFormula::ChemicalFormula(std::string formula)
     m_charge = internal::parseCharge(formula);
 }
 
-auto ChemicalFormula::formula() const -> std::string
+auto ChemicalFormula::str() const -> std::string
 {
     return m_formula;
 }
@@ -195,6 +195,11 @@ auto ChemicalFormula::coefficient(std::string symbol) const -> double
 {
     const auto it = m_elements.find(symbol);
     return it != m_elements.end() ? it->second : 0.0;
+}
+
+ChemicalFormula::operator std::string() const
+{
+    return m_formula;
 }
 
 } // namespace Atomik
