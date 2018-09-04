@@ -154,21 +154,29 @@ ElementDatabase::ElementDatabase()
         m_elements[data.symbol] = data;
 }
 
-auto ElementDatabase::elements() const -> const std::unordered_map<std::string, Element>&
+auto ElementDatabase::data() const -> std::list<Element>
 {
-     return m_elements;
+    std::list<Element> res;
+    for(const auto& pair : m_elements)
+        res.push_back(pair.second);
+     return res;
 }
 
-auto ElementDatabase::get(std::string symbol) const -> Element
+auto ElementDatabase::operator()(std::string symbol) const -> Element
 {
     auto it = m_elements.find(symbol);
     return it == m_elements.end() ? Element() : it->second;
 }
 
-auto ElementDatabase::append(const Element& element) -> void
+auto ElementDatabase::clear() -> void
 {
-    if(element.symbol().size())
-        m_elements[element.symbol()] = element;
+    m_elements.clear();
+}
+
+auto ElementDatabase::append(const ElementData& element) -> void
+{
+    if(element.symbol.size())
+        m_elements[element.symbol] = element;
 }
 
 auto ElementDatabase::remove(std::string symbol) -> void

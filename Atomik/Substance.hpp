@@ -19,7 +19,6 @@
 
 // C++ includes
 #include <string>
-#include <tuple>
 #include <vector>
 
 // Atomik includes
@@ -30,25 +29,36 @@
 namespace Atomik {
 
 /// A type used to represent a chemical substance.
-/// Below are examples of how a Substance object can be created:
+/// The following examples demonstrate how different water substances can be created:
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/// Substance substance01("H2O");
-/// Substance substance02("CaCl2");
-/// Substance substance03("MgCO3");
-/// Substance substance04("(CaMg)(CO3)2");
-/// Substance substance05("Fe3Al2Si3O12");
-/// Substance substance06("Na+");
-/// Substance substance07("Ca++");
-/// Substance substance08("Fe+++");
-/// Substance substance09("Fe+3");
-/// Substance substance10("CO3--");
-/// Substance substance11("CO3-2");
+/// Substance water1("H2O");
+/// Substance water2("H2O").name("WATER");
+/// Substance water3("H2O").name("WATER").uid("H2O(aq)");
+/// Substance water4("H2O").name("WATER").uid("H2O(g)");
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/// There are two ways of specifying the electric charge of the substance:
-///   1. as a suffix containing as many symbols `+` and `-` as there are charges (e.g., `Fe+++`, `Ca++`, `CO3--`); or
-///   2. as a suffix containing the symbol `+` or `-` followed by the number of charges (e.g., `Fe+3`, `Ca+2`, `Na+`)
-/// Note that number 1 is optional for the second formart.
-/// In both formats, the symbol `+` is used for positively charged substances, and `-` for negatively charged ones.
+/// Substance `water1` is initialized with its name and unique identifier (uid) equal
+/// to its formula, `H2O`. Substance `water2` also has its uid set to `H2O` by default,
+/// but its name is modified to `WATER`. For substances `water3` and `water4`, both their
+/// names and uid have been specified. In this case, the uid is used to distinguish these
+/// two water substances, with same formula and name, based on their aggregate states,
+/// with suffix (aq) denoting an aqueous state, and suffix (g) a gaseous state.
+///
+/// By default, the chemical elements of the previous four water substances were obtained
+/// from an internal ElementDatabase object with default state. This database object is
+/// initialized with all existing chemical elements in the periodic table. The example below
+/// shows how to use a customized database of elements when constructing substances. It assumes
+/// two elements `Aa` and `Bb` have been defined an appended to the database of elements.
+/// The substance has chemical formula `AaBb2`.
+/// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/// ElementDatabase elements;
+/// elements.append({"Aa"});
+/// elements.append({"Bb"});
+///
+/// Substance substance("AaBb2", elements);
+///
+/// std::cout << substance.coefficient("Aa") == 1 << std::endl;
+/// std::cout << substance.coefficient("Bb") == 2 << std::endl;
+/// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class Substance
 {
 public:
@@ -57,34 +67,39 @@ public:
 
     /// Construct a Substance object with a given chemical formula.
     /// A default database of chemical elements is used to construct the elements composing the substance.
-    /// @param formula The chemical formula of the substance (e.g., "H2O", "CaCO3", "CO3--", "CO3-2").
+    /// @param formula The chemical formula of the substance (e.g., `H2O`, `CaCO3`, `CO3--`, `CO3-2`).
     Substance(std::string formula);
 
     /// Construct a Substance object with a given chemical formula.
-    /// @param formula The chemical formula of the substance (e.g., "H2O", "CaCO3", "CO3--", "CO3-2").
+    /// @param formula The chemical formula of the substance (e.g., `H2O`, `CaCO3`, `CO3--`, `CO3-2`).
     /// @param elementdb The user-defined database of chemical elements.
     Substance(std::string formula, const ElementDatabase& elementdb);
 
-    /// Construct a Substance object with a given chemical formula and name.
-    /// A default database of chemical elements is used to construct the elements composing the substance.
-    /// @param name The name of the substance (e.g., "WATER", "CALCIUM-CARBONATE").
-    /// @param formula The chemical formula of the substance (e.g., "H2O", "CaCO3", "CO3--", "CO3-2").
-    Substance(std::string name, std::string formula);
+    /// Set the unique identifier (uid) of the substance.
+    /// The uid of a substance exists to differentiate substances with same name and formula
+    /// but existing under different aggregate states. For example, the uid of substance carbon
+    /// dioxide, with name `CARBON-DIOXIDE` and formula `CO2`, could be set to `CO2(aq)` and `CO2(g)`
+    /// to distinguish carbon dioxide in an aqueous state (aq) and in a gaseous state (g).
+    /// @param uid The uid of the substance (e.g., `CO2(aq)`, `CaCO3(calcite)`)
+    auto uid(std::string uid) -> Substance&;
 
-    /// Construct a Substance object with a given chemical formula and name.
-    /// @param name The name of the substance (e.g., "WATER", "CALCIUM-CARBONATE").
-    /// @param formula The chemical formula of the substance (e.g., "H2O", "CaCO3", "CO3--", "CO3-2").
-    /// @param elementdb The user-defined database of chemical elements.
-    Substance(std::string name, std::string formula, const ElementDatabase& elementdb);
+    /// Return the unique identifier (uid) of the substance.
+    /// @return The uid of the substance if provided, otherwise, its chemical formula.
+    auto uid() const -> std::string;
 
-    /// Return the name of the substance, if provided, otherwise, its chemical formula.
+    /// Set the name of the substance.
+    /// @param name The name of the substance (e.g., `WATER`, `CARBON-DIOXIDE`, `CALCIUM-CARBONATE`)
+    auto name(std::string name) -> Substance&;
+
+    /// Return the name of the substance.
+    /// @return The name of the substance if provided, otherwise, its chemical formula.
     auto name() const -> std::string;
 
     /// Return the chemical formula of the substance.
     auto formula() const -> std::string;
 
     /// Return the elements of the substance and their coefficients.
-    auto elements() const -> const std::vector<std::tuple<Element, double>>&;
+    auto elements() const -> const std::vector<std::pair<Element, double>>&;
 
     /// Return the electric charge of the substance.
     auto charge() const -> double;
@@ -96,6 +111,9 @@ public:
     auto coefficient(std::string symbol) const -> double;
 
 private:
+    /// The unique identifier of the substance.
+    std::string m_uid;
+
     /// The name of the substance.
     std::string m_name;
 
@@ -103,11 +121,10 @@ private:
     ChemicalFormula m_formula;
 
     /// The elements of the substance and their coefficients.
-    std::vector<std::tuple<Element, double>> m_elements;
+    std::vector<std::pair<Element, double>> m_elements;
 
     /// The molar mass of the substance (in unit of kg/mol).
     double m_molarmass;
-
 };
 
 } // namespace Atomik

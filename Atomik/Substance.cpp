@@ -24,11 +24,12 @@ namespace internal {
 const ElementDatabase default_elementdb;
 
 // Throw a runtime error if the substance name has spaces.
-auto checkSubstanceNameHasNoSpaces(std::string name) -> void
+auto checkSubstanceIdentifierHasNoSpaces(std::string name, std::string nametype) -> void
 {
     // Check the name provided has no spaces
     if(name.find(' ') != std::string::npos)
-        throw std::runtime_error("***ERROR***: The given substance name `" + name + "` violates the naming rule for substance names, which must have no spaces.");
+        throw std::runtime_error("***ERROR***: The given substance " + nametype + " `" + name + "` "
+            "violates the naming rule for substance names and uid, which must have no spaces.");
 }
 
 } // namespace internal
@@ -37,35 +38,42 @@ Substance::Substance()
 {}
 
 Substance::Substance(std::string formula)
-: Substance(formula, formula, internal::default_elementdb)
-{
-}
+: Substance(formula, internal::default_elementdb)
+{}
 
 Substance::Substance(std::string formula, const ElementDatabase& elementdb)
-: Substance(formula, formula, elementdb)
+: m_uid(formula), m_name(formula), m_formula(formula)
 {
-}
-
-Substance::Substance(std::string name, std::string formula)
-: Substance(name, formula, internal::default_elementdb)
-{
-}
-
-Substance::Substance(std::string name, std::string formula, const ElementDatabase& elementdb)
-: m_name(name), m_formula(formula)
-{
-    // Check if provided name has space and throws a runtime error if true
-    internal::checkSubstanceNameHasNoSpaces(name);
-
     // Initialize the chemical elements of the chemical substance
     m_elements.clear();
     for(const auto& pair : m_formula.elements())
-        m_elements.emplace_back(elementdb.get(pair.first), pair.second);
+        m_elements.emplace_back(elementdb(pair.first), pair.second);
 
     // Initialize the molar mass of the chemical substance
     m_molarmass = 0.0;
     for(const auto& pair : m_elements)
         m_molarmass += std::get<1>(pair) * std::get<0>(pair).atomicWeight();
+}
+
+auto Substance::uid(std::string uid) -> Substance&
+{
+    // Check if provided uid has space and throws a runtime error if true
+    internal::checkSubstanceIdentifierHasNoSpaces(uid, "uid");
+    m_uid = uid;
+    return *this;
+}
+
+auto Substance::uid() const -> std::string
+{
+    return m_uid;
+}
+
+auto Substance::name(std::string name) -> Substance&
+{
+    // Check if provided name has space and throws a runtime error if true
+    internal::checkSubstanceIdentifierHasNoSpaces(name, "name");
+    m_name = name;
+    return *this;
 }
 
 auto Substance::name() const -> std::string
@@ -78,7 +86,7 @@ auto Substance::formula() const -> std::string
     return m_formula.formula();
 }
 
-auto Substance::elements() const -> const std::vector<std::tuple<Element, double>>&
+auto Substance::elements() const -> const std::vector<std::pair<Element, double>>&
 {
     return m_elements;
 }

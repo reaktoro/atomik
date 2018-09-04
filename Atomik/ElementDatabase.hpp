@@ -18,6 +18,7 @@
 #pragma once
 
 // C++ includes
+#include <list>
 #include <string>
 #include <unordered_map>
 
@@ -30,19 +31,25 @@ namespace Atomik {
 class ElementDatabase
 {
 public:
-    /// Construct a default Elements object.
+    /// Construct a default ElementDatabase object.
     ElementDatabase();
 
-    /// Return all elements stored in the database of elements.
-    auto elements() const -> const std::unordered_map<std::string, Element>&;
+    /// Return the element attributes for a given element symbol.
+    /// @param symbol The symbol of the chemical element (e.g., H, O, C, Ca, Na)
+    /// @return A non-empty Element object if symbol is found, otherwise, an empty object.
+    auto operator()(std::string symbol) const -> Element;
 
-    /// Return an Element object with given symbol, or empty object if symbol not known.
-    auto get(std::string symbol) const -> Element;
+    /// Return all elements stored in the database.
+    auto data() const -> std::list<Element>;
 
-    /// Append a new custom element into the database of elements.
-    auto append(const Element& element) -> void;
+    /// Clear the database removing all stored elements.
+    auto clear() -> void;
 
-    /// Remove an existing element from the database of elements.
+    /// Append a new custom element into the database.
+    auto append(const ElementData& element) -> void;
+
+    /// Remove an existing element from the database.
+    /// @param symbol The symbol of the chemical element (e.g., H, O, C, Ca, Na)
     auto remove(std::string symbol) -> void;
 
 private:
