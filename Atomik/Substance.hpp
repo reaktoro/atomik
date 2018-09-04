@@ -127,4 +127,10 @@ private:
     double m_molarmass;
 };
 
+/// Compare two Substance objects for less than
+auto operator<(const Substance& lhs, const Substance& rhs) -> bool;
+
+/// Compare two Substance objects for equality
+auto operator==(const Substance& lhs, const Substance& rhs) -> bool;
+
 } // namespace Atomik
