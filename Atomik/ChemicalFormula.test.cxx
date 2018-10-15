@@ -251,6 +251,17 @@ TEST_CASE("Testing ChemicalFormula class", "[ChemicalFormula]")
     REQUIRE(formula.elements().at("S") == 1);
 
     REQUIRE(equivalent("Ca++", "Ca+2"));
+    REQUIRE(equivalent("Ca++", "Ca(2+)"));
+
     REQUIRE(equivalent("CO3--", "CO3-2"));
+    REQUIRE(equivalent("CO3--", "CO3(2-)"));
+
     REQUIRE(equivalent("Fe+++", "Fe+3"));
+    REQUIRE(equivalent("Fe+++", "Fe(3+)"));
+
+    REQUIRE(equivalent("H+", "H+1"));
+    REQUIRE(equivalent("H+", "H(+)"));
+
+    REQUIRE(equivalent("OH-", "OH-1"));
+    REQUIRE(equivalent("OH-", "OH(-)"));
 }

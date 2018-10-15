@@ -158,10 +158,35 @@ auto parseChargeModeMultipleSigns(std::string formula) -> double
     else return 0;
 }
 
+auto parseChargeModeNumberSign(std::string formula) -> double
+{
+    if(formula.back() != ')') return 0.0;
+
+    std::size_t iparbegin = formula.rfind('(');
+
+    if(iparbegin == std::string::npos) return 0.0;
+
+    const auto isign = formula.size() - 2;
+    const auto sign = formula[isign] == '+' ? +1.0 : formula[isign] == '-' ? -1.0 : 0.0;
+
+    if(sign == 0.0) return 0.0;
+
+    std::string digits(formula.begin() + iparbegin + 1, formula.end() - 2);
+
+    if(digits.empty()) return sign;
+
+    return sign * std::stod(digits);
+}
+
 auto parseCharge(std::string formula) -> double
 {
-    const auto charge = parseChargeModeMultipleSigns(formula);
-    return charge != 0.0 ? charge : parseChargeModeSignNumber(formula);
+    double charge;
+
+    charge = parseChargeModeMultipleSigns(formula); if(charge != 0.0) return charge;
+    charge = parseChargeModeNumberSign(formula); if(charge != 0.0) return charge;
+    charge = parseChargeModeSignNumber(formula); if(charge != 0.0) return charge;
+
+    return 0.0;
 }
 
 } // namespace internal
