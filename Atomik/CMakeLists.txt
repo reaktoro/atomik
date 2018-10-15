@@ -4,6 +4,9 @@ file(GLOB_RECURSE HPP_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.hpp)
 # Collect all source files from the current directory for the C++ library
 file(GLOB_RECURSE CPP_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 
+# Collect all test source files from the current directory for the C++ testing suite
+file(GLOB_RECURSE CXX_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.test.cxx)
+
 # The name of the shared and static libraries
 set(PROJECT_SHARED_LIB ${PROJECT_NAME}${SUFFIX_SHARED_LIBS})
 set(PROJECT_STATIC_LIB ${PROJECT_NAME}${SUFFIX_STATIC_LIBS})
@@ -38,3 +41,10 @@ endif()
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/Atomik
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT headers
     FILES_MATCHING PATTERN "*.hpp")
+    
+# Build the test application
+add_executable(AtomikTests ${CXX_FILES} $<TARGET_OBJECTS:catch>)
+set_target_properties(AtomikTests PROPERTIES CXX_STANDARD 11)
+target_include_directories(AtomikTests PUBLIC ${PROJECT_SOURCE_DIR})
+target_include_directories(AtomikTests PUBLIC ${PROJECT_SOURCE_DIR}/deps)
+target_link_libraries(AtomikTests AtomikShared)
