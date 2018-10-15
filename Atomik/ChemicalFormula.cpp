@@ -42,8 +42,8 @@ auto parseElementAtom(string::iterator begin, string::iterator end) -> pair<stri
 auto parseNumAtoms(string::iterator begin, string::iterator end) -> pair<double, string::iterator>
 {
     if(begin == end) return {1.0, begin};
-    if(!isdigit(*begin)) return {1.0, begin};
-    auto endnumber = std::find_if(begin, end, [](char c){return !isdigit(c);});
+    if(!(isdigit(*begin) || *begin == '.')) return {1.0, begin};
+    auto endnumber = std::find_if(begin, end, [](char c){return !(isdigit(c) || c == '.');});
     double number = atof(string(begin, endnumber).c_str());
     return {number, endnumber};
 }
