@@ -19,7 +19,7 @@
 
 // C++ includes
 #include <string>
-#include <map>
+#include <unordered_map>
 
 namespace Atomik {
 
@@ -59,7 +59,7 @@ public:
     auto str() const -> std::string;
 
     /// Return the elements in the chemical formula and their coefficients.
-    auto elements() const -> std::map<std::string, double>;
+    auto elements() const -> std::unordered_map<std::string, double>;
 
     /// Return the electric charge of the chemical formula.
     auto charge() const -> double;
@@ -75,7 +75,7 @@ private:
     std::string m_formula;
 
     /// The elements in the chemical formula and their coefficients.
-    std::map<std::string, double> m_elements;
+    std::unordered_map<std::string, double> m_elements;
 
     /// The electrical charge of the chemical formula.
     double m_charge;

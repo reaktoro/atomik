@@ -23,7 +23,7 @@
 #include <stdexcept>
 #include <string>
 using std::string;
-using std::map;
+using std::unordered_map;
 using std::pair;
 
 namespace Atomik {
@@ -62,7 +62,7 @@ auto findMatchedParenthesis(string::iterator begin, string::iterator end) -> str
     return end;
 }
 
-auto parseFormula(string::iterator begin, string::iterator end, map<string, double>& result, double scalar) -> void
+auto parseFormula(string::iterator begin, string::iterator end, unordered_map<string, double>& result, double scalar) -> void
 {
     if(begin == end) return;
 
@@ -114,9 +114,9 @@ auto parseFormula(string::iterator begin, string::iterator end, map<string, doub
     }
 }
 
-auto parseFormula(std::string formula) -> std::map<std::string, double>
+auto parseFormula(std::string formula) -> std::unordered_map<std::string, double>
 {
-    std::map<std::string, double> result;
+    std::unordered_map<std::string, double> result;
 
     parseFormula(formula.begin(), formula.end(), result, 1.0);
 
@@ -210,7 +210,7 @@ auto ChemicalFormula::str() const -> std::string
     return m_formula;
 }
 
-auto ChemicalFormula::elements() const -> std::map<std::string, double>
+auto ChemicalFormula::elements() const -> std::unordered_map<std::string, double>
 {
     return m_elements;
 }
