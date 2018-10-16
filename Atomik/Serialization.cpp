@@ -27,7 +27,7 @@ auto operator>>(std::istream& is, ChemicalFormula& formula) -> std::istream&
 {
     std::string str;
     is >> str;
-    formula = ChemicalFormula(formula);
+    formula = ChemicalFormula(str);
     return is;
 }
 
