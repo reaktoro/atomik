@@ -47,7 +47,7 @@ class Element
 {
 public:
     /// Construct a default Element object.
-    Element() {}
+    Element() : m_data(new ElementData{}) {}
 
     /// Construct an Element object with given data.
     Element(const ElementData& data) : m_data(new ElementData(data)) {}
@@ -69,6 +69,9 @@ public:
 
     /// Return true if this Element object is empty.
     auto empty() const -> bool { return !m_data; }
+
+    /// Return the underlying data of this Element object.
+    auto data() const -> const ElementData& { return *m_data; }
 
 private:
     /// The chemical element data.
