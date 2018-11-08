@@ -24,7 +24,7 @@
 // Atomik includes
 #include <Atomik/ChemicalFormula.hpp>
 #include <Atomik/Element.hpp>
-#include <Atomik/ElementDatabase.hpp>
+#include <Atomik/Elements.hpp>
 
 namespace Atomik {
 
@@ -44,13 +44,13 @@ namespace Atomik {
 /// with suffix (aq) denoting an aqueous state, and suffix (g) a gaseous state.
 ///
 /// By default, the chemical elements of the previous four water substances were obtained
-/// from an internal ElementDatabase object with default state. This database object is
+/// from an internal Elements object with default state. This database object is
 /// initialized with all existing chemical elements in the periodic table. The example below
 /// shows how to use a customized database of elements when constructing substances. It assumes
 /// two elements `Aa` and `Bb` have been defined an appended to the database of elements.
 /// The substance has chemical formula `AaBb2`.
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/// ElementDatabase elements;
+/// Elements elements;
 /// elements.append({"Aa"});
 /// elements.append({"Bb"});
 ///
@@ -73,7 +73,7 @@ public:
     /// Construct a Substance object with a given chemical formula.
     /// @param formula The chemical formula of the substance (e.g., `H2O`, `CaCO3`, `CO3--`, `CO3-2`).
     /// @param elementdb The user-defined database of chemical elements.
-    Substance(std::string formula, const ElementDatabase& elementdb);
+    Substance(std::string formula, const Elements& elementdb);
 
     /// Set the unique identifier (uid) of the substance.
     /// The uid of a substance exists to differentiate substances with same name and formula

@@ -40,6 +40,9 @@ struct ElementData
 
     /// The electronegativity of the chemical element.
     double electronegativity;
+
+    /// The tags of the chemical element.
+    std::vector<std::string> tags;
 };
 
 /// A type used to define a chemical element and its attributes.
@@ -66,6 +69,9 @@ public:
 
     /// Return the electronegativity of the chemical element.
     auto electronegativity() const -> double { return m_data->electronegativity; };
+
+    /// Return the tags of the chemical element.
+    auto tags() const -> std::vector<std::string> { return m_data->tags; };
 
     /// Return true if this Element object is empty.
     auto empty() const -> bool { return !m_data; }

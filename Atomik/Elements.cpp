@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this library. If not, see <http://www.gnu.org/licenses/>.
 
-#include "ElementDatabase.hpp"
+#include "Elements.hpp"
 
 // C++ includes
 #include <vector>
@@ -148,13 +148,13 @@ const std::vector<ElementData> elementsdata =
 
 } // namespace internal
 
-ElementDatabase::ElementDatabase()
+Elements::Elements()
 {
     for(const ElementData& data : internal::elementsdata)
         m_elements[data.symbol] = data;
 }
 
-auto ElementDatabase::data() const -> std::list<Element>
+auto Elements::data() const -> std::list<Element>
 {
     std::list<Element> res;
     for(const auto& pair : m_elements)
@@ -162,24 +162,24 @@ auto ElementDatabase::data() const -> std::list<Element>
      return res;
 }
 
-auto ElementDatabase::operator()(std::string symbol) const -> Element
+auto Elements::operator()(std::string symbol) const -> Element
 {
     auto it = m_elements.find(symbol);
     return it == m_elements.end() ? Element() : it->second;
 }
 
-auto ElementDatabase::clear() -> void
+auto Elements::clear() -> void
 {
     m_elements.clear();
 }
 
-auto ElementDatabase::append(const ElementData& element) -> void
+auto Elements::append(const ElementData& element) -> void
 {
     if(element.symbol.size())
         m_elements[element.symbol] = element;
 }
 
-auto ElementDatabase::remove(std::string symbol) -> void
+auto Elements::remove(std::string symbol) -> void
 {
     auto it = m_elements.find(symbol);
     if(it != m_elements.end())

@@ -129,7 +129,7 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE_THROWS(Substance("CaCO3").name("CALCIUM CARBONATE")); // runtime error if substance name has space
     REQUIRE_THROWS(Substance("CaCO3").uid("CaCO3 calcite")); // runtime error if substance uid has space
 
-    ElementDatabase elements;
+    Elements elements;
     elements.append({"Aa"});
     elements.append({"Bb"});
 

@@ -21,7 +21,7 @@ namespace Atomik {
 namespace internal {
 
 /// The default database of elements
-const ElementDatabase default_elementdb;
+const Elements default_elementdb;
 
 // Throw a runtime error if the substance name has spaces.
 auto checkSubstanceIdentifierHasNoSpaces(std::string name, std::string nametype) -> void
@@ -41,7 +41,7 @@ Substance::Substance(std::string formula)
 : Substance(formula, internal::default_elementdb)
 {}
 
-Substance::Substance(std::string formula, const ElementDatabase& elementdb)
+Substance::Substance(std::string formula, const Elements& elementdb)
 : m_uid(formula), m_name(formula), m_formula(formula)
 {
     // Initialize the chemical elements of the chemical substance

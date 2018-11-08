@@ -28,11 +28,11 @@
 namespace Atomik {
 
 /// A type used as a database of chemical elements.
-class ElementDatabase
+class Elements
 {
 public:
-    /// Construct a default ElementDatabase object.
-    ElementDatabase();
+    /// Construct a default Elements object.
+    Elements();
 
     /// Return the element attributes for a given element symbol.
     /// @param symbol The symbol of the chemical element (e.g., H, O, C, Ca, Na)

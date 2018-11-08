@@ -19,6 +19,6 @@
 
 // Atomik includes
 #include <Atomik/Element.hpp>
-#include <Atomik/ElementDatabase.hpp>
+#include <Atomik/Elements.hpp>
 #include <Atomik/ChemicalFormula.hpp>
 #include <Atomik/Substance.hpp>
