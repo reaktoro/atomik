@@ -20,8 +20,8 @@ target_include_directories(AtomikObject PUBLIC ${PROJECT_SOURCE_DIR})
 # Set some properties for the AtomikObject target
 set_property(TARGET AtomikObject PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-# Ensure Atomik is compiled with a compiler that supports C++11
-set_property(TARGET AtomikObject PROPERTY CXX_STANDARD 11)
+# Ensure Atomik is compiled with a compiler that supports C++17
+set_property(TARGET AtomikObject PROPERTY CXX_STANDARD 17)
 
 # Check if a shared library for Atomik must be built
 if(BUILD_SHARED_LIBS)
@@ -41,10 +41,10 @@ endif()
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/Atomik
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT headers
     FILES_MATCHING PATTERN "*.hpp")
-    
+
 # Build the test application
 add_executable(AtomikTests ${CXX_FILES} $<TARGET_OBJECTS:catch>)
-set_target_properties(AtomikTests PROPERTIES CXX_STANDARD 11)
+set_target_properties(AtomikTests PROPERTIES CXX_STANDARD 17)
 target_include_directories(AtomikTests PUBLIC ${PROJECT_SOURCE_DIR})
 target_include_directories(AtomikTests PUBLIC ${PROJECT_SOURCE_DIR}/deps)
 target_link_libraries(AtomikTests AtomikShared)

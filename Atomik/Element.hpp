@@ -24,7 +24,7 @@
 
 namespace Atomik {
 
-/// A type used to define a chemical element attributes.
+/// A type used to define attributes of chemical elements.
 struct ElementData
 {
     /// The symbol of the chemical element (e.g., "H", "O", "C", "Na").
@@ -51,34 +51,31 @@ class Element
 {
 public:
     /// Construct a default Element object.
-    Element() : m_data(new ElementData{}) {}
+    Element();
 
     /// Construct an Element object with given data.
-    Element(const ElementData& data) : m_data(new ElementData(data)) {}
+    Element(const ElementData& data);
 
     /// Return the symbol of the chemical element (e.g., "H", "O", "C", "Na").
-    auto symbol() const -> std::string { return m_data->symbol; };
+    auto symbol() const -> std::string;
 
     /// Return the name of the chemical element (e.g., "Hydrogen", "Oxygen").
-    auto name() const -> std::string { return m_data->name; };
+    auto name() const -> std::string;
 
     /// Return the atomic number of the chemical element.
-    auto atomicNumber() const -> std::size_t { return m_data->atomic_number; };
+    auto atomicNumber() const -> std::size_t;
 
     /// Return the atomic weight (or molar mass) of the chemical element (in unit of kg/mol).
-    auto atomicWeight() const -> double { return m_data->atomic_weight; };
+    auto atomicWeight() const -> double;
 
     /// Return the electronegativity of the chemical element.
-    auto electronegativity() const -> double { return m_data->electronegativity; };
+    auto electronegativity() const -> double;
 
     /// Return the tags of the chemical element.
-    auto tags() const -> std::set<std::string> { return m_data->tags; };
-
-    /// Return true if this Element object is empty.
-    auto empty() const -> bool { return !m_data; }
+    auto tags() const -> std::set<std::string>;
 
     /// Return the underlying data of this Element object.
-    auto data() const -> const ElementData& { return *m_data; }
+    auto data() const -> const ElementData&;
 
 private:
     /// The chemical element data.

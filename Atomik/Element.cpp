@@ -19,14 +19,57 @@
 
 namespace Atomik {
 
+Element::Element()
+: m_data(new ElementData{})
+{}
+
+Element::Element(const ElementData& data)
+ : m_data(new ElementData(data))
+{}
+
+auto Element::symbol() const -> std::string
+{
+    return m_data->symbol;
+};
+
+auto Element::name() const -> std::string
+{
+    return m_data->name;
+};
+
+auto Element::atomicNumber() const -> std::size_t
+{
+    return m_data->atomic_number;
+};
+
+auto Element::atomicWeight() const -> double
+{
+    return m_data->atomic_weight;
+};
+
+auto Element::electronegativity() const -> double
+{
+    return m_data->electronegativity;
+};
+
+auto Element::tags() const -> std::set<std::string>
+{
+    return m_data->tags;
+};
+
+auto Element::data() const -> const ElementData&
+{
+    return *m_data;
+}
+
 auto operator<(const Element& lhs, const Element& rhs) -> bool
 {
-    return lhs.name() < rhs.name();
+    return lhs.atomicNumber() < rhs.atomicNumber();
 }
 
 auto operator==(const Element& lhs, const Element& rhs) -> bool
 {
-    return lhs.name() == rhs.name();
+    return lhs.atomicNumber() == rhs.atomicNumber();
 }
 
 } // namespace Atomik

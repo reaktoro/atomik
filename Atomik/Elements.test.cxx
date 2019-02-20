@@ -26,22 +26,10 @@ TEST_CASE("Testing Elements", "[Elements]")
 {
     Elements elements;
 
-    auto initialsize = elements.size();
-
-    SECTION("After filtering a few elements")
-    {
-        elements = elements.filter("Na");
-
-        CHECK(elements.size() == 1);
-        CHECK_FALSE(elements("Na").empty());
-    }
-
-    SECTION("After removing a few elements")
-    {
-        elements = elements.remove("Na").remove("Cl");
-
-        CHECK(elements.size() == initialsize - 2);
-        CHECK(elements("Na").empty());
-        CHECK(elements("Cl").empty());
-    }
+    CHECK(elements.size() == elements.data().size());
+    CHECK(elements.index("Na"));
+    CHECK(elements.index("Na") == elements.indexWithSymbol("Na"));
+    CHECK(elements.index("Na") == elements.indexWithName("Sodium"));
+    CHECK_NOTHROW(elements("Na"));
+    CHECK_THROWS(elements("Xyz"));
 }

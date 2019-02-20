@@ -18,9 +18,8 @@
 #pragma once
 
 // C++ includes
-#include <list>
 #include <string>
-#include <unordered_map>
+#include <vector>
 
 // Atomik includes
 #include <Atomik/Element.hpp>
@@ -34,31 +33,42 @@ public:
     /// Construct a default Elements object.
     Elements();
 
-    /// Construct an Elements object with given collection of Element objects.
-    Elements(const std::list<Element>& data);
+    /// Construct an Elements object with given data.
+    explicit Elements(std::vector<Element> elements);
 
-    /// Return the element attributes for a given element symbol.
-    /// @param symbol The symbol of the chemical element (e.g., H, O, C, Ca, Na)
-    /// @return A non-empty Element object if symbol is found, otherwise, an empty object.
-    auto operator()(std::string symbol) const -> Element;
+    /// Return the first Element object with a given symbol.
+    /// @param symbol An element symbol such as `H`, `O`, `C`, `Ca`, `Na`.
+    /// @return The Element object with given symbol if found.
+    /// @throw std::out_of_range In case there is no Element object with given symbol.
+    auto operator()(std::string symbol) const -> const Element&;
 
-    /// Return all elements in the container.
-    auto data() const -> std::list<Element>;
-
-    /// Return the number of chemical elements in the container.
+    /// Return the number of chemical elements in the collection.
     auto size() const -> std::size_t;
 
-    /// Return a copy of this Elements object with only the chemical elements with a given attribute.
-    /// @param attribute Either the symbol, name, or a tag of the chemical element(s) to be filtered.
-    auto filter(std::string attribute) const -> Elements;
+    /// Return the index of a chemical element with given symbol.
+    auto index(std::string symbol) const -> std::size_t;
 
-    /// Return a copy of this Elements object without chemical elements with a given attribute.
-    /// @param attribute Either the symbol, name, or a tag of the chemical element(s) to be removed.
-    auto remove(std::string attribute) const -> Elements;
+    /// Return the index of a chemical element with given symbol.
+    auto indexWithSymbol(std::string symbol) const -> std::size_t;
+
+    /// Return the index of a chemical element with given name.
+    auto indexWithName(std::string name) const -> std::size_t;
+
+    /// Return the chemical elements with a given tag.
+    auto withTag(std::string tag) const -> Elements;
+
+    /// Return the internal collection of Element objects.
+    auto data() const -> const std::vector<Element>&;
 
 private:
     /// The chemical elements stored in the database.
-    std::unordered_map<std::string, Element> m_elements;
+    std::vector<Element> m_elements;
 };
+
+// Methods to enable for range loops
+inline auto begin(const Elements& elements) { return elements.data().begin(); }
+inline auto begin(Elements& elements) { return elements.data().begin(); }
+inline auto end(const Elements& elements) { return elements.data().end(); }
+inline auto end(Elements& elements) { return elements.data().end(); }
 
 } // namespace Atomik

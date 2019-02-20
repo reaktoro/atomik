@@ -28,7 +28,23 @@
 
 namespace Atomik {
 
-/// A type used to represent a chemical substance.
+/// A type used to define attributes of chemical substances.
+struct SubstanceData
+{
+    /// The chemical formula of the substance such as `"H2O"`, `"O2"`, `"H+"`.
+    ChemicalFormula formula;
+
+    /// The name of the substance such as `"H2O(aq)"`, `"O2(g)"`, `"H+(aq)"`.
+    std::string name;
+
+    /// The elements of the substance and their coefficients.
+    std::vector<std::pair<Element, double>> elements;
+
+    /// The tags of the chemical substance such as `"aqueous"`, `"mineral"`, `"organic"`.
+    std::set<std::string> tags;
+};
+
+/// A type used to represent a chemical substance and its attributes.
 /// The following examples demonstrate how different water substances can be created:
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 /// Substance water1("H2O");
@@ -68,12 +84,15 @@ public:
     /// Construct a Substance object with a given chemical formula.
     /// A default database of chemical elements is used to construct the elements composing the substance.
     /// @param formula The chemical formula of the substance (e.g., `H2O`, `CaCO3`, `CO3--`, `CO3-2`).
-    Substance(std::string formula);
+    /// @param elementdb The database of chemical elements (if not the default).
+    Substance(ChemicalFormula formula, const Elements& elementdb = {});
 
     /// Construct a Substance object with a given chemical formula.
+    /// A default database of chemical elements is used to construct the elements composing the substance.
     /// @param formula The chemical formula of the substance (e.g., `H2O`, `CaCO3`, `CO3--`, `CO3-2`).
-    /// @param elementdb The user-defined database of chemical elements.
-    Substance(std::string formula, const Elements& elementdb);
+    /// @param name The name of the chemical substance (e.g., `H2O(aq)`, `CaCO3(calcite)`, `CO3--(aq)`, `CO3-2(aq)`).
+    /// @param elementdb The database of chemical elements (if not the default).
+    Substance(ChemicalFormula formula, std::string name, const Elements& elementdb = {});
 
     /// Set the unique identifier (uid) of the substance.
     /// The uid of a substance exists to differentiate substances with same name and formula
@@ -83,13 +102,8 @@ public:
     /// @param uid The uid of the substance (e.g., `CO2(aq)`, `CaCO3(calcite)`)
     auto uid(std::string uid) -> Substance&;
 
-    /// Return the unique identifier (uid) of the substance.
-    /// @return The uid of the substance if provided, otherwise, its chemical formula.
-    auto uid() const -> std::string;
-
-    /// Set the name of the substance.
-    /// @param name The name of the substance (e.g., `WATER`, `CARBON-DIOXIDE`, `CALCIUM-CARBONATE`)
-    auto name(std::string name) -> Substance&;
+    /// Return the symbol, or unique identifier, of the chemical substance.
+    auto symbol() const -> std::string;
 
     /// Return the name of the substance.
     /// @return The name of the substance if provided, otherwise, its chemical formula.
