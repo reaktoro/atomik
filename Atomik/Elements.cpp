@@ -150,8 +150,19 @@ const std::vector<ElementData> elementsdata =
 
 Elements::Elements()
 {
-    for(const ElementData& data : internal::elementsdata)
-        m_elements[data.symbol] = data;
+    for(const ElementData& element : internal::elementsdata)
+        m_elements[element.symbol] = element;
+}
+
+Elements::Elements(const std::list<Element>& data)
+{
+    for(const auto& element : data)
+        m_elements[element.symbol()] = element;
+}
+
+auto Elements::size() const -> std::size_t
+{
+    return m_elements.size();
 }
 
 auto Elements::data() const -> std::list<Element>
@@ -168,22 +179,34 @@ auto Elements::operator()(std::string symbol) const -> Element
     return it == m_elements.end() ? Element() : it->second;
 }
 
-auto Elements::clear() -> void
+auto Elements::filter(std::string attribute) const -> Elements
 {
-    m_elements.clear();
+    auto pred = [&](const Element& element)
+    {
+        return element.name() != attribute
+            && element.symbol() != attribute
+            && element.tags().count(attribute);
+    };
+
+    std::list<Element> newdata = data();
+    newdata.remove_if(pred);
+
+    return Elements(newdata);
 }
 
-auto Elements::append(const ElementData& element) -> void
+auto Elements::remove(std::string attribute) const -> Elements
 {
-    if(element.symbol.size())
-        m_elements[element.symbol] = element;
-}
+    auto pred = [&](const Element& element)
+    {
+        return element.name() == attribute
+            || element.symbol() == attribute
+            || element.tags().count(attribute);
+    };
 
-auto Elements::remove(std::string symbol) -> void
-{
-    auto it = m_elements.find(symbol);
-    if(it != m_elements.end())
-        m_elements.erase(it);
+    std::list<Element> newdata = data();
+    newdata.remove_if(pred);
+
+    return Elements(newdata);
 }
 
 } // namespace Atomik

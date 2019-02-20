@@ -34,23 +34,27 @@ public:
     /// Construct a default Elements object.
     Elements();
 
+    /// Construct an Elements object with given collection of Element objects.
+    Elements(const std::list<Element>& data);
+
     /// Return the element attributes for a given element symbol.
     /// @param symbol The symbol of the chemical element (e.g., H, O, C, Ca, Na)
     /// @return A non-empty Element object if symbol is found, otherwise, an empty object.
     auto operator()(std::string symbol) const -> Element;
 
-    /// Return all elements stored in the database.
+    /// Return all elements in the container.
     auto data() const -> std::list<Element>;
 
-    /// Clear the database removing all stored elements.
-    auto clear() -> void;
+    /// Return the number of chemical elements in the container.
+    auto size() const -> std::size_t;
 
-    /// Append a new custom element into the database.
-    auto append(const ElementData& element) -> void;
+    /// Return a copy of this Elements object with only the chemical elements with a given attribute.
+    /// @param attribute Either the symbol, name, or a tag of the chemical element(s) to be filtered.
+    auto filter(std::string attribute) const -> Elements;
 
-    /// Remove an existing element from the database.
-    /// @param symbol The symbol of the chemical element (e.g., H, O, C, Ca, Na)
-    auto remove(std::string symbol) -> void;
+    /// Return a copy of this Elements object without chemical elements with a given attribute.
+    /// @param attribute Either the symbol, name, or a tag of the chemical element(s) to be removed.
+    auto remove(std::string attribute) const -> Elements;
 
 private:
     /// The chemical elements stored in the database.
