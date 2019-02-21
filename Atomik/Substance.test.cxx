@@ -16,7 +16,7 @@
 // along with this library. If not, see <http://www.gnu.org/licenses/>.
 
 // Catch includes
-#include <catch/catch.hpp>
+#include <catch2/catch.hpp>
 
 // Atomik includes
 #include <Atomik/Atomik.hpp>
@@ -129,9 +129,10 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE_THROWS(Substance("CaCO3").name("CALCIUM CARBONATE")); // runtime error if substance name has space
     REQUIRE_THROWS(Substance("CaCO3").uid("CaCO3 calcite")); // runtime error if substance uid has space
 
-    Elements elements;
-    elements.append({"Aa"});
-    elements.append({"Bb"});
+    Elements elements({
+        Element({"Aa"})
+        Element({"Bb"})
+    });
 
     substance = Substance("AaBb2+", elements);
     REQUIRE(substance.uid() == "AaBb2+");
