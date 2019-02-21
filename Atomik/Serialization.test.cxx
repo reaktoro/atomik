@@ -16,7 +16,7 @@
 // along with this library. If not, see <http://www.gnu.org/licenses/>.
 
 // Catch includes
-#include <catch/catch.hpp>
+#include <catch2/catch.hpp>
 
 // C++ includes
 #include <sstream>
