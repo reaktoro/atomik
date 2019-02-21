@@ -21,6 +21,10 @@
 #include <string>
 #include <unordered_map>
 
+// Atomik includes
+#include <Atomik/Element.hpp>
+#include <Atomik/Elements.hpp>
+
 namespace Atomik {
 
 /// A type used to represent a chemical formula.
@@ -46,36 +50,56 @@ namespace Atomik {
 class ChemicalFormula
 {
 public:
-    /// Construct a default ChemicalFormula object.
-    ChemicalFormula();
+    /// Construct a ChemicalFormula object.
+    /// @param formula A string such as `H2O`, `CaCO3`, `(CaMg)(CO3)2`.
+    explicit ChemicalFormula(std::string formula);
 
-    /// Construct a ChemicalFormula object with given chemical formula.
-    ChemicalFormula(std::string formula);
-
-    /// Construct a ChemicalFormula object with given chemical formula.
-    ChemicalFormula(const char* formula);
-
-    /// Return the chemical formula string.
-    auto str() const -> std::string;
+    /// Construct a ChemicalFormula object with custom database of elements.
+    /// @param formula A string such as `H2O`, `CaCO3`, `(CaMg)(CO3)2`.
+    /// @param edb A database of elements if the default one is not applicable..
+    ChemicalFormula(std::string formula, const Elements& edb);
 
     /// Return the elements in the chemical formula and their coefficients.
-    auto elements() const -> std::unordered_map<std::string, double>;
+    auto elements() const -> const Elements&;
 
-    /// Return the electric charge of the chemical formula.
-    auto charge() const -> double;
+    /// Return the elements in the chemical formula and their coefficients.
+    auto coefficients() const -> const std::vector<double>&;
 
     /// Return the coefficient of an element symbol in the chemical formula.
     auto coefficient(std::string symbol) const -> double;
 
-    /// Convert this ChemicalFormula object into a std::string.
+    /// Return the electric charge of the chemical formula.
+    auto charge() const -> double;
+
+    /// Return the molar mass of the chemical formula (in kg/mol).
+    auto molarMass() const -> double;
+
+    /// Return the chemical formula as a string.
+    auto str() const -> std::string;
+
+    /// Convert this ChemicalFormula object into a string.
     operator std::string() const;
+
+    /// Parse a chemical formula.
+    /// This method only requires that element names follow the convention
+    /// that its first letter is uppercase and all others in lowercase.
+    /// Thus, even chemical formulas such as `AaBbb` or `(Aa2Bbb4)Cc6` are supported.
+    /// @param formula A string such as `H2O`, `CaCO3`, `(CaMg)(CO3)2`.
+    /// @return An unordered map such as `{ {"Ca", 1}, {"C", 1}, {"O", 3} }` for `CaCO3`.
+    static auto parse(std::string formula) -> std::unordered_map<std::string, double>;
 
 private:
     /// The chemical formula as a string.
     std::string m_formula;
 
-    /// The elements in the chemical formula and their coefficients.
-    std::unordered_map<std::string, double> m_elements;
+    /// The elements in the chemical formula.
+    Elements m_elements;
+
+    /// The coefficients of the elements in the chemical formula such a {1, 2} for CO2.
+    std::vector<double> m_coefficients;
+
+    /// The molar mass of the chemical formula (in kg/mol).
+    double m_molar_mass;
 
     /// The electrical charge of the chemical formula.
     double m_charge;

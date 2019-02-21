@@ -246,4 +246,9 @@ auto equivalent(const ChemicalFormula& lhs, const ChemicalFormula& rhs) -> bool
     return lhs.elements() == rhs.elements() && lhs.charge() == rhs.charge();
 }
 
+auto ChemicalFormula::parse(std::string formula) -> std::unordered_map<std::string, double>
+{
+    return internal::parseFormula(formula);
+}
+
 } // namespace Atomik
