@@ -22,9 +22,13 @@
 #include <exception>
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
+using std::pair;
 using std::string;
 using std::unordered_map;
-using std::pair;
+
+// Atomik includes
+#include <Atomik/Utils.hpp>
 
 namespace Atomik {
 namespace internal {
@@ -114,15 +118,6 @@ auto parseFormula(string::iterator begin, string::iterator end, unordered_map<st
     }
 }
 
-auto parseFormula(std::string formula) -> std::unordered_map<std::string, double>
-{
-    std::unordered_map<std::string, double> result;
-
-    parseFormula(formula.begin(), formula.end(), result, 1.0);
-
-    return result;
-}
-
 auto parseChargeModeSignNumber(std::string formula) -> double
 {
     std::size_t ipos = formula.find_last_of('+');
@@ -189,30 +184,58 @@ auto parseCharge(std::string formula) -> double
     return 0.0;
 }
 
+auto parseFormula(std::string formula) -> std::unordered_map<std::string, double>
+{
+    std::unordered_map<std::string, double> result;
+
+    // Parse the formula for elements and their coefficients (without charge)
+    parseFormula(formula.begin(), formula.end(), result, 1.0);
+
+    // Get the charge of the formula
+    auto charge = parseCharge(formula);
+
+    // Check if the formula contains charge
+    if(charge)
+        result.insert({"Z", charge});
+
+    return result;
+}
+
 } // namespace internal
 
 ChemicalFormula::ChemicalFormula()
 {}
 
+ChemicalFormula::ChemicalFormula(const char* formula)
+: m_formula(formula)
+{
+    // Initialize the element symbols and coefficients
+    const auto pairs = internal::parseFormula(formula);
+    m_elements.reserve(pairs.size());
+    m_coefficients.resize(pairs.size());
+
+    for(auto&& [symbol, coeff] : pairs)
+    {
+        m_coefficients[m_elements.size()] = coeff;
+        m_elements.push_back(symbol);
+    }
+
+    // Initialize the charge of the formula
+    m_charge = internal::parseCharge(formula);
+}
+
 ChemicalFormula::ChemicalFormula(std::string formula)
 : ChemicalFormula(formula.c_str())
 {}
 
-ChemicalFormula::ChemicalFormula(const char* formula)
-{
-    m_formula = formula;
-    m_elements = internal::parseFormula(formula);
-    m_charge = internal::parseCharge(formula);
-}
-
-auto ChemicalFormula::str() const -> std::string
-{
-    return m_formula;
-}
-
-auto ChemicalFormula::elements() const -> std::unordered_map<std::string, double>
+auto ChemicalFormula::elements() const -> std::vector<std::string> const&
 {
     return m_elements;
+}
+
+auto ChemicalFormula::coefficients() const -> std::valarray<double> const&
+{
+    return m_coefficients;
 }
 
 auto ChemicalFormula::charge() const -> double
@@ -222,8 +245,13 @@ auto ChemicalFormula::charge() const -> double
 
 auto ChemicalFormula::coefficient(std::string symbol) const -> double
 {
-    const auto it = m_elements.find(symbol);
-    return it != m_elements.end() ? it->second : 0.0;
+    auto i = index(m_elements, symbol);
+    return i < m_elements.size() ? m_coefficients[i] : 0.0;
+}
+
+auto ChemicalFormula::str() const -> std::string
+{
+    return m_formula;
 }
 
 ChemicalFormula::operator std::string() const
@@ -244,11 +272,6 @@ auto operator==(const ChemicalFormula& lhs, const ChemicalFormula& rhs) -> bool
 auto equivalent(const ChemicalFormula& lhs, const ChemicalFormula& rhs) -> bool
 {
     return lhs.elements() == rhs.elements() && lhs.charge() == rhs.charge();
-}
-
-auto ChemicalFormula::parse(std::string formula) -> std::unordered_map<std::string, double>
-{
-    return internal::parseFormula(formula);
 }
 
 } // namespace Atomik

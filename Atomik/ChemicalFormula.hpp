@@ -19,17 +19,18 @@
 
 // C++ includes
 #include <string>
-#include <unordered_map>
-
-// Atomik includes
-#include <Atomik/Element.hpp>
-#include <Atomik/Elements.hpp>
+#include <valarray>
+#include <vector>
 
 namespace Atomik {
 
-/// A type used to represent a chemical formula.
-/// The chemical formula of a formula can be represented by a string with the following formats:
+/// A type used to represent the chemical formula of a substance.
+/// The chemical formula of a substance follows the convention
+/// that its first letter is uppercase and all others in lowercase.
+/// Thus, even chemical formulas such as `AaBbb` or `(Aa2Bbb4)Cc6` are supported.
+/// Below are some examples of chemical formulas of interest:
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/// using namespace Atomik;
 /// ChemicalFormula formula01("H2O");
 /// ChemicalFormula formula02("CaCl2");
 /// ChemicalFormula formula03("MgCO3");
@@ -42,37 +43,38 @@ namespace Atomik {
 /// ChemicalFormula formula10("CO3--");
 /// ChemicalFormula formula11("CO3-2");
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/// There are two ways of specifying the electric charge of the substance:
+/// Above we see some formulas for substances with electric charge.
+/// There are two ways of specifying the electric charge in the formula:
 ///   1. as a suffix containing as many symbols `+` and `-` as there are charges (e.g., `Fe+++`, `Ca++`, `CO3--`); or
 ///   2. as a suffix containing the symbol `+` or `-` followed by the number of charges (e.g., `Fe+3`, `Ca+2`, `Na+`)
-/// Note that number 1 is optional for the second formart.
-/// In both formats, the symbol `+` is used for positively charged substances, and `-` for negatively charged ones.
+/// Note that the number 1 is optional for the second format (e.g., `Na+` and `Na+1` are equivalent).
+/// In both formats (1) and (2), the symbol `+` is used for positively charged substances, and `-` for negatively charged ones.
 class ChemicalFormula
 {
 public:
+    /// Construct a default ChemicalFormula object.
+    ChemicalFormula();
+
     /// Construct a ChemicalFormula object.
     /// @param formula A string such as `H2O`, `CaCO3`, `(CaMg)(CO3)2`.
-    explicit ChemicalFormula(std::string formula);
+    ChemicalFormula(const char* formula);
 
-    /// Construct a ChemicalFormula object with custom database of elements.
+    /// Construct a ChemicalFormula object.
     /// @param formula A string such as `H2O`, `CaCO3`, `(CaMg)(CO3)2`.
-    /// @param edb A database of elements if the default one is not applicable..
-    ChemicalFormula(std::string formula, const Elements& edb);
+    ChemicalFormula(std::string formula);
 
-    /// Return the elements in the chemical formula and their coefficients.
-    auto elements() const -> const Elements&;
+    /// Return the elements and their coefficients in the chemical formula.
+    auto elements() const -> std::vector<std::string> const&;
 
-    /// Return the elements in the chemical formula and their coefficients.
-    auto coefficients() const -> const std::vector<double>&;
+    /// Return the coefficients of the elements in the chemical formula.
+    auto coefficients() const -> std::valarray<double> const&;
 
-    /// Return the coefficient of an element symbol in the chemical formula.
+    /// Return the coefficient of an element in the chemical formula.
+    /// @param symbol The symbol of the element.
     auto coefficient(std::string symbol) const -> double;
 
     /// Return the electric charge of the chemical formula.
     auto charge() const -> double;
-
-    /// Return the molar mass of the chemical formula (in kg/mol).
-    auto molarMass() const -> double;
 
     /// Return the chemical formula as a string.
     auto str() const -> std::string;
@@ -80,28 +82,17 @@ public:
     /// Convert this ChemicalFormula object into a string.
     operator std::string() const;
 
-    /// Parse a chemical formula.
-    /// This method only requires that element names follow the convention
-    /// that its first letter is uppercase and all others in lowercase.
-    /// Thus, even chemical formulas such as `AaBbb` or `(Aa2Bbb4)Cc6` are supported.
-    /// @param formula A string such as `H2O`, `CaCO3`, `(CaMg)(CO3)2`.
-    /// @return An unordered map such as `{ {"Ca", 1}, {"C", 1}, {"O", 3} }` for `CaCO3`.
-    static auto parse(std::string formula) -> std::unordered_map<std::string, double>;
-
 private:
     /// The chemical formula as a string.
     std::string m_formula;
 
     /// The elements in the chemical formula.
-    Elements m_elements;
+    std::vector<std::string> m_elements;
 
     /// The coefficients of the elements in the chemical formula such a {1, 2} for CO2.
-    std::vector<double> m_coefficients;
+    std::valarray<double> m_coefficients;
 
-    /// The molar mass of the chemical formula (in kg/mol).
-    double m_molar_mass;
-
-    /// The electrical charge of the chemical formula.
+    /// The electric charge of the chemical formula.
     double m_charge;
 };
 
@@ -111,7 +102,9 @@ auto operator<(const ChemicalFormula& lhs, const ChemicalFormula& rhs) -> bool;
 /// Compare two ChemicalFormula objects for equality
 auto operator==(const ChemicalFormula& lhs, const ChemicalFormula& rhs) -> bool;
 
-/// Return true if two chemical formulas have the same charge and elemental composition (e.g., `Ca++` and `Ca+2`).
+/// Return true if two chemical formulas are equivalent.
+/// Equivalency is defined as two formulas with the same elemental composition.
+/// For example, `Ca++` and `Ca+2`; and `CaCO3` and `Ca(CO3)`.
 auto equivalent(const ChemicalFormula& lhs, const ChemicalFormula& rhs) -> bool;
 
 } // namespace Atomik
