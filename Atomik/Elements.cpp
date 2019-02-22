@@ -26,6 +26,7 @@ namespace internal {
 /// The map of element symbol to element data.
 const std::vector<Element> elements =
 {
+    Element({ "Z" ,  "Charge"        , 0   , 0.000000000 , 0.00 }),
     Element({ "H"  , "Hydrogen"      , 1   , 0.001007940 , 2.20 }),
     Element({ "He" , "Helium"        , 2   , 0.004002602 , 0.00 }),
     Element({ "Li" , "Lithium"       , 3   , 0.006941000 , 0.98 }),
