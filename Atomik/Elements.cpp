@@ -20,11 +20,14 @@
 // C++ includes
 #include <algorithm>
 
+// Atomik includes
+#include <Atomik/Utils.hpp>
+
 namespace Atomik {
 namespace internal {
 
-/// The map of element symbol to element data.
-const std::vector<Element> elements =
+/// The chemical elements from the periodic table.
+const std::vector<Element> elements_from_periodic_table =
 {
     Element({ "Z" ,  "Charge"        , 0   , 0.000000000 , 0.00 }),
     Element({ "H"  , "Hydrogen"      , 1   , 0.001007940 , 2.20 }),
@@ -150,14 +153,13 @@ const std::vector<Element> elements =
 } // namespace internal
 
 Elements::Elements()
-: Elements(internal::elements)
 {}
 
 Elements::Elements(std::vector<Element> elements)
 : m_elements(std::move(elements))
 {}
 
-auto Elements::operator()(std::string symbol) const -> const Element&
+auto Elements::get(std::string symbol) const -> const Element&
 {
     return m_elements.at(index(symbol));
 }
@@ -174,36 +176,36 @@ auto Elements::index(std::string symbol) const -> std::size_t
 
 auto Elements::indexWithSymbol(std::string symbol) const -> std::size_t
 {
-    const auto has_symbol = [&](const Element& element)
-    {
+    const auto has_symbol = [&](const Element& element) {
         return element.symbol() == symbol;
     };
-    return std::find_if(data().begin(), data().end(), has_symbol) - data().begin();
+    return indexfn(data(), has_symbol);
 }
 
 auto Elements::indexWithName(std::string name) const -> std::size_t
 {
-    const auto has_name = [&](const Element& element)
-    {
+    const auto has_name = [&](const Element& element) {
         return element.name() == name;
     };
-    return std::find_if(data().begin(), data().end(), has_name) - data().begin();
+    return indexfn(data(), has_name);
 }
 
 auto Elements::withTag(std::string tag) const -> Elements
 {
-    const auto has_tag = [&](const Element& element)
-    {
+    const auto has_tag = [&](const Element& element) {
         return element.tags().count(tag);
     };
-    auto copy = data();
-    std::remove_if(copy.begin(), copy.end(), has_tag);
-    return Elements(copy);
+    return Elements(filter(data(), has_tag));
 }
 
 auto Elements::data() const -> const std::vector<Element>&
 {
     return m_elements;
+}
+
+auto Elements::PeriodicTable() -> Elements
+{
+    return Elements(internal::elements_from_periodic_table);
 }
 
 } // namespace Atomik

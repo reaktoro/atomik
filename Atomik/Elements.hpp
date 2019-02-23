@@ -40,7 +40,7 @@ public:
     /// @param symbol An element symbol such as `H`, `O`, `C`, `Ca`, `Na`.
     /// @return The Element object with given symbol if found.
     /// @throw std::out_of_range In case there is no Element object with given symbol.
-    auto operator()(std::string symbol) const -> const Element&;
+    auto get(std::string symbol) const -> const Element&;
 
     /// Return the number of chemical elements in the collection.
     auto size() const -> std::size_t;
@@ -59,6 +59,9 @@ public:
 
     /// Return the internal collection of Element objects.
     auto data() const -> const std::vector<Element>&;
+
+    /// Return all chemical elements from the periodic table.
+    static auto PeriodicTable() -> Elements;
 
 private:
     /// The chemical elements stored in the database.
