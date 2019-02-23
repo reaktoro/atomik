@@ -23,15 +23,29 @@
 namespace Atomik {
 
 template <typename Container, typename T>
-auto index(Container const& c, T const& value)
+auto index(const Container& c, const T& value)
 {
     return std::find(c.begin(), c.end(), value) - c.begin();
 }
 
 template <typename Container, typename Predicate>
-auto indexfn(Container const& c, Predicate const& pred)
+auto indexfn(const Container& c, const Predicate& pred)
 {
     return std::find_if(c.begin(), c.end(), pred) - c.begin();
+}
+
+template <typename Container, typename Predicate>
+auto filter(const Container& c, const Predicate& pred)
+{
+    Container res;
+    std::copy_if(c.begin(), c.end(), std::back_inserter(res), pred);
+    return res;
+}
+
+template <typename Container, typename Predicate>
+auto remove(const Container& c, const Predicate& pred)
+{
+    return filter(c, [&](auto&& x) { return !pred(x); });
 }
 
 } // namespace Atomik
