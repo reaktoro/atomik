@@ -63,11 +63,11 @@ public:
     /// @param formula A string such as `H2O`, `CaCO3`, `(CaMg)(CO3)2`.
     ChemicalFormula(std::string formula);
 
-    /// Return the elements and their coefficients in the chemical formula.
-    auto elements() const -> std::vector<std::string> const&;
+    /// Return the symbols of the elements in the chemical formula.
+    auto symbols() const -> const std::vector<std::string>&;
 
     /// Return the coefficients of the elements in the chemical formula.
-    auto coefficients() const -> std::valarray<double> const&;
+    auto coefficients() const -> const std::valarray<double>&;
 
     /// Return the coefficient of an element in the chemical formula.
     /// @param symbol The symbol of the element.
@@ -86,8 +86,8 @@ private:
     /// The chemical formula as a string.
     std::string m_formula;
 
-    /// The elements in the chemical formula.
-    std::vector<std::string> m_elements;
+    /// The symbols of the elements in the chemical formula such a {"C", "O"} for CO2.
+    std::vector<std::string> m_symbols;
 
     /// The coefficients of the elements in the chemical formula such a {1, 2} for CO2.
     std::valarray<double> m_coefficients;

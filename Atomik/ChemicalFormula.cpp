@@ -211,13 +211,13 @@ ChemicalFormula::ChemicalFormula(const char* formula)
 {
     // Initialize the element symbols and coefficients
     const auto pairs = internal::parseFormula(formula);
-    m_elements.reserve(pairs.size());
+    m_symbols.reserve(pairs.size());
     m_coefficients.resize(pairs.size());
 
     for(auto&& [symbol, coeff] : pairs)
     {
-        m_coefficients[m_elements.size()] = coeff;
-        m_elements.push_back(symbol);
+        m_coefficients[m_symbols.size()] = coeff;
+        m_symbols.push_back(symbol);
     }
 
     // Initialize the charge of the formula
@@ -228,12 +228,12 @@ ChemicalFormula::ChemicalFormula(std::string formula)
 : ChemicalFormula(formula.c_str())
 {}
 
-auto ChemicalFormula::elements() const -> std::vector<std::string> const&
+auto ChemicalFormula::symbols() const -> const std::vector<std::string>&
 {
-    return m_elements;
+    return m_symbols;
 }
 
-auto ChemicalFormula::coefficients() const -> std::valarray<double> const&
+auto ChemicalFormula::coefficients() const -> const std::valarray<double>&
 {
     return m_coefficients;
 }
@@ -245,8 +245,8 @@ auto ChemicalFormula::charge() const -> double
 
 auto ChemicalFormula::coefficient(std::string symbol) const -> double
 {
-    auto i = index(m_elements, symbol);
-    return i < m_elements.size() ? m_coefficients[i] : 0.0;
+    auto i = index(m_symbols, symbol);
+    return i < m_symbols.size() ? m_coefficients[i] : 0.0;
 }
 
 auto ChemicalFormula::str() const -> std::string
@@ -266,12 +266,12 @@ auto operator<(const ChemicalFormula& lhs, const ChemicalFormula& rhs) -> bool
 
 auto operator==(const ChemicalFormula& lhs, const ChemicalFormula& rhs) -> bool
 {
-    return lhs.str() == rhs.str();
+    return lhs.symbols() == rhs.symbols() && (lhs.coefficients() == rhs.coefficients()).min();
 }
 
 auto equivalent(const ChemicalFormula& lhs, const ChemicalFormula& rhs) -> bool
 {
-    return lhs.elements() == rhs.elements() && lhs.charge() == rhs.charge();
+    return lhs.symbols() == rhs.symbols() && (lhs.coefficients() == rhs.coefficients()).min();
 }
 
 } // namespace Atomik
