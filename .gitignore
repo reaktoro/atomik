@@ -4,6 +4,9 @@ build/
 # Conda related files
 environment.yml
 
+# vscode files
+.vscode/
+
 # Eclipse files
 .cproject
 .project
@@ -41,3 +44,4 @@ environment.yml
 *.exe
 *.out
 *.app
+.vscode/settings.json
