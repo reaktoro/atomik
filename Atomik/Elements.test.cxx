@@ -20,6 +20,7 @@
 
 // Atomik includes
 #include <Atomik/Elements.hpp>
+#include <Atomik/StringList.hpp>
 using namespace Atomik;
 
 TEST_CASE("Testing Elements", "[Elements]")
@@ -171,4 +172,48 @@ TEST_CASE("Testing Elements", "[Elements]")
     REQUIRE(elements.get("Lv").name() == "Livermorium");
     REQUIRE(elements.get("Ts").name() == "Tennessine");
     REQUIRE(elements.get("Og").name() == "Oganesson");
+
+    // Test the filtering methods
+    Elements filtered;
+
+    filtered = elements.withSymbols("H O Na Cl");
+
+    REQUIRE(filtered.size() == 4);
+    REQUIRE(filtered.index("H") == 0);
+    REQUIRE(filtered.index("O") == 1);
+    REQUIRE(filtered.index("Na") == 2);
+    REQUIRE(filtered.index("Cl") == 3);
+
+    filtered = elements.withNames("Hydrogen Oxygen Sodium Chlorine");
+
+    REQUIRE(filtered.size() == 4);
+    REQUIRE(filtered.index("H") == 0);
+    REQUIRE(filtered.index("O") == 1);
+    REQUIRE(filtered.index("Na") == 2);
+    REQUIRE(filtered.index("Cl") == 3);
+
+    elements = Elements({
+        Element()
+            .withSymbol("Aa")
+            .withTags({"tag1", "tag2", "tag3"}),
+        Element()
+            .withSymbol("Bb")
+            .withTags({"tag1", "tag3"}),
+        Element()
+            .withSymbol("Cc")
+            .withTags({"tag1"})
+    });
+
+    filtered = elements.withTag("tag1");
+
+    REQUIRE(filtered.size() == 3);
+    REQUIRE(filtered[0].symbol() == "Aa");
+    REQUIRE(filtered[1].symbol() == "Bb");
+    REQUIRE(filtered[2].symbol() == "Cc");
+
+    filtered = elements.withTags({"tag3", "tag1"});
+
+    REQUIRE(filtered.size() == 2);
+    REQUIRE(filtered[0].symbol() == "Aa");
+    REQUIRE(filtered[1].symbol() == "Bb");
 }

@@ -21,6 +21,7 @@
 #include <algorithm>
 
 // Atomik includes
+#include <Atomik/StringList.hpp>
 #include <Atomik/Utils.hpp>
 
 namespace Atomik {
@@ -159,14 +160,29 @@ Elements::Elements(std::vector<Element> elements)
 : m_elements(std::move(elements))
 {}
 
-auto Elements::get(std::string symbol) const -> const Element&
+auto Elements::data() const -> const std::vector<Element>&
 {
-    return m_elements.at(index(symbol));
+    return m_elements;
 }
 
 auto Elements::size() const -> std::size_t
 {
-    return m_elements.size();
+    return data().size();
+}
+
+auto Elements::operator[](std::size_t index) const -> const Element&
+{
+    return data()[index];
+}
+
+auto Elements::at(std::size_t index) const -> const Element&
+{
+    return data().at(index);
+}
+
+auto Elements::get(std::string symbol) const -> const Element&
+{
+    return at(index(symbol));
 }
 
 auto Elements::index(std::string symbol) const -> std::size_t
@@ -190,17 +206,41 @@ auto Elements::indexWithName(std::string name) const -> std::size_t
     return indexfn(data(), has_name);
 }
 
+auto Elements::withSymbols(const StringList& symbols) const -> Elements
+{
+    const auto has_required_symbol = [&](const Element& element) {
+        return contains(symbols, element.symbol());
+    };
+    return Elements(filter(data(), has_required_symbol));
+}
+
+auto Elements::withNames(const StringList& names) const -> Elements
+{
+    const auto has_required_name = [&](const Element& element) {
+        return contains(names, element.name());
+    };
+    return Elements(filter(data(), has_required_name));
+}
+
 auto Elements::withTag(std::string tag) const -> Elements
 {
     const auto has_tag = [&](const Element& element) {
-        return element.tags().count(tag);
+        return contains(element.tags(), tag);
     };
     return Elements(filter(data(), has_tag));
 }
 
-auto Elements::data() const -> const std::vector<Element>&
+auto Elements::withTags(const StringList& tags) const -> Elements
 {
-    return m_elements;
+    const auto has_tags = [&](const Element& element) {
+        return contained(tags, element.tags());
+    };
+    return Elements(filter(data(), has_tags));
+}
+
+auto Elements::append(Element element) -> void
+{
+    m_elements.emplace_back(std::move(element));
 }
 
 auto Elements::PeriodicTable() -> Elements

@@ -26,7 +26,10 @@
 
 namespace Atomik {
 
-/// A type used as a database of chemical elements.
+// Forward declarations
+class StringList;
+
+/// A type used as a collection of chemical elements.
 class Elements
 {
 public:
@@ -36,14 +39,24 @@ public:
     /// Construct an Elements object with given data.
     explicit Elements(std::vector<Element> elements);
 
+    /// Return the internal collection of Element objects.
+    auto data() const -> const std::vector<Element>&;
+
+    /// Return the number of chemical elements in the collection.
+    auto size() const -> std::size_t;
+
+    /// Return the Element object with given index.
+    auto operator[](std::size_t index) const -> const Element&;
+
+    /// Return the Element object with given index.
+    /// @throw std::out_of_range In case the index is out of bounds.
+    auto at(std::size_t index) const -> const Element&;
+
     /// Return the first Element object with a given symbol.
     /// @param symbol An element symbol such as `H`, `O`, `C`, `Ca`, `Na`.
     /// @return The Element object with given symbol if found.
     /// @throw std::out_of_range In case there is no Element object with given symbol.
     auto get(std::string symbol) const -> const Element&;
-
-    /// Return the number of chemical elements in the collection.
-    auto size() const -> std::size_t;
 
     /// Return the index of a chemical element with given symbol.
     auto index(std::string symbol) const -> std::size_t;
@@ -54,11 +67,32 @@ public:
     /// Return the index of a chemical element with given name.
     auto indexWithName(std::string name) const -> std::size_t;
 
+    /// Return the chemical elements with given symbols.
+    auto withSymbols(const StringList& symbols) const -> Elements;
+
+    /// Return the chemical elements with given names.
+    auto withNames(const StringList& names) const -> Elements;
+
     /// Return the chemical elements with a given tag.
     auto withTag(std::string tag) const -> Elements;
 
-    /// Return the internal collection of Element objects.
-    auto data() const -> const std::vector<Element>&;
+    /// Return the chemical elements with given tags.
+    auto withTags(const StringList& tags) const -> Elements;
+
+    /// Append a new element to the list of elements.
+    auto append(Element element) -> void;
+
+    /// Return begin const iterator of this Elements instance
+    inline auto begin() const { return data().begin(); }
+
+    /// Return begin iterator of this Elements instance
+    inline auto begin() { return data().begin(); }
+
+    /// Return end const iterator of this Elements instance
+    inline auto end() const { return data().end(); }
+
+    /// Return end iterator of this Elements instance
+    inline auto end() { return data().end(); }
 
     /// Return all chemical elements from the periodic table.
     static auto PeriodicTable() -> Elements;
@@ -67,11 +101,5 @@ private:
     /// The chemical elements stored in the database.
     std::vector<Element> m_elements;
 };
-
-// Methods to enable for range loops
-inline auto begin(const Elements& elements) { return elements.data().begin(); }
-inline auto begin(Elements& elements) { return elements.data().begin(); }
-inline auto end(const Elements& elements) { return elements.data().end(); }
-inline auto end(Elements& elements) { return elements.data().end(); }
 
 } // namespace Atomik
