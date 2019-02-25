@@ -18,30 +18,35 @@
 #pragma once
 
 // C++ includes
+#include <any>
+#include <memory>
+#include <set>
 #include <string>
 #include <vector>
 
-// Atomik includes
-#include <Atomik/ChemicalFormula.hpp>
-#include <Atomik/Element.hpp>
-#include <Atomik/Elements.hpp>
-
 namespace Atomik {
 
-/// A type used to define attributes of chemical substances.
-struct SubstanceData
-{
-    /// The chemical formula of the substance such as `"H2O"`, `"O2"`, `"H+"`.
-    ChemicalFormula formula;
+// Forward declarations
+class ChemicalFormula;
+class Elements;
 
-    /// The name of the substance such as `"H2O(aq)"`, `"O2(g)"`, `"H+(aq)"`.
+/// A type used to define basic attributes of chemical substances.
+struct SubstanceAttributes
+{
+    /// The chemical formula of the substance such as `H2O`, `O2`, `H+`.
+    std::string formula;
+
+    /// The name of the substance such as `H2O(aq)`, `O2(g)`, `H+(aq)`.
     std::string name;
 
-    /// The elements of the substance and their coefficients.
-    std::vector<std::pair<Element, double>> elements;
+    /// The type of the substance such as `aqueous`, `liquid`, `gaseous`, `solid`, etc..
+    std::string type;
 
-    /// The tags of the chemical substance such as `"aqueous"`, `"mineral"`, `"organic"`.
+    /// The tags of the substance such as `organic`, `mineral`.
     std::set<std::string> tags;
+
+    /// The extra attributes a substance might have.
+    std::any extra;
 };
 
 /// A type used to represent a chemical substance and its attributes.
@@ -81,39 +86,52 @@ public:
     /// Construct a default Substance object.
     Substance();
 
-    /// Construct a Substance object with a given chemical formula.
+    /// Construct a Substance object with given chemical formula.
     /// A default database of chemical elements is used to construct the elements composing the substance.
-    /// @param formula The chemical formula of the substance (e.g., `H2O`, `CaCO3`, `CO3--`, `CO3-2`).
-    /// @param elementdb The database of chemical elements (if not the default).
-    Substance(ChemicalFormula formula, const Elements& elementdb = {});
+    /// @param formula The formula of the substance (e.g., `H2O`, `CaCO3`, `CO3--`, `CO3-2`).
+    Substance(std::string formula);
 
-    /// Construct a Substance object with a given chemical formula.
+    /// Construct a Substance object with given chemical formula and database of elements.
+    /// @param formula The formula of the substance (e.g., `H2O`, `CaCO3`, `CO3--`, `CO3-2`).
+    /// @param db The database of chemical elements (if the default is insufficient).
+    Substance(std::string formula, const Elements& db);
+
+    /// Construct a Substance object with given attributes.
     /// A default database of chemical elements is used to construct the elements composing the substance.
-    /// @param formula The chemical formula of the substance (e.g., `H2O`, `CaCO3`, `CO3--`, `CO3-2`).
-    /// @param name The name of the chemical substance (e.g., `H2O(aq)`, `CaCO3(calcite)`, `CO3--(aq)`, `CO3-2(aq)`).
-    /// @param elementdb The database of chemical elements (if not the default).
-    Substance(ChemicalFormula formula, std::string name, const Elements& elementdb = {});
+    /// @param attributes The basic attributes of the substance.
+    Substance(SubstanceAttributes attributes);
 
-    /// Set the unique identifier (uid) of the substance.
-    /// The uid of a substance exists to differentiate substances with same name and formula
-    /// but existing under different aggregate states. For example, the uid of substance carbon
-    /// dioxide, with name `CARBON-DIOXIDE` and formula `CO2`, could be set to `CO2(aq)` and `CO2(g)`
-    /// to distinguish carbon dioxide in an aqueous state (aq) and in a gaseous state (g).
-    /// @param uid The uid of the substance (e.g., `CO2(aq)`, `CaCO3(calcite)`)
-    auto uid(std::string uid) -> Substance&;
+    /// Construct a Substance object with given attributes abd database of elements.
+    /// @param attributes The basic attributes of the substance.
+    /// @param db The database of chemical elements (if the default is insufficient).
+    Substance(SubstanceAttributes attributes, const Elements& db);
 
-    /// Return the symbol, or unique identifier, of the chemical substance.
-    auto symbol() const -> std::string;
-
-    /// Return the name of the substance.
-    /// @return The name of the substance if provided, otherwise, its chemical formula.
+    /// Return the name of the substance if provided, otherwise, its formula.
     auto name() const -> std::string;
 
     /// Return the chemical formula of the substance.
     auto formula() const -> const ChemicalFormula&;
 
-    /// Return the elements of the substance and their coefficients.
-    auto elements() const -> const std::vector<std::pair<Element, double>>&;
+    /// Return the type of the substance (e.g., `aqueous`, `liquid`, `gaseous`, `solid`).
+    auto type() const -> std::string;
+
+    /// Return the tags of the substance (e.g., `organic`, `mineral`).
+    auto tags() const -> const std::set<std::string>&;
+
+    /// Return the extra attributes a substance might have.
+    auto extra() const -> const std::any&;
+
+    /// Return the elements of the substance.
+    auto elements() const -> const Elements&;
+
+    /// Return the symbols of the elements in the substance.
+    auto symbols() const -> const std::vector<std::string>&;
+
+    /// Return the coefficients of the elements in the substance.
+    auto coefficients() const -> const std::valarray<double>&;
+
+    /// Return the coefficient of an element symbol in the substance.
+    auto coefficient(std::string symbol) const -> double;
 
     /// Return the electric charge of the substance.
     auto charge() const -> double;
@@ -121,24 +139,22 @@ public:
     /// Return the molar mass of the substance (in unit of kg/mol).
     auto molarMass() const -> double;
 
-    /// Return the coefficient of an element in the substance.
-    auto coefficient(std::string symbol) const -> double;
+    /// Return a duplicate of this Substance object with given formula.
+    auto withFormula(std::string formula) -> Substance;
+
+    /// Return a duplicate of this Substance object with given name.
+    auto withName(std::string name) -> Substance;
+
+    /// Return a duplicate of this Substance object with given type.
+    auto withType(std::string type) -> Substance;
+
+    /// Return a duplicate of this Substance object with given tags.
+    auto withTags(std::set<std::string> tags) -> Substance;
 
 private:
-    /// The unique identifier of the substance.
-    std::string m_uid;
+    struct Impl;
 
-    /// The name of the substance.
-    std::string m_name;
-
-    /// The chemical formula of the substance.
-    ChemicalFormula m_formula;
-
-    /// The elements of the substance and their coefficients.
-    std::vector<std::pair<Element, double>> m_elements;
-
-    /// The molar mass of the substance (in unit of kg/mol).
-    double m_molarmass;
+    std::shared_ptr<Impl> pimpl;
 };
 
 /// Compare two Substance objects for less than

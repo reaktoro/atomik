@@ -19,128 +19,147 @@
 #include <catch2/catch.hpp>
 
 // Atomik includes
+#include <Atomik/ChemicalFormula.hpp>
+#include <Atomik/Elements.hpp>
+#include <Atomik/Extract.hpp>
 #include <Atomik/Substance.hpp>
 using namespace Atomik;
 
 TEST_CASE("Testing Substance class", "[Substance]")
 {
-    // Substance substance;
+    Substance substance;
 
-    // substance = Substance("H2O").name("WATER");
-    // REQUIRE(substance.uid() == "H2O");
-    // REQUIRE(substance.name() == "WATER");
-    // REQUIRE(substance.formula().str() == "H2O");
-    // REQUIRE(substance.charge() == 0);
-    // REQUIRE(substance.elements().size() == 2);
-    // REQUIRE(substance.molarMass() == Approx(0.01801528));
-    // REQUIRE(substance.coefficient("H") == 2);
-    // REQUIRE(substance.coefficient("O") == 1);
+    // Test Substance::Substance(formula) constructor
+    substance = Substance("H2O");
+    REQUIRE(substance.formula() == "H2O");
+    REQUIRE(substance.name() == "H2O");
+    REQUIRE(substance.type() == "");
+    REQUIRE(substance.tags().empty());
+    REQUIRE(substance.molarMass() == Approx(0.01801528));
+    REQUIRE(substance.charge() == 0);
+    REQUIRE(substance.symbols().size() == 2);
+    REQUIRE(substance.symbols() == Extract::symbols(substance.elements()));
+    REQUIRE(substance.coefficient("H") == 2);
+    REQUIRE(substance.coefficient("O") == 1);
 
-    // substance = Substance("CaCO3").name("CALCIUM-CARBONATE").uid("CaCO3(calcite)");
-    // REQUIRE(substance.uid() == "CaCO3(calcite)");
-    // REQUIRE(substance.name() == "CALCIUM-CARBONATE");
-    // REQUIRE(substance.formula().str() == "CaCO3");
-    // REQUIRE(substance.charge() == 0);
-    // REQUIRE(substance.elements().size() == 3);
-    // REQUIRE(substance.molarMass() == Approx(0.1000869));
-    // REQUIRE(substance.coefficient("C") == 1);
-    // REQUIRE(substance.coefficient("Ca") == 1);
-    // REQUIRE(substance.coefficient("O") == 3);
+    // Test Substance::Substance(attributes) constructor
+    substance = Substance({"Na+", "Na+(aq)", "aqueous", {"cation", "charged"}});
+    REQUIRE(substance.formula() == "Na+");
+    REQUIRE(substance.name() == "Na+(aq)");
+    REQUIRE(substance.type() == "aqueous");
+    REQUIRE(substance.tags().size() == 2);
+    REQUIRE(substance.tags().count("cation"));
+    REQUIRE(substance.tags().count("charged"));
+    REQUIRE(substance.molarMass() == Approx(0.022989769));
+    REQUIRE(substance.charge() == 1);
+    REQUIRE(substance.symbols().size() == 2);
+    REQUIRE(substance.symbols() == Extract::symbols(substance.elements()));
+    REQUIRE(substance.coefficient("Na") == 1);
+    REQUIRE(substance.coefficient("Z") == 1);
 
-    // substance = Substance("HCO3-");
-    // REQUIRE(substance.uid() == "HCO3-");
-    // REQUIRE(substance.name() == "HCO3-");
-    // REQUIRE(substance.formula().str() == "HCO3-");
-    // REQUIRE(substance.charge() == -1);
-    // REQUIRE(substance.elements().size() == 3);
-    // REQUIRE(substance.molarMass() == Approx(0.0610168));
-    // REQUIRE(substance.coefficient("C") == 1);
-    // REQUIRE(substance.coefficient("H") == 1);
-    // REQUIRE(substance.coefficient("O") == 3);
+    // Test Substance::Substance(attributes) constructor
+    substance = Substance({"Cl-", "Cl-(aq)", "aqueous", {"anion", "charged"}});
+    REQUIRE(substance.formula() == "Cl-");
+    REQUIRE(substance.name() == "Cl-(aq)");
+    REQUIRE(substance.type() == "aqueous");
+    REQUIRE(substance.tags().size() == 2);
+    REQUIRE(substance.tags().count("anion"));
+    REQUIRE(substance.tags().count("charged"));
+    REQUIRE(substance.molarMass() == Approx(0.035453));
+    REQUIRE(substance.charge() == -1);
+    REQUIRE(substance.symbols().size() == 2);
+    REQUIRE(substance.symbols() == Extract::symbols(substance.elements()));
+    REQUIRE(substance.coefficient("Cl") == 1);
+    REQUIRE(substance.coefficient("Z") == -1);
 
-    // substance = Substance("H+");
-    // REQUIRE(substance.uid() == "H+");
-    // REQUIRE(substance.name() == "H+");
-    // REQUIRE(substance.formula().str() == "H+");
-    // REQUIRE(substance.charge() == 1);
-    // REQUIRE(substance.elements().size() == 1);
-    // REQUIRE(substance.molarMass() == Approx(0.00100794));
-    // REQUIRE(substance.coefficient("H") == 1);
+    // Test Substance::Substance(attributes) constructor
+    substance = Substance({"CO3--", "CO3--(aq)", "aqueous", {"anion", "charged"}});
+    REQUIRE(substance.formula() == "CO3-2");
+    REQUIRE(substance.name() == "CO3--(aq)");
+    REQUIRE(substance.type() == "aqueous");
+    REQUIRE(substance.tags().size() == 2);
+    REQUIRE(substance.tags().count("anion"));
+    REQUIRE(substance.tags().count("charged"));
+    REQUIRE(substance.molarMass() == Approx(0.0600092));
+    REQUIRE(substance.charge() == -2);
+    REQUIRE(substance.symbols().size() == 3);
+    REQUIRE(substance.symbols() == Extract::symbols(substance.elements()));
+    REQUIRE(substance.coefficient("C") == 1);
+    REQUIRE(substance.coefficient("O") == 3);
+    REQUIRE(substance.coefficient("Z") == -2);
 
-    // substance = Substance("Na+");
-    // REQUIRE(substance.uid() == "Na+");
-    // REQUIRE(substance.name() == "Na+");
-    // REQUIRE(substance.formula().str() == "Na+");
-    // REQUIRE(substance.charge() == 1);
-    // REQUIRE(substance.elements().size() == 1);
-    // REQUIRE(substance.molarMass() == Approx(0.022989769));
-    // REQUIRE(substance.coefficient("Na") == 1);
+    // Test Substance::withFormula method with Substance::Substance(formula) constructor
+    substance = Substance("CaCO3").withFormula("Ca(CO3)");
+    REQUIRE(substance.formula() == "Ca(CO3)");
+    REQUIRE(substance.name() == "CaCO3");
+    REQUIRE(substance.type() == "");
+    REQUIRE(substance.tags().empty());
+    REQUIRE(substance.molarMass() == Approx(0.1000869));
+    REQUIRE(substance.charge() == 0);
+    REQUIRE(substance.symbols().size() == 3);
+    REQUIRE(substance.symbols() == Extract::symbols(substance.elements()));
+    REQUIRE(substance.coefficient("C") == 1);
+    REQUIRE(substance.coefficient("Ca") == 1);
+    REQUIRE(substance.coefficient("O") == 3);
 
-    // substance = Substance("Cl-");
-    // REQUIRE(substance.uid() == "Cl-");
-    // REQUIRE(substance.name() == "Cl-");
-    // REQUIRE(substance.formula().str() == "Cl-");
-    // REQUIRE(substance.charge() == -1);
-    // REQUIRE(substance.elements().size() == 1);
-    // REQUIRE(substance.molarMass() == Approx(0.035453));
-    // REQUIRE(substance.coefficient("Cl") == 1);
+    // Test Substance::withName method with Substance::Substance(formula) constructor
+    substance = Substance("H+").withName("H+(aq)");
+    REQUIRE(substance.formula() == "H+");
+    REQUIRE(substance.name() == "H+(aq)");
+    REQUIRE(substance.type() == "");
+    REQUIRE(substance.tags().empty());
+    REQUIRE(substance.molarMass() == Approx(0.00100794));
+    REQUIRE(substance.charge() == 1);
+    REQUIRE(substance.symbols().size() == 2);
+    REQUIRE(substance.symbols() == Extract::symbols(substance.elements()));
+    REQUIRE(substance.coefficient("H") == 1);
+    REQUIRE(substance.coefficient("Z") == 1);
 
-    // substance = Substance("CO3--");
-    // REQUIRE(substance.uid() == "CO3--");
-    // REQUIRE(substance.name() == "CO3--");
-    // REQUIRE(substance.formula().str() == "CO3--");
-    // REQUIRE(substance.charge() == -2);
-    // REQUIRE(substance.elements().size() == 2);
-    // REQUIRE(substance.molarMass() == Approx(0.0600092));
-    // REQUIRE(substance.coefficient("C") == 1);
-    // REQUIRE(substance.coefficient("O") == 3);
+    // Test Substance::withType method with Substance::Substance(formula) constructor
+    substance = Substance("HCO3-").withType("aqueous");
+    REQUIRE(substance.formula() == "HCO3-");
+    REQUIRE(substance.name() == "HCO3-");
+    REQUIRE(substance.type() == "aqueous");
+    REQUIRE(substance.tags().empty());
+    REQUIRE(substance.molarMass() == Approx(0.0610168));
+    REQUIRE(substance.charge() == -1);
+    REQUIRE(substance.symbols().size() == 4);
+    REQUIRE(substance.symbols() == Extract::symbols(substance.elements()));
+    REQUIRE(substance.coefficient("C") == 1);
+    REQUIRE(substance.coefficient("H") == 1);
+    REQUIRE(substance.coefficient("O") == 3);
+    REQUIRE(substance.coefficient("Z") == -1);
 
-    // substance = Substance("Fe+++");
-    // REQUIRE(substance.name() == "Fe+++");
-    // REQUIRE(substance.formula().str() == "Fe+++");
-    // REQUIRE(substance.charge() == 3);
-    // REQUIRE(substance.elements().size() == 1);
-    // REQUIRE(substance.molarMass() == Approx(0.055847));
-    // REQUIRE(substance.coefficient("Fe") == 1);
+    // Test Substance::withTags method with Substance::Substance(formula) constructor
+    substance = Substance("Fe+++").withTags({"cation", "charged", "iron"});
+    REQUIRE(substance.formula() == "Fe+3");
+    REQUIRE(substance.name() == "Fe+++");
+    REQUIRE(substance.type() == "");
+    REQUIRE(substance.tags().size() == 3);
+    REQUIRE(substance.tags().count("cation"));
+    REQUIRE(substance.tags().count("charged"));
+    REQUIRE(substance.tags().count("iron"));
+    REQUIRE(substance.molarMass() == Approx(0.055847));
+    REQUIRE(substance.charge() == 3);
+    REQUIRE(substance.symbols().size() == 2);
+    REQUIRE(substance.symbols() == Extract::symbols(substance.elements()));
+    REQUIRE(substance.coefficient("Fe") == 1);
+    REQUIRE(substance.coefficient("Z") == 3);
 
-    // substance = Substance("(CaMg)(CO3)2").name("CALCIUM-MAGNESIUM-CARBONATE").uid("(CaMg)(CO3)2(dolomite)");
-    // REQUIRE(substance.uid() == "(CaMg)(CO3)2(dolomite)");
-    // REQUIRE(substance.name() == "CALCIUM-MAGNESIUM-CARBONATE");
-    // REQUIRE(substance.formula().str() == "(CaMg)(CO3)2");
-    // REQUIRE(substance.charge() == 0);
-    // REQUIRE(substance.elements().size() == 4);
-    // REQUIRE(substance.molarMass() == Approx(0.1844014));
-    // REQUIRE(substance.coefficient("C") == 2);
-    // REQUIRE(substance.coefficient("Ca") == 1);
-    // REQUIRE(substance.coefficient("Mg") == 1);
-    // REQUIRE(substance.coefficient("O") == 6);
+    Elements elements = Elements::PeriodicTable();
+    elements.append( Element({"Aa"}) );
+    elements.append( Element({"Bb"}) );
 
-    // substance = Substance("CH3COOH");
-    // REQUIRE(substance.uid() == "CH3COOH");
-    // REQUIRE(substance.name() == "CH3COOH");
-    // REQUIRE(substance.formula().str() == "CH3COOH");
-    // REQUIRE(substance.charge() == 0);
-    // REQUIRE(substance.elements().size() == 3);
-    // REQUIRE(substance.molarMass() == Approx(0.06005256));
-    // REQUIRE(substance.coefficient("C") == 2);
-    // REQUIRE(substance.coefficient("H") == 4);
-    // REQUIRE(substance.coefficient("O") == 2);
-
-    // REQUIRE_THROWS(Substance("CaCO3").name("CALCIUM CARBONATE")); // runtime error if substance name has space
-    // REQUIRE_THROWS(Substance("CaCO3").uid("CaCO3 calcite")); // runtime error if substance uid has space
-
-    // Elements elements({
-    //     Element({"Aa"})
-    //     Element({"Bb"})
-    // });
-
-    // substance = Substance("AaBb2+", elements);
-    // REQUIRE(substance.uid() == "AaBb2+");
-    // REQUIRE(substance.name() == "AaBb2+");
-    // REQUIRE(substance.formula().str() == "AaBb2+");
-    // REQUIRE(substance.charge() == 1);
-    // REQUIRE(substance.elements().size() == 2);
-    // REQUIRE(substance.molarMass() == Approx(0.0));
-    // REQUIRE(substance.coefficient("Aa") == 1);
-    // REQUIRE(substance.coefficient("Bb") == 2);
+    substance = Substance("AaBb2+", elements);
+    REQUIRE(substance.formula() == "AaBb2+");
+    REQUIRE(substance.name() == "AaBb2+");
+    REQUIRE(substance.type() == "");
+    REQUIRE(substance.tags().empty());
+    REQUIRE(substance.molarMass() == Approx(0.0));
+    REQUIRE(substance.charge() == 1);
+    REQUIRE(substance.symbols().size() == 3);
+    REQUIRE(substance.symbols() == Extract::symbols(substance.elements()));
+    REQUIRE(substance.coefficient("Aa") == 1);
+    REQUIRE(substance.coefficient("Bb") == 2);
+    REQUIRE(substance.coefficient("Z") == 1);
 }

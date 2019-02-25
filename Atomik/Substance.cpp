@@ -17,107 +17,166 @@
 
 #include "Substance.hpp"
 
+// Atomik includes
+#include <Atomik/ChemicalFormula.hpp>
+#include <Atomik/Elements.hpp>
+#include <Atomik/Extract.hpp>
+
 namespace Atomik {
 namespace internal {
 
 /// The default database of elements
-const Elements default_elementdb;
-
-// Throw a runtime error if the substance name has spaces.
-auto checkSubstanceIdentifierHasNoSpaces(std::string name, std::string nametype) -> void
-{
-    // Check the name provided has no spaces
-    if(name.find(' ') != std::string::npos)
-        throw std::runtime_error("***ERROR***: The given substance " + nametype + " `" + name + "` "
-            "violates the naming rule for substance names and uid, which must have no spaces.");
-}
+const Elements elementsdb = Elements::PeriodicTable();
 
 } // namespace internal
 
+struct Substance::Impl
+{
+    /// The attributes of the substance.
+    SubstanceAttributes attributes;
+
+    /// The chemical formula of the substance.
+    ChemicalFormula formula;
+
+    /// The elements of the substance.
+    Elements elements;
+
+    /// The molar mass of the substance (in unit of kg/mol).
+    double molarMass;
+
+    /// Construct a default Substance::Impl instance
+    Impl()
+    {}
+
+    /// Construct a Substance::Impl instance
+    Impl(SubstanceAttributes _attributes, const Elements& db)
+    : attributes(_attributes),
+      formula(_attributes.formula)
+    {
+        // Initialize the name of the substance
+        if(attributes.name.empty())
+            attributes.name = attributes.formula;
+
+        // Initialize the elements of the substance
+        for(auto const& symbol : formula.symbols())
+            elements.append(db.get(symbol));
+
+        // Initialize the molar mass of the substance
+        molarMass = (formula.coefficients() * Extract::molarMasses(elements)).sum();
+    }
+};
+
 Substance::Substance()
+: pimpl(new Impl())
 {}
 
 Substance::Substance(std::string formula)
-: Substance(formula, internal::default_elementdb)
+: pimpl(new Impl({formula}, internal::elementsdb))
 {}
 
-Substance::Substance(std::string formula, const Elements& elementdb)
-: m_uid(formula), m_name(formula), m_formula(formula)
-{
-    // Initialize the chemical elements of the chemical substance
-    m_elements.clear();
-    for(const auto& pair : m_formula.elements())
-        m_elements.emplace_back(elementdb(pair.first), pair.second);
+Substance::Substance(std::string formula, const Elements& db)
+: pimpl(new Impl({formula}, db))
+{}
 
-    // Initialize the molar mass of the chemical substance
-    m_molarmass = 0.0;
-    for(const auto& pair : m_elements)
-        m_molarmass += std::get<1>(pair) * std::get<0>(pair).atomicWeight();
-}
+Substance::Substance(SubstanceAttributes attributes)
+: pimpl(new Impl(attributes, internal::elementsdb))
+{}
 
-auto Substance::uid(std::string uid) -> Substance&
-{
-    // Check if provided uid has space and throws a runtime error if true
-    internal::checkSubstanceIdentifierHasNoSpaces(uid, "uid");
-    m_uid = uid;
-    return *this;
-}
-
-auto Substance::uid() const -> std::string
-{
-    return m_uid;
-}
-
-auto Substance::name(std::string name) -> Substance&
-{
-    // Check if provided name has space and throws a runtime error if true
-    internal::checkSubstanceIdentifierHasNoSpaces(name, "name");
-    m_name = name;
-    return *this;
-}
+Substance::Substance(SubstanceAttributes attributes, const Elements& db)
+: pimpl(new Impl(attributes, db))
+{}
 
 auto Substance::name() const -> std::string
 {
-    return m_name;
+    return pimpl->attributes.name;
 }
 
 auto Substance::formula() const -> const ChemicalFormula&
 {
-    return m_formula;
+    return pimpl->formula;
 }
 
-auto Substance::elements() const -> const std::vector<std::pair<Element, double>>&
+auto Substance::type() const -> std::string
 {
-    return m_elements;
+    return pimpl->attributes.type;
 }
 
-auto Substance::charge() const -> double
+auto Substance::tags() const -> const std::set<std::string>&
 {
-    return m_formula.charge();
+    return pimpl->attributes.tags;
 }
 
-auto Substance::molarMass() const -> double
+auto Substance::extra() const -> const std::any&
 {
-    return m_molarmass;
+    return pimpl->attributes.extra;
+}
+
+auto Substance::elements() const -> const Elements&
+{
+    return pimpl->elements;
+}
+
+auto Substance::symbols() const -> const std::vector<std::string>&
+{
+    return formula().symbols();
+}
+
+auto Substance::coefficients() const -> const std::valarray<double>&
+{
+    return formula().coefficients();
 }
 
 auto Substance::coefficient(std::string symbol) const -> double
 {
-    return m_formula.coefficient(symbol);
+    return formula().coefficient(symbol);
+}
+
+auto Substance::charge() const -> double
+{
+    return formula().charge();
+}
+
+auto Substance::molarMass() const -> double
+{
+    return pimpl->molarMass;
+}
+
+auto Substance::withFormula(std::string formula) -> Substance
+{
+    auto attributes = pimpl->attributes;
+    attributes.formula = formula;
+    return Substance(attributes);
+}
+
+auto Substance::withName(std::string name) -> Substance
+{
+    auto attributes = pimpl->attributes;
+    attributes.name = name;
+    return Substance(attributes);
+}
+
+auto Substance::withType(std::string type) -> Substance
+{
+    auto attributes = pimpl->attributes;
+    attributes.type = type;
+    return Substance(attributes);
+}
+
+auto Substance::withTags(std::set<std::string> tags) -> Substance
+{
+    auto attributes = pimpl->attributes;
+    attributes.tags = tags;
+    return Substance(attributes);
 }
 
 auto operator<(const Substance& lhs, const Substance& rhs) -> bool
 {
-    return lhs.uid() < rhs.uid();
+    return lhs.name() < rhs.name();
 }
 
 auto operator==(const Substance& lhs, const Substance& rhs) -> bool
 {
-    return lhs.uid() == rhs.uid() &&
-           lhs.name() == rhs.name() &&
-           lhs.formula() == rhs.formula() &&
-           lhs.elements() == rhs.elements() &&
-           lhs.charge() == rhs.charge();
+    return lhs.name() == rhs.name() && lhs.formula() == rhs.formula();
 }
 
 } // namespace Atomik
