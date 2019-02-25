@@ -19,47 +19,109 @@
 
 namespace Atomik {
 
+struct Element::Impl
+{
+    /// The attributes of the element.
+    ElementAttributes attributes;
+
+    /// Construct a default Element::Impl object.
+    Impl()
+    {}
+
+    /// Construct an Element::Impl object with given attributes.
+    Impl(ElementAttributes attributes)
+    : attributes(std::move(attributes))
+    {}
+};
+
 Element::Element()
-: m_data(new ElementData{})
+: pimpl(new Impl())
 {}
 
-Element::Element(const ElementData& data)
- : m_data(new ElementData(data))
+Element::Element(ElementAttributes attributes)
+ : pimpl(new Impl(std::move(attributes)))
 {}
 
 auto Element::symbol() const -> std::string
 {
-    return m_data->symbol;
-};
+    return pimpl->attributes.symbol;
+}
 
 auto Element::name() const -> std::string
 {
-    return m_data->name;
-};
+    return pimpl->attributes.name;
+}
 
 auto Element::atomicNumber() const -> std::size_t
 {
-    return m_data->atomic_number;
-};
+    return pimpl->attributes.atomicNumber;
+}
 
 auto Element::atomicWeight() const -> double
 {
-    return m_data->atomic_weight;
-};
+    return pimpl->attributes.atomicWeight;
+}
 
 auto Element::electronegativity() const -> double
 {
-    return m_data->electronegativity;
-};
+    return pimpl->attributes.electronegativity;
+}
 
-auto Element::tags() const -> std::set<std::string>
+auto Element::molarMass() const -> double
 {
-    return m_data->tags;
-};
+    return atomicWeight();
+}
 
-auto Element::data() const -> const ElementData&
+auto Element::tags() const -> const std::set<std::string>&
 {
-    return *m_data;
+    return pimpl->attributes.tags;
+}
+
+auto Element::attributes() const -> ElementAttributes
+{
+    return pimpl->attributes;
+}
+
+auto Element::withSymbol(std::string symbol) const -> Element
+{
+    auto attribs = attributes();
+    attribs.symbol = symbol;
+    return Element(attribs);
+}
+
+auto Element::withName(std::string name) const -> Element
+{
+    auto attribs = attributes();
+    attribs.name = name;
+    return Element(attribs);
+}
+
+auto Element::withAtomicNumber(std::size_t atomicNumber) const -> Element
+{
+    auto attribs = attributes();
+    attribs.atomicNumber = atomicNumber;
+    return Element(attribs);
+}
+
+auto Element::withAtomicWeight(double atomicWeight) const -> Element
+{
+    auto attribs = attributes();
+    attribs.atomicWeight = atomicWeight;
+    return Element(attribs);
+}
+
+auto Element::withElectronegativity(double electronegativity) const -> Element
+{
+    auto attribs = attributes();
+    attribs.electronegativity = electronegativity;
+    return Element(attribs);
+}
+
+auto Element::withTags(std::set<std::string> tags) const -> Element
+{
+    auto attribs = attributes();
+    attribs.tags = tags;
+    return Element(attribs);
 }
 
 auto operator<(const Element& lhs, const Element& rhs) -> bool
@@ -69,7 +131,7 @@ auto operator<(const Element& lhs, const Element& rhs) -> bool
 
 auto operator==(const Element& lhs, const Element& rhs) -> bool
 {
-    return lhs.atomicNumber() == rhs.atomicNumber();
+    return lhs.attributes() == rhs.attributes();
 }
 
 } // namespace Atomik

@@ -25,7 +25,7 @@
 namespace Atomik {
 
 /// A type used to define attributes of chemical elements.
-struct ElementData
+struct ElementAttributes
 {
     /// The symbol of the chemical element (e.g., "H", "O", "C", "Na").
     std::string symbol;
@@ -34,10 +34,10 @@ struct ElementData
     std::string name;
 
     /// The atomic number of the chemical element.
-    std::size_t atomic_number;
+    std::size_t atomicNumber;
 
     /// The atomic weight (or molar mass) of the chemical element (in unit of kg/mol).
-    double atomic_weight;
+    double atomicWeight;
 
     /// The electronegativity of the chemical element.
     double electronegativity;
@@ -53,8 +53,8 @@ public:
     /// Construct a default Element object.
     Element();
 
-    /// Construct an Element object with given data.
-    Element(const ElementData& data);
+    /// Construct an Element object with given attributes.
+    Element(ElementAttributes attributes);
 
     /// Return the symbol of the chemical element (e.g., "H", "O", "C", "Na").
     auto symbol() const -> std::string;
@@ -65,21 +65,43 @@ public:
     /// Return the atomic number of the chemical element.
     auto atomicNumber() const -> std::size_t;
 
-    /// Return the atomic weight (or molar mass) of the chemical element (in unit of kg/mol).
+    /// Return the atomic weight of the chemical element (in unit of kg/mol).
     auto atomicWeight() const -> double;
 
     /// Return the electronegativity of the chemical element.
     auto electronegativity() const -> double;
 
     /// Return the tags of the chemical element.
-    auto tags() const -> std::set<std::string>;
+    auto tags() const -> const std::set<std::string>&;
 
-    /// Return the underlying data of this Element object.
-    auto data() const -> const ElementData&;
+    /// Return the molar mass of the chemical element (in unit of kg/mol).
+    auto molarMass() const -> double;
+
+    /// Return the attributes of the chemical element.
+    auto attributes() const -> ElementAttributes;
+
+    /// Return a duplicate of this Element object with given symbol.
+    auto withSymbol(std::string symbol) const -> Element;
+
+    /// Return a duplicate of this Element object with given name.
+    auto withName(std::string name) const -> Element;
+
+    /// Return a duplicate of this Element object with given atomic number.
+    auto withAtomicNumber(std::size_t atomicNumber) const -> Element;
+
+    /// Return a duplicate of this Element object with given atomic weight.
+    auto withAtomicWeight(double atomicWeight) const -> Element;
+
+    /// Return a duplicate of this Element object with given electronegativity.
+    auto withElectronegativity(double electronegativity) const -> Element;
+
+    /// Return a duplicate of this Element object with given tags.
+    auto withTags(std::set<std::string> tags) const -> Element;
 
 private:
-    /// The chemical element data.
-    std::shared_ptr<ElementData> m_data;
+    struct Impl;
+
+    std::shared_ptr<Impl> pimpl;
 };
 
 /// Compare two Element objects for less than.
