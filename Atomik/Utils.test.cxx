@@ -52,4 +52,21 @@ TEST_CASE("Testing Utils", "[Utils]")
     REQUIRE( res[1] == 4 );
     REQUIRE( res[2] == 6 );
     REQUIRE( res[3] == 8 );
+
+    // Test the contains function
+    REQUIRE( contains(nums, 3) );
+    REQUIRE_FALSE( contains(nums, 10) );
+
+    // Test the containsfn function
+    REQUIRE( containsfn(nums, [](auto x) { return x == 5; }) );
+    REQUIRE_FALSE( containsfn(nums, [](auto x) { return x == 13; }) );
+
+    // Test the contained function
+    std::vector<int> a = {1, 2, 3, 4, 5};
+    std::vector<int> b = {2, 4};
+    std::vector<int> c = {4, 6};
+
+    REQUIRE( contained(a, a) );
+    REQUIRE( contained(b, a) );
+    REQUIRE_FALSE( contained(c, a) );
 }

@@ -48,4 +48,25 @@ auto remove(const Container& c, const Predicate& pred)
     return filter(c, [&](auto&& x) { return !pred(x); });
 }
 
+template <typename Container, typename T>
+auto contains(const Container& c, const T& value)
+{
+    return std::find(std::begin(c), std::end(c), value) != std::end(c);
+}
+
+template <typename Container, typename Predicate>
+auto containsfn(const Container& c, const Predicate& pred)
+{
+    return std::find_if(std::begin(c), std::end(c), pred) != std::end(c);
+}
+
+template <typename ContainerA, typename ContainerB>
+auto contained(const ContainerA& a, const ContainerB& b)
+{
+    for(auto const& x : a)
+        if (!contains(b, x))
+            return false;
+    return true;
+}
+
 } // namespace Atomik
