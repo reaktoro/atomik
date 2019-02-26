@@ -146,6 +146,7 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE(substance.coefficient("Fe") == 1);
     REQUIRE(substance.coefficient("Z") == 3);
 
+    // Test Substance::Substance(formula, elementsdb) constructor
     Elements elements = Elements::PeriodicTable();
     elements.append( Element({"Aa"}) );
     elements.append( Element({"Bb"}) );
@@ -162,4 +163,11 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE(substance.coefficient("Aa") == 1);
     REQUIRE(substance.coefficient("Bb") == 2);
     REQUIRE(substance.coefficient("Z") == 1);
+
+    // Test Substance::extra() method
+    substance = substance.withExtra(100);
+
+    REQUIRE(substance.extra().has_value());
+    REQUIRE(std::any_cast<int>(substance.extra()) == 100);
+    REQUIRE(substance.extra<int>() == 100);
 }

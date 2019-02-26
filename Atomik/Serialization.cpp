@@ -23,54 +23,54 @@
 
 namespace Atomik {
 
-auto operator>>(std::istream& is, ChemicalFormula& formula) -> std::istream&
-{
-    std::string str;
-    is >> str;
-    formula = ChemicalFormula(str);
-    return is;
-}
+// auto operator>>(std::istream& is, ChemicalFormula& formula) -> std::istream&
+// {
+//     std::string str;
+//     is >> str;
+//     formula = ChemicalFormula(str);
+//     return is;
+// }
 
-auto operator>>(std::istream& is, Element& element) -> std::istream&
-{
-    ElementData data;
-    is >> data;
-    element = Element(data);
-    return is;
-}
+// auto operator>>(std::istream& is, Element& element) -> std::istream&
+// {
+//     ElementAttributes data;
+//     is >> data;
+//     element = Element(data);
+//     return is;
+// }
 
-auto operator>>(std::istream& is, ElementData& element) -> std::istream&
-{
-    is
-    >> element.symbol
-    >> element.name
-    >> element.atomic_number
-    >> element.atomic_weight
-    >> element.electronegativity;
-    return is;
-}
+// auto operator>>(std::istream& is, ElementAttributes& element) -> std::istream&
+// {
+//     is
+//     >> element.symbol
+//     >> element.name
+//     >> element.atomic_number
+//     >> element.atomic_weight
+//     >> element.electronegativity;
+//     return is;
+// }
 
-auto operator<<(std::ostream& os, const ChemicalFormula& formula) -> std::ostream&
-{
-    os << formula.str();
-    return os;
-}
+// auto operator<<(std::ostream& os, const ChemicalFormula& formula) -> std::ostream&
+// {
+//     os << formula.str();
+//     return os;
+// }
 
-auto operator<<(std::ostream& os, const Element& element) -> std::ostream&
-{
-    os << element.data();
-    return os;
-}
+// auto operator<<(std::ostream& os, const Element& element) -> std::ostream&
+// {
+//     os << element.data();
+//     return os;
+// }
 
-auto operator<<(std::ostream& os, const ElementData& element) -> std::ostream&
-{
-    os
-    << element.symbol << " "
-    << element.name << " "
-    << element.atomic_number << " "
-    << element.atomic_weight << " "
-    << element.electronegativity;
-    return os;
-}
+// auto operator<<(std::ostream& os, const ElementAttributes& element) -> std::ostream&
+// {
+//     os
+//     << element.symbol << " "
+//     << element.name << " "
+//     << element.atomic_number << " "
+//     << element.atomic_weight << " "
+//     << element.electronegativity;
+//     return os;
+// }
 
 } // namespace Atomik

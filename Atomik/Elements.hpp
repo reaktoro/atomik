@@ -37,7 +37,7 @@ public:
     Elements();
 
     /// Construct an Elements object with given data.
-    explicit Elements(std::vector<Element> elements);
+    explicit Elements(const std::vector<Element>& elements);
 
     /// Return the internal collection of Element objects.
     auto data() const -> const std::vector<Element>&;

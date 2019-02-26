@@ -23,37 +23,37 @@
 
 namespace Atomik {
 
-// Forward declarations (class)
-class ChemicalFormula;
-class Element;
+// // Forward declarations (class)
+// class ChemicalFormula;
+// class Element;
 
-// Forward declarations (struct)
-struct ElementData;
+// // Forward declarations (struct)
+// struct ElementAttributes;
 
-//=================================================================================================
-// INPUT STREAM OPERATORS
-//=================================================================================================
+// //=================================================================================================
+// // INPUT STREAM OPERATORS
+// //=================================================================================================
 
-/// Initialize a ChemicalFormula object from an input stream.
-auto operator>>(std::istream& is, ChemicalFormula& formula) -> std::istream&;
+// /// Initialize a ChemicalFormula object from an input stream.
+// auto operator>>(std::istream& is, ChemicalFormula& formula) -> std::istream&;
 
-/// Initialize an Element object from an input stream.
-auto operator>>(std::istream& is, Element& element) -> std::istream&;
+// /// Initialize an Element object from an input stream.
+// auto operator>>(std::istream& is, Element& element) -> std::istream&;
 
-/// Initialize an ElementData object from an input stream.
-auto operator>>(std::istream& is, ElementData& element) -> std::istream&;
+// /// Initialize an ElementAttributes object from an input stream.
+// auto operator>>(std::istream& is, ElementAttributes& element) -> std::istream&;
 
-//=================================================================================================
-// OUTPUT STREAM OPERATORS
-//=================================================================================================
+// //=================================================================================================
+// // OUTPUT STREAM OPERATORS
+// //=================================================================================================
 
-/// Save a ChemicalFormula object to an output stream.
-auto operator<<(std::ostream& os, const ChemicalFormula& formula) -> std::ostream&;
+// /// Save a ChemicalFormula object to an output stream.
+// auto operator<<(std::ostream& os, const ChemicalFormula& formula) -> std::ostream&;
 
-/// Save an Element object to an output stream.
-auto operator<<(std::ostream& os, const Element& element) -> std::ostream&;
+// /// Save an Element object to an output stream.
+// auto operator<<(std::ostream& os, const Element& element) -> std::ostream&;
 
-/// Save an ElementData object to an output stream.
-auto operator<<(std::ostream& os, const ElementData& element) -> std::ostream&;
+// /// Save an ElementAttributes object to an output stream.
+// auto operator<<(std::ostream& os, const ElementAttributes& element) -> std::ostream&;
 
 } // namespace Atomik

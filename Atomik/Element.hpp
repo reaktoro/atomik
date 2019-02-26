@@ -54,7 +54,7 @@ public:
     Element();
 
     /// Construct an Element object with given attributes.
-    Element(ElementAttributes attributes);
+    Element(const ElementAttributes& attributes);
 
     /// Return the symbol of the chemical element (e.g., "H", "O", "C", "Na").
     auto symbol() const -> std::string;

@@ -121,6 +121,10 @@ public:
     /// Return the extra attributes a substance might have.
     auto extra() const -> const std::any&;
 
+    /// Return the extra attributes a substance might have.
+    template <typename Result>
+    auto extra() const { return std::any_cast<Result>(extra()); }
+
     /// Return the elements of the substance.
     auto elements() const -> const Elements&;
 
@@ -142,6 +146,9 @@ public:
     /// Return a duplicate of this Substance object with given formula.
     auto withFormula(std::string formula) -> Substance;
 
+    /// Return a duplicate of this Substance object with given formula and database of elements.
+    auto withFormula(std::string formula, const Elements& db) -> Substance;
+
     /// Return a duplicate of this Substance object with given name.
     auto withName(std::string name) -> Substance;
 
@@ -150,6 +157,9 @@ public:
 
     /// Return a duplicate of this Substance object with given tags.
     auto withTags(std::set<std::string> tags) -> Substance;
+
+    /// Return a duplicate of this Substance object with given tags.
+    auto withExtra(std::any extra) -> Substance;
 
 private:
     struct Impl;

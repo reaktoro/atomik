@@ -29,8 +29,8 @@ struct Element::Impl
     {}
 
     /// Construct an Element::Impl object with given attributes.
-    Impl(ElementAttributes attributes)
-    : attributes(std::move(attributes))
+    Impl(const ElementAttributes& attributes)
+    : attributes(attributes)
     {}
 };
 
@@ -38,8 +38,8 @@ Element::Element()
 : pimpl(new Impl())
 {}
 
-Element::Element(ElementAttributes attributes)
- : pimpl(new Impl(std::move(attributes)))
+Element::Element(const ElementAttributes& attributes)
+ : pimpl(new Impl(attributes))
 {}
 
 auto Element::symbol() const -> std::string

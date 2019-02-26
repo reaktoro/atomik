@@ -49,9 +49,8 @@ struct Substance::Impl
     {}
 
     /// Construct a Substance::Impl instance
-    Impl(SubstanceAttributes _attributes, const Elements& db)
-    : attributes(_attributes),
-      formula(_attributes.formula)
+    Impl(SubstanceAttributes attribs, const Elements& db)
+    : attributes(std::move(attribs)), formula(attributes.formula)
     {
         // Initialize the name of the substance
         if(attributes.name.empty())
@@ -79,11 +78,11 @@ Substance::Substance(std::string formula, const Elements& db)
 {}
 
 Substance::Substance(SubstanceAttributes attributes)
-: pimpl(new Impl(attributes, internal::elementsdb))
+: pimpl(new Impl(std::move(attributes), internal::elementsdb))
 {}
 
 Substance::Substance(SubstanceAttributes attributes, const Elements& db)
-: pimpl(new Impl(attributes, db))
+: pimpl(new Impl(std::move(attributes), db))
 {}
 
 auto Substance::name() const -> std::string
@@ -143,30 +142,42 @@ auto Substance::molarMass() const -> double
 
 auto Substance::withFormula(std::string formula) -> Substance
 {
+    return withFormula(formula, elements());
+}
+
+auto Substance::withFormula(std::string formula, const Elements& db) -> Substance
+{
     auto attributes = pimpl->attributes;
     attributes.formula = formula;
-    return Substance(attributes);
+    return Substance(attributes, db);
 }
 
 auto Substance::withName(std::string name) -> Substance
 {
     auto attributes = pimpl->attributes;
     attributes.name = name;
-    return Substance(attributes);
+    return Substance(attributes, elements());
 }
 
 auto Substance::withType(std::string type) -> Substance
 {
     auto attributes = pimpl->attributes;
     attributes.type = type;
-    return Substance(attributes);
+    return Substance(attributes, elements());
 }
 
 auto Substance::withTags(std::set<std::string> tags) -> Substance
 {
     auto attributes = pimpl->attributes;
     attributes.tags = tags;
-    return Substance(attributes);
+    return Substance(attributes, elements());
+}
+
+auto Substance::withExtra(std::any extra) -> Substance
+{
+    auto attributes = pimpl->attributes;
+    attributes.extra = extra;
+    return Substance(attributes, elements());
 }
 
 auto operator<(const Substance& lhs, const Substance& rhs) -> bool

@@ -29,27 +29,27 @@ using namespace Atomik;
 
 TEST_CASE("Testing serialization of ChemicalFormula", "[Serialization]")
 {
-    ChemicalFormula formula;
+    // ChemicalFormula formula;
 
-    std::istringstream iss("CaCO3");
-    iss >> formula;
+    // std::istringstream iss("CaCO3");
+    // iss >> formula;
 
-    CHECK(formula.str() == "CaCO3");
-    CHECK(formula.coefficient("Ca") == 1);
-    CHECK(formula.coefficient("C") == 1);
-    CHECK(formula.coefficient("O") == 3);
+    // CHECK(formula.str() == "CaCO3");
+    // CHECK(formula.coefficient("Ca") == 1);
+    // CHECK(formula.coefficient("C") == 1);
+    // CHECK(formula.coefficient("O") == 3);
 }
 
-TEST_CASE("Testing serialization of Element", "[Serialization]")
-{
-    Element element;
+// TEST_CASE("Testing serialization of Element", "[Serialization]")
+// {
+//     Element element;
 
-    std::istringstream iss("H Hydrogen 1 1.00794 2.2");
-    iss >> element;
+//     std::istringstream iss("H Hydrogen 1 1.00794 2.2");
+//     iss >> element;
 
-    CHECK(element.symbol() == "H");
-    CHECK(element.name() == "Hydrogen");
-    CHECK(element.atomicNumber() == 1);
-    CHECK(element.atomicWeight() == 1.00794);
-    CHECK(element.electronegativity() == 2.2);
-}
+//     CHECK(element.symbol() == "H");
+//     CHECK(element.name() == "Hydrogen");
+//     CHECK(element.atomicNumber() == 1);
+//     CHECK(element.atomicWeight() == 1.00794);
+//     CHECK(element.electronegativity() == 2.2);
+// }

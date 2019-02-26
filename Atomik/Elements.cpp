@@ -156,8 +156,8 @@ const std::vector<Element> elements_from_periodic_table =
 Elements::Elements()
 {}
 
-Elements::Elements(std::vector<Element> elements)
-: m_elements(std::move(elements))
+Elements::Elements(const std::vector<Element>& elements)
+: m_elements(elements)
 {}
 
 auto Elements::data() const -> const std::vector<Element>&
