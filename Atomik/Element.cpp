@@ -42,6 +42,48 @@ Element::Element(const ElementAttributes& attributes)
  : pimpl(new Impl(attributes))
 {}
 
+auto Element::replaceSymbol(std::string symbol) const -> Element
+{
+    auto attributes = pimpl->attributes;
+    attributes.symbol = symbol;
+    return Element(attributes);
+}
+
+auto Element::replaceName(std::string name) const -> Element
+{
+    auto attributes = pimpl->attributes;
+    attributes.name = name;
+    return Element(attributes);
+}
+
+auto Element::replaceAtomicNumber(std::size_t atomicNumber) const -> Element
+{
+    auto attributes = pimpl->attributes;
+    attributes.atomicNumber = atomicNumber;
+    return Element(attributes);
+}
+
+auto Element::replaceAtomicWeight(double atomicWeight) const -> Element
+{
+    auto attributes = pimpl->attributes;
+    attributes.atomicWeight = atomicWeight;
+    return Element(attributes);
+}
+
+auto Element::replaceElectronegativity(double electronegativity) const -> Element
+{
+    auto attributes = pimpl->attributes;
+    attributes.electronegativity = electronegativity;
+    return Element(attributes);
+}
+
+auto Element::replaceTags(std::set<std::string> tags) const -> Element
+{
+    auto attributes = pimpl->attributes;
+    attributes.tags = tags;
+    return Element(attributes);
+}
+
 auto Element::symbol() const -> std::string
 {
     return pimpl->attributes.symbol;
@@ -67,61 +109,14 @@ auto Element::electronegativity() const -> double
     return pimpl->attributes.electronegativity;
 }
 
-auto Element::molarMass() const -> double
-{
-    return atomicWeight();
-}
-
 auto Element::tags() const -> const std::set<std::string>&
 {
     return pimpl->attributes.tags;
 }
 
-auto Element::attributes() const -> ElementAttributes
+auto Element::molarMass() const -> double
 {
-    return pimpl->attributes;
-}
-
-auto Element::withSymbol(std::string symbol) const -> Element
-{
-    auto attribs = attributes();
-    attribs.symbol = symbol;
-    return Element(attribs);
-}
-
-auto Element::withName(std::string name) const -> Element
-{
-    auto attribs = attributes();
-    attribs.name = name;
-    return Element(attribs);
-}
-
-auto Element::withAtomicNumber(std::size_t atomicNumber) const -> Element
-{
-    auto attribs = attributes();
-    attribs.atomicNumber = atomicNumber;
-    return Element(attribs);
-}
-
-auto Element::withAtomicWeight(double atomicWeight) const -> Element
-{
-    auto attribs = attributes();
-    attribs.atomicWeight = atomicWeight;
-    return Element(attribs);
-}
-
-auto Element::withElectronegativity(double electronegativity) const -> Element
-{
-    auto attribs = attributes();
-    attribs.electronegativity = electronegativity;
-    return Element(attribs);
-}
-
-auto Element::withTags(std::set<std::string> tags) const -> Element
-{
-    auto attribs = attributes();
-    attribs.tags = tags;
-    return Element(attribs);
+    return atomicWeight();
 }
 
 auto operator<(const Element& lhs, const Element& rhs) -> bool
@@ -131,7 +126,13 @@ auto operator<(const Element& lhs, const Element& rhs) -> bool
 
 auto operator==(const Element& lhs, const Element& rhs) -> bool
 {
-    return lhs.attributes() == rhs.attributes();
+    return lhs.symbol()            == rhs.symbol()            &&
+           lhs.name()              == rhs.name()              &&
+           lhs.atomicNumber()      == rhs.atomicNumber()      &&
+           lhs.atomicWeight()      == rhs.atomicWeight()      &&
+           lhs.electronegativity() == rhs.electronegativity() &&
+           lhs.tags()              == rhs.tags()
+           ;
 }
 
-} // namespace Atomik
+} // attributes Atomik

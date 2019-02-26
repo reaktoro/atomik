@@ -91,7 +91,7 @@ public:
     /// @param formula The formula of the substance (e.g., `H2O`, `CaCO3`, `CO3--`, `CO3-2`).
     Substance(std::string formula);
 
-    /// Construct a Substance object with given chemical formula and database of elements.
+    /// Construct a Substance object with given chemical formula using custom database of elements.
     /// @param formula The formula of the substance (e.g., `H2O`, `CaCO3`, `CO3--`, `CO3-2`).
     /// @param db The database of chemical elements (if the default is insufficient).
     Substance(std::string formula, const Elements& db);
@@ -101,10 +101,28 @@ public:
     /// @param attributes The basic attributes of the substance.
     Substance(SubstanceAttributes attributes);
 
-    /// Construct a Substance object with given attributes abd database of elements.
+    /// Construct a Substance object with given attributes using custom database of elements.
     /// @param attributes The basic attributes of the substance.
     /// @param db The database of chemical elements (if the default is insufficient).
     Substance(SubstanceAttributes attributes, const Elements& db);
+
+    /// Return a duplicate of this Substance object with replaced formula attribute.
+    auto replaceFormula(std::string formula) -> Substance;
+
+    /// Return a duplicate of this Substance object with replaced formula attribute using custom database of elements.
+    auto replaceFormula(std::string formula, const Elements& db) -> Substance;
+
+    /// Return a duplicate of this Substance object with replaced name attribute.
+    auto replaceName(std::string name) -> Substance;
+
+    /// Return a duplicate of this Substance object with replaced type attribute.
+    auto replaceType(std::string type) -> Substance;
+
+    /// Return a duplicate of this Substance object with replaced tags attribute.
+    auto replaceTags(std::set<std::string> tags) -> Substance;
+
+    /// Return a duplicate of this Substance object with replaced tags attribute.
+    auto replaceExtra(std::any extra) -> Substance;
 
     /// Return the name of the substance if provided, otherwise, its formula.
     auto name() const -> std::string;
@@ -142,24 +160,6 @@ public:
 
     /// Return the molar mass of the substance (in unit of kg/mol).
     auto molarMass() const -> double;
-
-    /// Return a duplicate of this Substance object with given formula.
-    auto withFormula(std::string formula) -> Substance;
-
-    /// Return a duplicate of this Substance object with given formula and database of elements.
-    auto withFormula(std::string formula, const Elements& db) -> Substance;
-
-    /// Return a duplicate of this Substance object with given name.
-    auto withName(std::string name) -> Substance;
-
-    /// Return a duplicate of this Substance object with given type.
-    auto withType(std::string type) -> Substance;
-
-    /// Return a duplicate of this Substance object with given tags.
-    auto withTags(std::set<std::string> tags) -> Substance;
-
-    /// Return a duplicate of this Substance object with given tags.
-    auto withExtra(std::any extra) -> Substance;
 
 private:
     struct Impl;

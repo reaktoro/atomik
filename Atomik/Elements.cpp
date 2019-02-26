@@ -21,6 +21,7 @@
 #include <algorithm>
 
 // Atomik includes
+#include <Atomik/Exception.hpp>
 #include <Atomik/StringList.hpp>
 #include <Atomik/Utils.hpp>
 
@@ -156,8 +157,8 @@ const std::vector<Element> elements_from_periodic_table =
 Elements::Elements()
 {}
 
-Elements::Elements(const std::vector<Element>& elements)
-: m_elements(elements)
+Elements::Elements(std::vector<Element> elements)
+: m_elements(std::move(elements))
 {}
 
 auto Elements::data() const -> const std::vector<Element>&
@@ -175,21 +176,6 @@ auto Elements::operator[](std::size_t index) const -> const Element&
     return data()[index];
 }
 
-auto Elements::at(std::size_t index) const -> const Element&
-{
-    return data().at(index);
-}
-
-auto Elements::get(std::string symbol) const -> const Element&
-{
-    return at(index(symbol));
-}
-
-auto Elements::index(std::string symbol) const -> std::size_t
-{
-    return indexWithSymbol(symbol);
-}
-
 auto Elements::indexWithSymbol(std::string symbol) const -> std::size_t
 {
     const auto has_symbol = [&](const Element& element) {
@@ -204,6 +190,20 @@ auto Elements::indexWithName(std::string name) const -> std::size_t
         return element.name() == name;
     };
     return indexfn(data(), has_name);
+}
+
+auto Elements::getWithName(std::string name) const -> Element
+{
+    auto idx = indexWithName(name);
+    error(idx >= size(), "Could not find an element with the given name `", name, "`.");
+    return m_elements[idx];
+}
+
+auto Elements::getWithSymbol(std::string symbol) const -> Element
+{
+    auto idx = indexWithSymbol(symbol);
+    error(idx >= size(), "Could not find an element with the given symbol `", symbol, "`.");
+    return m_elements[idx];
 }
 
 auto Elements::withSymbols(const StringList& symbols) const -> Elements

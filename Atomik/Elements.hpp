@@ -37,7 +37,7 @@ public:
     Elements();
 
     /// Construct an Elements object with given data.
-    explicit Elements(const std::vector<Element>& elements);
+    explicit Elements(std::vector<Element> elements);
 
     /// Return the internal collection of Element objects.
     auto data() const -> const std::vector<Element>&;
@@ -48,24 +48,19 @@ public:
     /// Return the Element object with given index.
     auto operator[](std::size_t index) const -> const Element&;
 
-    /// Return the Element object with given index.
-    /// @throw std::out_of_range In case the index is out of bounds.
-    auto at(std::size_t index) const -> const Element&;
+    /// Return the index of the first chemical element with given name.
+    auto indexWithName(std::string name) const -> std::size_t;
 
-    /// Return the first Element object with a given symbol.
-    /// @param symbol An element symbol such as `H`, `O`, `C`, `Ca`, `Na`.
-    /// @return The Element object with given symbol if found.
-    /// @throw std::out_of_range In case there is no Element object with given symbol.
-    auto get(std::string symbol) const -> const Element&;
-
-    /// Return the index of a chemical element with given symbol.
-    auto index(std::string symbol) const -> std::size_t;
-
-    /// Return the index of a chemical element with given symbol.
+    /// Return the index of the first chemical element with given symbol.
     auto indexWithSymbol(std::string symbol) const -> std::size_t;
 
-    /// Return the index of a chemical element with given name.
-    auto indexWithName(std::string name) const -> std::size_t;
+    /// Return the first chemical element with given name.
+    /// @throw std::runtime_error When there is no element with given name.
+    auto getWithName(std::string name) const -> Element;
+
+    /// Return the first chemical element with given symbol.
+    /// @throw std::runtime_error When there is no element with given symbol.
+    auto getWithSymbol(std::string symbol) const -> Element;
 
     /// Return the chemical elements with given symbols.
     auto withSymbols(const StringList& symbols) const -> Elements;

@@ -48,6 +48,12 @@ auto remove(const Container& c, const Predicate& pred)
     return filter(c, [&](auto&& x) { return !pred(x); });
 }
 
+template <typename Result, typename Container, typename Function>
+auto transform(const Container& c, Result& res, const Function& f)
+{
+    std::transform(c.begin(), c.end(), res.begin(), f);
+}
+
 template <typename Container, typename T>
 auto contains(const Container& c, const T& value)
 {

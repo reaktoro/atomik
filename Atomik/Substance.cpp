@@ -58,7 +58,7 @@ struct Substance::Impl
 
         // Initialize the elements of the substance
         for(auto const& symbol : formula.symbols())
-            elements.append(db.get(symbol));
+            elements.append(db.getWithSymbol(symbol));
 
         // Initialize the molar mass of the substance
         molarMass = (formula.coefficients() * Extract::molarMasses(elements)).sum();
@@ -84,6 +84,46 @@ Substance::Substance(SubstanceAttributes attributes)
 Substance::Substance(SubstanceAttributes attributes, const Elements& db)
 : pimpl(new Impl(std::move(attributes), db))
 {}
+
+auto Substance::replaceFormula(std::string formula) -> Substance
+{
+    return replaceFormula(formula, elements());
+}
+
+auto Substance::replaceFormula(std::string formula, const Elements& db) -> Substance
+{
+    auto attributes = pimpl->attributes;
+    attributes.formula = formula;
+    return Substance(attributes, db);
+}
+
+auto Substance::replaceName(std::string name) -> Substance
+{
+    auto attributes = pimpl->attributes;
+    attributes.name = name;
+    return Substance(attributes, elements());
+}
+
+auto Substance::replaceType(std::string type) -> Substance
+{
+    auto attributes = pimpl->attributes;
+    attributes.type = type;
+    return Substance(attributes, elements());
+}
+
+auto Substance::replaceTags(std::set<std::string> tags) -> Substance
+{
+    auto attributes = pimpl->attributes;
+    attributes.tags = tags;
+    return Substance(attributes, elements());
+}
+
+auto Substance::replaceExtra(std::any extra) -> Substance
+{
+    auto attributes = pimpl->attributes;
+    attributes.extra = extra;
+    return Substance(attributes, elements());
+}
 
 auto Substance::name() const -> std::string
 {
@@ -140,46 +180,6 @@ auto Substance::molarMass() const -> double
     return pimpl->molarMass;
 }
 
-auto Substance::withFormula(std::string formula) -> Substance
-{
-    return withFormula(formula, elements());
-}
-
-auto Substance::withFormula(std::string formula, const Elements& db) -> Substance
-{
-    auto attributes = pimpl->attributes;
-    attributes.formula = formula;
-    return Substance(attributes, db);
-}
-
-auto Substance::withName(std::string name) -> Substance
-{
-    auto attributes = pimpl->attributes;
-    attributes.name = name;
-    return Substance(attributes, elements());
-}
-
-auto Substance::withType(std::string type) -> Substance
-{
-    auto attributes = pimpl->attributes;
-    attributes.type = type;
-    return Substance(attributes, elements());
-}
-
-auto Substance::withTags(std::set<std::string> tags) -> Substance
-{
-    auto attributes = pimpl->attributes;
-    attributes.tags = tags;
-    return Substance(attributes, elements());
-}
-
-auto Substance::withExtra(std::any extra) -> Substance
-{
-    auto attributes = pimpl->attributes;
-    attributes.extra = extra;
-    return Substance(attributes, elements());
-}
-
 auto operator<(const Substance& lhs, const Substance& rhs) -> bool
 {
     return lhs.name() < rhs.name();
@@ -187,7 +187,11 @@ auto operator<(const Substance& lhs, const Substance& rhs) -> bool
 
 auto operator==(const Substance& lhs, const Substance& rhs) -> bool
 {
-    return lhs.name() == rhs.name() && lhs.formula() == rhs.formula();
+    return lhs.name()    == rhs.name()       &&
+           lhs.formula() == rhs.formula() &&
+           lhs.type()    == rhs.type()       &&
+           lhs.tags()    == rhs.tags()
+           ;
 }
 
 } // namespace Atomik

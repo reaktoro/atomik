@@ -56,6 +56,24 @@ public:
     /// Construct an Element object with given attributes.
     Element(const ElementAttributes& attributes);
 
+    /// Return a duplicate of this Element object with replaced symbol attribute.
+    auto replaceSymbol(std::string symbol) const -> Element;
+
+    /// Return a duplicate of this Element object with replaced name attribute.
+    auto replaceName(std::string name) const -> Element;
+
+    /// Return a duplicate of this Element object with replaced atomic number attribute.
+    auto replaceAtomicNumber(std::size_t atomicNumber) const -> Element;
+
+    /// Return a duplicate of this Element object with replaced atomic weight attribute.
+    auto replaceAtomicWeight(double atomicWeight) const -> Element;
+
+    /// Return a duplicate of this Element object with replaced electronegativity attribute.
+    auto replaceElectronegativity(double electronegativity) const -> Element;
+
+    /// Return a duplicate of this Element object with replaced tags attribute.
+    auto replaceTags(std::set<std::string> tags) const -> Element;
+
     /// Return the symbol of the chemical element (e.g., "H", "O", "C", "Na").
     auto symbol() const -> std::string;
 
@@ -76,27 +94,6 @@ public:
 
     /// Return the molar mass of the chemical element (in unit of kg/mol).
     auto molarMass() const -> double;
-
-    /// Return the attributes of the chemical element.
-    auto attributes() const -> ElementAttributes;
-
-    /// Return a duplicate of this Element object with given symbol.
-    auto withSymbol(std::string symbol) const -> Element;
-
-    /// Return a duplicate of this Element object with given name.
-    auto withName(std::string name) const -> Element;
-
-    /// Return a duplicate of this Element object with given atomic number.
-    auto withAtomicNumber(std::size_t atomicNumber) const -> Element;
-
-    /// Return a duplicate of this Element object with given atomic weight.
-    auto withAtomicWeight(double atomicWeight) const -> Element;
-
-    /// Return a duplicate of this Element object with given electronegativity.
-    auto withElectronegativity(double electronegativity) const -> Element;
-
-    /// Return a duplicate of this Element object with given tags.
-    auto withTags(std::set<std::string> tags) const -> Element;
 
 private:
     struct Impl;

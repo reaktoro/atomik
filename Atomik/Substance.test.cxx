@@ -88,8 +88,8 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE(substance.coefficient("O") == 3);
     REQUIRE(substance.coefficient("Z") == -2);
 
-    // Test Substance::withFormula method with Substance::Substance(formula) constructor
-    substance = Substance("CaCO3").withFormula("Ca(CO3)");
+    // Test Substance::replaceFormula method with Substance::Substance(formula) constructor
+    substance = Substance("CaCO3").replaceFormula("Ca(CO3)");
     REQUIRE(substance.formula() == "Ca(CO3)");
     REQUIRE(substance.name() == "CaCO3");
     REQUIRE(substance.type() == "");
@@ -102,8 +102,8 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE(substance.coefficient("Ca") == 1);
     REQUIRE(substance.coefficient("O") == 3);
 
-    // Test Substance::withName method with Substance::Substance(formula) constructor
-    substance = Substance("H+").withName("H+(aq)");
+    // Test Substance::replaceName method with Substance::Substance(formula) constructor
+    substance = Substance("H+").replaceName("H+(aq)");
     REQUIRE(substance.formula() == "H+");
     REQUIRE(substance.name() == "H+(aq)");
     REQUIRE(substance.type() == "");
@@ -115,8 +115,8 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE(substance.coefficient("H") == 1);
     REQUIRE(substance.coefficient("Z") == 1);
 
-    // Test Substance::withType method with Substance::Substance(formula) constructor
-    substance = Substance("HCO3-").withType("aqueous");
+    // Test Substance::replaceType method with Substance::Substance(formula) constructor
+    substance = Substance("HCO3-").replaceType("aqueous");
     REQUIRE(substance.formula() == "HCO3-");
     REQUIRE(substance.name() == "HCO3-");
     REQUIRE(substance.type() == "aqueous");
@@ -130,8 +130,8 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE(substance.coefficient("O") == 3);
     REQUIRE(substance.coefficient("Z") == -1);
 
-    // Test Substance::withTags method with Substance::Substance(formula) constructor
-    substance = Substance("Fe+++").withTags({"cation", "charged", "iron"});
+    // Test Substance::replaceTags method with Substance::Substance(formula) constructor
+    substance = Substance("Fe+++").replaceTags({"cation", "charged", "iron"});
     REQUIRE(substance.formula() == "Fe+3");
     REQUIRE(substance.name() == "Fe+++");
     REQUIRE(substance.type() == "");
@@ -165,7 +165,7 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE(substance.coefficient("Z") == 1);
 
     // Test Substance::extra() method
-    substance = substance.withExtra(100);
+    substance = substance.replaceExtra(100);
 
     REQUIRE(substance.extra().has_value());
     REQUIRE(std::any_cast<int>(substance.extra()) == 100);

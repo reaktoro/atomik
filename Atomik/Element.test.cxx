@@ -41,22 +41,22 @@ TEST_CASE("Testing Element", "[Element]")
     REQUIRE(element.tags().count("none"));
     REQUIRE(element.molarMass() == element.atomicWeight());
 
-    element = element.withSymbol("Na");
+    element = element.replaceSymbol("Na");
     REQUIRE(element.symbol() == "Na");
 
-    element = element.withName("Sodium");
+    element = element.replaceName("Sodium");
     REQUIRE(element.name() == "Sodium");
 
-    element = element.withAtomicNumber(11);
+    element = element.replaceAtomicNumber(11);
     REQUIRE(element.atomicNumber() == 11);
 
-    element = element.withAtomicWeight(0.022989768);
+    element = element.replaceAtomicWeight(0.022989768);
     REQUIRE(element.atomicWeight() == 0.022989768);
 
-    element = element.withElectronegativity(0.93);
+    element = element.replaceElectronegativity(0.93);
     REQUIRE(element.electronegativity() == 0.93);
 
-    element = element.withTags({"tag1", "tag2"});
+    element = element.replaceTags({"tag1", "tag2"});
     REQUIRE(element.tags().size() == 2);
     REQUIRE(element.tags().count("tag1"));
     REQUIRE(element.tags().count("tag2"));
