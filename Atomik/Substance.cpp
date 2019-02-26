@@ -187,9 +187,9 @@ auto operator<(const Substance& lhs, const Substance& rhs) -> bool
 
 auto operator==(const Substance& lhs, const Substance& rhs) -> bool
 {
-    return lhs.name()    == rhs.name()       &&
+    return lhs.name()    == rhs.name()    &&
            lhs.formula() == rhs.formula() &&
-           lhs.type()    == rhs.type()       &&
+           lhs.type()    == rhs.type()    &&
            lhs.tags()    == rhs.tags()
            ;
 }
