@@ -16,8 +16,6 @@ include(GNUInstallDirs)
 # Ensure proper configuration if in a conda environment
 include(CondaAware)
 
-message(CMAKE_PREFIX_PATH = ${CMAKE_PREFIX_PATH})
-
 # Find dependencies
 find_package(Catch2 REQUIRED)
 
