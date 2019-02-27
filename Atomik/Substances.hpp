@@ -36,8 +36,11 @@ public:
     /// Construct a default Substances object.
     Substances();
 
-    /// Construct an Substances object with given data.
+    /// Construct an Substances object with given substances.
     explicit Substances(std::vector<Substance> substances);
+
+    /// Construct an Substances object with given substance formulas.
+    explicit Substances(StringList formulas);
 
     /// Return the internal collection of Substance objects.
     auto data() const -> const std::vector<Substance>&;
@@ -84,6 +87,37 @@ public:
 
     /// Return the chemical substances without given tags.
     auto withoutTags(const StringList& tags) const -> Substances;
+
+    /// Return the chemical substances with a certain elemental composition.
+    /// This method filters the substances composed of one or more given elements, as shown below.
+    /// ~~~
+    /// using namespace Atomik;
+    /// Substances substances("H2O H+ OH- H2 O2 Na+ Cl- NaCl CO2 HCO3- CO3-2 CH4");
+    /// Substances subs1 = substances.withElements("H O");          // {H2O, H2, O2}
+    /// Substances subs2 = substances.withElements("H O C");        // {H2O, H2, O2, CO2, CH4}
+    /// Substances subs3 = substances.withElements("H O C Z");      // {H2O, H+, OH-, H2, O2, CO2, HCO3-, CO3-2, CH4}
+    /// Substances subs4 = substances.withElements("H O Na Cl");    // {H2O, H2, O2, NaCl}
+    /// Substances subs5 = substances.withElements("H O Na Cl Z");  // {H2O H+ OH- H2 O2 Na+ Cl- NaCl}
+    /// ~~~
+    /// @param symbols The element symbols of interest.
+    /// @see Substance::withElementsOf
+    auto withElements(const StringList& symbols) const -> Substances;
+
+    /// Return the chemical substances with a certain elemental composition.
+    /// This method extracts the elements from a given set of chemical formulas and
+    /// then filters the substances composed of one or more such elements, as shown below.
+    /// ~~~
+    /// using namespace Atomik;
+    /// Substances substances("H2O H+ OH- H2 O2 Na+ Cl- NaCl CO2 HCO3- CO3-2 CH4");
+    /// Substances subs1 = substances.withElementsOf("H2O");         // {H2O, H2, O2}
+    /// Substances subs2 = substances.withElementsOf("H2O CO2");     // {H2O, H2, O2, CO2, CH4}
+    /// Substances subs3 = substances.withElementsOf("H2O CO2 Z");   // {H2O, H+, OH-, H2, O2, CO2, HCO3-, CO3-2, CH4}
+    /// Substances subs4 = substances.withElementsOf("H2O NaCl");    // {H2O, H2, O2, NaCl}
+    /// Substances subs5 = substances.withElementsOf("H2O Na+ Cl-"); // {H2O H+ OH- H2 O2 Na+ Cl- NaCl}
+    /// ~~~
+    /// @param formulas The formulas of the substances from which elements are extracted.
+    /// @see Substance::withElements
+    auto withElementsOf(const StringList& formulas) const -> Substances;
 
     /// Append a new substance to the list of substances.
     auto append(Substance substance) -> void;

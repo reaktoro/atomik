@@ -27,9 +27,6 @@
 #include <Atomik/Utils.hpp>
 
 namespace Atomik {
-namespace internal {
-
-} // namespace internal
 
 Substances::Substances()
 {}
@@ -37,6 +34,12 @@ Substances::Substances()
 Substances::Substances(std::vector<Substance> substances)
 : m_substances(std::move(substances))
 {}
+
+Substances::Substances(StringList formulas)
+: m_substances(formulas.size())
+{
+    transform(formulas, m_substances, [&](std::string formula) { return Substance(formula); });
+}
 
 auto Substances::data() const -> const std::vector<Substance>&
 {
@@ -135,6 +138,22 @@ auto Substances::withoutTags(const StringList& tags) const -> Substances
         return contained(tags, substance.tags());
     };
     return Substances(remove(data(), has_tags));
+}
+
+auto Substances::withElements(const StringList& symbols) const -> Substances
+{
+    const auto has_elements = [&](const Substance& substance) {
+        return contained(substance.symbols(), symbols);
+    };
+    return Substances(filter(data(), has_elements));
+}
+
+auto Substances::withElementsOf(const StringList& formulas) const -> Substances
+{
+    std::vector<std::string> symbols;
+    for(auto formula : formulas)
+        symbols = merge(symbols, ChemicalFormula(formula).symbols());
+    return withElements(symbols);
 }
 
 auto Substances::append(Substance substance) -> void
