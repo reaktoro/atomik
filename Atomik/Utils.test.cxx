@@ -53,6 +53,31 @@ TEST_CASE("Testing Utils", "[Utils]")
     REQUIRE( res[2] == 6 );
     REQUIRE( res[3] == 8 );
 
+    // Test the unique function
+    std::vector<int> notunique = { 3, 2, 3, 6, 8, 2, 5 };
+
+    res = unique(notunique);
+
+    REQUIRE( res.size() == 5 );
+    REQUIRE( res[0] == 2 );
+    REQUIRE( res[1] == 3 );
+    REQUIRE( res[2] == 5 );
+    REQUIRE( res[3] == 6 );
+    REQUIRE( res[4] == 8 );
+
+    // Test the merge function
+    std::vector<int> vec1 = { 3, 2, 1 };
+    std::vector<int> vec2 = { 5, 2, 3, 4 };
+
+    res = merge(vec1, vec2);
+
+    REQUIRE( res.size() == 5 );
+    REQUIRE( res[0] == 1 );
+    REQUIRE( res[1] == 2 );
+    REQUIRE( res[2] == 3 );
+    REQUIRE( res[3] == 4 );
+    REQUIRE( res[4] == 5 );
+
     // Test the contains function
     REQUIRE( contains(nums, 3) );
     REQUIRE_FALSE( contains(nums, 10) );

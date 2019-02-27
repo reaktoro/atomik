@@ -48,10 +48,29 @@ auto remove(const Container& c, const Predicate& pred)
     return filter(c, [&](auto&& x) { return !pred(x); });
 }
 
+template <typename Container>
+auto unique(const Container& c)
+{
+    Container res(c);
+    std::sort(res.begin(), res.end());
+    res.erase(std::unique(res.begin(), res.end()), res.end());
+    return res;
+}
+
 template <typename Container, typename Result, typename Function>
 auto transform(const Container& c, Result& res, const Function& f)
 {
     std::transform(c.begin(), c.end(), res.begin(), f);
+}
+
+template <typename Container>
+auto merge(const Container& a, const Container& b)
+{
+    Container res(a);
+    res.insert(res.end(), b.begin(), b.end());
+    std::sort(res.begin(), res.end());
+    res.erase(std::unique(res.begin(), res.end()), res.end());
+    return res;
 }
 
 template <typename Container, typename T>
