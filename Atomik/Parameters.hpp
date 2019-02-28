@@ -111,21 +111,13 @@ public:
     /// @throw std::runtime_error In case this Parameters object has children parameters.
     operator const double& () const;
 
-    /// Return begin const iterator of this Parameters instance
-    /// @throw std::runtime_error In case this Parameters object has no children parameters.
-    // auto begin() const;
+    /// Return (implicitly) the values of this Parameters object.
+    /// @throw std::runtime_error In case this Parameters object has children parameters.
+    operator std::vector<double>& ();
 
-    /// Return begin iterator of this Parameters instance
-    /// @throw std::runtime_error In case this Parameters object has no children parameters.
-    // auto begin();
-
-    /// Return end const iterator of this Parameters instance
-    /// @throw std::runtime_error In case this Parameters object has no children parameters.
-    // auto end() const;
-
-    /// Return end iterator of this Parameters instance
-    /// @throw std::runtime_error In case this Parameters object has no children parameters.
-    // auto end();
+    /// Return (implicitly) the values of this Parameters object.
+    /// @throw std::runtime_error In case this Parameters object has children parameters.
+    operator const std::vector<double>& () const;
 
 private:
     /// The child parameters of this Parameters object

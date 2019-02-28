@@ -26,38 +26,34 @@ TEST_CASE("Testing Parameters class", "[Parameters]")
 {
     Parameters parameters;
 
-    parameters = 1.0;
+    // Testing Parameters::operator=(double)
+    REQUIRE_NOTHROW( parameters = 1.0 );
 
+    REQUIRE( parameters == 1.0 );
     REQUIRE( parameters.value() == 1.0 );
 
-    parameters = {1, 2, 3};
+    // Testing Parameters::operator=(vector<double>)
+    REQUIRE_NOTHROW( parameters = {1, 2, 3} );
 
     REQUIRE( parameters.values().size() == 3 );
     REQUIRE( parameters.values().at(0) == 1 );
     REQUIRE( parameters.values().at(1) == 2 );
     REQUIRE( parameters.values().at(2) == 3 );
 
-    // parameters.insert("a").value() = 1.0;
-    parameters.insert("a");
-    parameters["a"] = 1.0;
-    // parameters["a"];
+    // Testing method Parameters::insert
+    REQUIRE_NOTHROW( parameters.insert("a").insert("b") );
+    REQUIRE_NOTHROW( parameters.insert("a").insert("d") );
 
+    REQUIRE_NOTHROW( parameters.get("a").get("b") = 5.0 );
+    REQUIRE_NOTHROW( parameters.get("a").get("d") = {3.0, 2.0, 1.0} );
 
-    REQUIRE( parameters["a"] == 1.0 );
+    REQUIRE( parameters.get("a").get("b") == 5.0 );
+    REQUIRE( parameters.get("a").get("d").values().at(0) == 3.0 );
+    REQUIRE( parameters.get("a").get("d").values().at(1) == 2.0 );
+    REQUIRE( parameters.get("a").get("d").values().at(2) == 1.0 );
 
-
-    parameters.insert("a").insert("b") = 3.0;
-
-    REQUIRE( parameters["a"]["b"] == 3.0 );
-
-
-
-    // parameters.insert("a");
-    // parameters.get("a") = 1.0;
-
-    // REQUIRE( parameters.get("a") == 1.0 );
-
-    // parameters.insert("a").insert("b") = 3.0;
-
-    // REQUIRE( parameters.get("a").get("b") == 3.0 );
+    REQUIRE( parameters["a"]["b"] == 5.0 );
+    REQUIRE( parameters["a"]["d"].values().at(0) == 3.0 );
+    REQUIRE( parameters["a"]["d"].values().at(1) == 2.0 );
+    REQUIRE( parameters["a"]["d"].values().at(2) == 1.0 );
 }

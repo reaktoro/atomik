@@ -30,26 +30,28 @@ using Node = std::variant<double, std::vector<double>, std::unordered_map<std::s
 template <typename ParametersData>
 auto children(ParametersData&& data)
 {
-    error(data.index() == 0, "Cannot access children parameter nodes when the current node holds a numeric value (= ", std::get<0>(data), ").");
-    error(data.index() == 1, "Cannot access children parameter nodes when the current node holds numeric values.");
+    error(data.index() == 0,
+        "Cannot access children parameter nodes "
+        "when the current node holds a numeric value.");
+    error(data.index() == 1,
+        "Cannot access children parameter nodes "
+        "when the current node holds numeric values.");
     return std::get<1>(std::forward<ParametersData>(data));
 }
 
 /// Return the children parameter nodes of a parameter node.
-auto child(Node& data, const std::string& key) -> std::any&
+template <typename ParameterData>
+auto child(ParameterData&& data, const std::string& key) -> decltype(auto)
 {
-    // error(data.index() == 0, "Cannot access child parameter with name `", key, "` when the current node holds a numeric value (= ", std::get<0>(data), ").");
-    // error(data.index() == 1, "Cannot access child parameter with name `", key, "` when the current node holds numeric values.");
-    error(std::get<2>(data).count(key) == 0, "Cannot access child parameter with name `", key, "`, which has not yet been inserted.");
-    return std::get<2>(data)[key];
-}
-
-/// Return the children parameter nodes of a parameter node.
-auto child(const Node& data, const std::string& key) -> const std::any&
-{
-    error(data.index() == 0, "Cannot access child parameter with name `", key, "` when the current node holds a numeric value (= ", std::get<0>(data), ").");
-    error(data.index() == 1, "Cannot access child parameter with name `", key, "` when the current node holds numeric values.");
-    error(std::get<2>(data).count(key) == 0, "Cannot access child parameter with name `", key, "`, which has not yet been inserted.");
+    error(data.index() == 0,
+        "Cannot access child parameter with name `", key, "` "
+        "when the current node holds a numeric value.");
+    error(data.index() == 1,
+        "Cannot access child parameter with name `", key, "` "
+        "when the current node holds numeric values.");
+    error(std::get<2>(data).count(key) == 0,
+        "Cannot access child parameter with name `", key, "`, "
+        "which has not yet been inserted.");
     return std::get<2>(data).at(key);
 }
 
@@ -57,8 +59,13 @@ auto child(const Node& data, const std::string& key) -> const std::any&
 template <typename ParametersData>
 auto value(ParametersData&& data) -> decltype(auto)
 {
-    // error(data.index() == 2, "Cannot retrieve the numeric value of a parameter node with children parameter nodes.");
-    // return std::get<0>(std::forward<ParametersData>(data));
+    error(data.index() == 1,
+        "Cannot retrieve the numeric value of "
+        "a parameter node with a vector of values. "
+        "Use method Parameters::values() instead.");
+    error(data.index() == 2,
+        "Cannot retrieve the numeric value of "
+        "a parameter node with children parameter nodes.");
     return std::get<0>(data);
 }
 
@@ -66,9 +73,14 @@ auto value(ParametersData&& data) -> decltype(auto)
 template <typename ParametersData>
 auto values(ParametersData&& data) -> decltype(auto)
 {
-    error(data.index() == 0, "Cannot retrieve the numeric values of a parameter node that has only one numeric value. Use Parameters::value() instead.");
-    error(data.index() == 2, "Cannot retrieve the numeric values of a parameter node that has children parameter nodes.");
-    return std::get<1>(std::forward<ParametersData>(data));
+    error(data.index() == 0,
+        "Cannot retrieve the numeric values of "
+        "a parameter node that has only one numeric value. "
+        "Use method Parameters::value() instead.");
+    error(data.index() == 2,
+        "Cannot retrieve the numeric values of "
+        "a parameter node that has children parameter nodes.");
+    return std::get<1>(data);
 }
 
 } // namespace internal
@@ -79,11 +91,10 @@ Parameters::Parameters()
 
 auto Parameters::operator=(double value) -> Parameters&
 {
-    // error(data.index() == 2,
-    //     "Cannot overwrite current parameter node with a "
-    //     "numeric value, as this would destroy its "
-    //     "children parameter nodes.");
-
+    error(data.index() == 2,
+        "Cannot overwrite current parameter node with a "
+        "numeric value, as this would destroy its "
+        "children parameter nodes.");
     data = value;
     return *this;
 }
@@ -94,14 +105,14 @@ auto Parameters::operator=(std::vector<double> values) -> Parameters&
         "Cannot overwrite current parameter node with a "
         "numeric value, as this would destroy its "
         "children parameter nodes.");
-
     data = std::move(values);
     return *this;
 }
 
 auto Parameters::insert(const std::string& key) -> Parameters&
 {
-    data = std::unordered_map<std::string, std::any>();
+    if(data.index() != 2)
+        data = std::unordered_map<std::string, std::any>();
 
     auto [iter, success] = std::get<2>(data).insert({key, Parameters()});
 
@@ -168,24 +179,14 @@ Parameters::operator const double& () const
     return value();
 }
 
-// auto Parameters::begin() const
-// {
-//     return internal::children(data).begin();
-// }
+Parameters::operator std::vector<double>& ()
+{
+    return values();
+}
 
-// auto Parameters::begin()
-// {
-//     return internal::children(data).begin();
-// }
-
-// auto Parameters::end() const
-// {
-//     return internal::children(data).end();
-// }
-
-// auto Parameters::end()
-// {
-//     return internal::children(data).end();
-// }
+Parameters::operator const std::vector<double>& () const
+{
+    return values();
+}
 
 } // namespace Atomik
