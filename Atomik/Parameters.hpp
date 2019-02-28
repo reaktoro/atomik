@@ -46,27 +46,28 @@ namespace Atomik {
 /// A type used to store thermodynamic and chemical model parameters.
 class Parameters
 {
-private:
+public:
     /// Construct a default Parameters object.
     Parameters();
+
+    /// Insert a new parameter child node with given key.
+    auto insert(const std::string& key) -> Parameters&;
 
     /// Assign a value to this Parameters object.
     /// @throws std::runtime_error In case this Parameters object has children parameters.
     auto operator=(double value) -> Parameters&;
 
+    /// Assign a vector of values to this Parameters object.
+    /// @throws std::runtime_error In case this Parameters object has children parameters.
+    auto operator=(std::vector<double> values) -> Parameters&;
+
     /// Return the child Parameters object with a given key.
+    /// @throw std::runtime_error In case this Parameters object has no children parameters or no child with given key.
     auto operator[](const std::string& key) -> Parameters&;
 
     /// Return the child Parameters object with a given key.
-    auto operator[](const std::string& key) const -> const Parameters&;
-
-    /// Return the child Parameters object with a given key.
-    /// @throw std::runtime_error In case no parameters with given key exist.
-    auto get(const std::string& key) -> Parameters&;
-
-    /// Return the child Parameters object with a given key.
-    /// @throw std::runtime_error In case no parameters with given key exist.
-    auto get(const std::string& key) const -> const Parameters&;
+    /// @throw std::runtime_error In case this Parameters object has no children parameters or no child with given key.
+    // auto operator[](const std::string& key) const -> const Parameters&;
 
     /// Return the numeric value of this Parameters object.
     /// @throw std::runtime_error In case this Parameters object has children parameters.
@@ -76,17 +77,13 @@ private:
     /// @throw std::runtime_error In case this Parameters object has children parameters.
     auto value() const -> const double&;
 
-    /// Return the numeric value of a child parameter with given name.
-    auto value(const std::string& name) -> double&;
+    /// Return the numeric values of this Parameters object.
+    /// @throw std::runtime_error In case this Parameters object has children parameters.
+    auto values() -> std::vector<double>&;
 
-    /// Return the numeric value of a child parameter with given name.
-    auto value(const std::string& name) const -> const double&;
-
-    /// Return the numeric value of a descendant parameter with given path.
-    auto value(const StringList& path) -> double&;
-
-    /// Return the numeric value of a descendant parameter with given path.
-    auto value(const StringList& path) const -> const double&;
+    /// Return the numeric values of this Parameters object.
+    /// @throw std::runtime_error In case this Parameters object has children parameters.
+    auto values() const -> const std::vector<double>&;
 
     /// Return (implicitly) the value of this Parameters object.
     /// @throw std::runtime_error In case this Parameters object has children parameters.
@@ -98,23 +95,23 @@ private:
 
     /// Return begin const iterator of this Parameters instance
     /// @throw std::runtime_error In case this Parameters object has no children parameters.
-    inline auto begin() const;
+    // auto begin() const;
 
     /// Return begin iterator of this Parameters instance
     /// @throw std::runtime_error In case this Parameters object has no children parameters.
-    inline auto begin();
+    // auto begin();
 
     /// Return end const iterator of this Parameters instance
     /// @throw std::runtime_error In case this Parameters object has no children parameters.
-    inline auto end() const;
+    // auto end() const;
 
     /// Return end iterator of this Parameters instance
     /// @throw std::runtime_error In case this Parameters object has no children parameters.
-    inline auto end();
+    // auto end();
 
-public:
+private:
     /// The child parameters of this Parameters object
-    std::variant<double, std::unordered_map<std::string, std::any>> data;
+    std::variant<double, std::vector<double>, std::unordered_map<std::string, std::any>> data;
 };
 
 } // namespace Atomik

@@ -24,5 +24,29 @@ using namespace Atomik;
 
 TEST_CASE("Testing Parameters class", "[Parameters]")
 {
+    Parameters parameters;
 
+    parameters = 1.0;
+
+    REQUIRE( parameters.value() == 1.0 );
+
+    parameters = {1, 2, 3};
+
+    REQUIRE( parameters.values().size() == 3 );
+    REQUIRE( parameters.values().at(0) == 1 );
+    REQUIRE( parameters.values().at(1) == 2 );
+    REQUIRE( parameters.values().at(2) == 3 );
+
+    // parameters.insert("a").value() = 1.0;
+    parameters.insert("a");
+    parameters["a"] = 1.0;
+    // parameters["a"];
+
+
+    REQUIRE( parameters["a"] == 1.0 );
+
+
+    parameters.insert("a").insert("b") = 3.0;
+
+    REQUIRE( parameters["a"]["b"] == 3.0 );
 }
