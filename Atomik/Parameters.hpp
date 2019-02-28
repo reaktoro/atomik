@@ -121,7 +121,8 @@ public:
 
 private:
     /// The child parameters of this Parameters object
-    std::variant<double, std::vector<double>, std::unordered_map<std::string, std::any>> data;
+    std::variant<double, std::vector<double>,
+        std::unordered_map<std::string, std::any>> data;
 };
 
 } // namespace Atomik
