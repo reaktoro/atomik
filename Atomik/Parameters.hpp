@@ -39,6 +39,8 @@
 // parameters.insert("HKF").insert("CO2(aq)").insert("Gf") = 1.0;
 
 // parameters.insert("HKF CO2(aq) Gf") = 1.0;
+// parameters.value("hkf", "CO2(aq)", "Gf")
+// parameters.get("a", "b")
 
 
 namespace Atomik {
@@ -67,7 +69,23 @@ public:
 
     /// Return the child Parameters object with a given key.
     /// @throw std::runtime_error In case this Parameters object has no children parameters or no child with given key.
-    // auto operator[](const std::string& key) const -> const Parameters&;
+    auto operator[](const std::string& key) const -> const Parameters&;
+
+    /// Return the child Parameters object with a given key.
+    /// @throw std::runtime_error In case this Parameters object has no children parameters or no child with given key.
+    auto operator[](const char* key) -> Parameters&;
+
+    /// Return the child Parameters object with a given key.
+    /// @throw std::runtime_error In case this Parameters object has no children parameters or no child with given key.
+    auto operator[](const char* key) const -> const Parameters&;
+
+    /// Return the child Parameters object with a given key.
+    /// @throw std::runtime_error In case this Parameters object has no children parameters or no child with given key.
+    auto get(const std::string& key) -> Parameters&;
+
+    /// Return the child Parameters object with a given key.
+    /// @throw std::runtime_error In case this Parameters object has no children parameters or no child with given key.
+    auto get(const std::string& key) const -> const Parameters&;
 
     /// Return the numeric value of this Parameters object.
     /// @throw std::runtime_error In case this Parameters object has children parameters.

@@ -113,10 +113,30 @@ auto Parameters::operator[](const std::string& key) -> Parameters&
     return std::any_cast<Parameters&>(internal::child(data, key));
 }
 
-// auto Parameters::operator[](const std::string& key) const -> const Parameters&
-// {
-//     return std::any_cast<const Parameters&>(internal::child(data, key));
-// }
+auto Parameters::operator[](const std::string& key) const -> const Parameters&
+{
+    return std::any_cast<const Parameters&>(internal::child(data, key));
+}
+
+auto Parameters::operator[](const char* key) -> Parameters&
+{
+    return std::any_cast<Parameters&>(internal::child(data, key));
+}
+
+auto Parameters::operator[](const char* key) const -> const Parameters&
+{
+    return std::any_cast<const Parameters&>(internal::child(data, key));
+}
+
+auto Parameters::get(const std::string& key) -> Parameters&
+{
+    return std::any_cast<Parameters&>(internal::child(data, key));
+}
+
+auto Parameters::get(const std::string& key) const -> const Parameters&
+{
+    return std::any_cast<const Parameters&>(internal::child(data, key));
+}
 
 auto Parameters::value() -> double&
 {

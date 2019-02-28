@@ -49,4 +49,15 @@ TEST_CASE("Testing Parameters class", "[Parameters]")
     parameters.insert("a").insert("b") = 3.0;
 
     REQUIRE( parameters["a"]["b"] == 3.0 );
+
+
+
+    // parameters.insert("a");
+    // parameters.get("a") = 1.0;
+
+    // REQUIRE( parameters.get("a") == 1.0 );
+
+    // parameters.insert("a").insert("b") = 3.0;
+
+    // REQUIRE( parameters.get("a").get("b") == 3.0 );
 }
