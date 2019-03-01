@@ -17,6 +17,7 @@ include(GNUInstallDirs)
 include(CondaAware)
 
 # Find dependencies
+find_package(yaml-cpp REQUIRED)
 find_package(Catch2 REQUIRED)
 
 # Build the dependencies
