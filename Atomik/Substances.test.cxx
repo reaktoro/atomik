@@ -48,21 +48,21 @@ TEST_CASE("Testing Substances", "[Substances]")
 
     // Test constructor Substances(vector<Substance>)
     substances = Substances({
-        Substance({ "H2O"  , "H2O(aq)"  , "aqueous", { "neutral", "solvent" } }),
-        Substance({ "H+"   , "H+(aq)"   , "aqueous", { "charged", "cation"}   }),
-        Substance({ "OH-"  , "OH-(aq)"  , "aqueous", { "charged", "anion" }   }),
-        Substance({ "H2"   , "H2(aq)"   , "aqueous", { "neutral" }            }),
-        Substance({ "O2"   , "O2(aq)"   , "aqueous", { "neutral" }            }),
-        Substance({ "Na+"  , "Na+(aq)"  , "aqueous", { "charged", "cation"}   }),
-        Substance({ "Cl-"  , "Cl-(aq)"  , "aqueous", { "charged", "anion" }   }),
-        Substance({ "NaCl" , "NaCl(aq)" , "aqueous", { "neutral" }            }),
-        Substance({ "CO2"  , "CO2(aq)"  , "aqueous", { "neutral" }            }),
-        Substance({ "HCO3-", "HCO3-(aq)", "aqueous", { "charged", "anion" }   }),
-        Substance({ "CO3-2", "CO3-2(aq)", "aqueous", { "charged", "anion" }   }),
-        Substance({ "CH4"  , "CH4(aq)"  , "aqueous", { "neutral" }            }),
-        Substance({ "H2O"  , "H2O(g)"   , "gaseous", { "gas" }                }),
-        Substance({ "CO2"  , "CO2(g)"   , "gaseous", { "gas" }                }),
-        Substance({ "CH4"  , "CH4(g)"   , "gaseous", { "gas" }                }),
+        Substance({ "H2O"  , "H2O(aq)"  , { "aqueous", "neutral", "solvent" } }),
+        Substance({ "H+"   , "H+(aq)"   , { "aqueous", "charged", "cation"}   }),
+        Substance({ "OH-"  , "OH-(aq)"  , { "aqueous", "charged", "anion" }   }),
+        Substance({ "H2"   , "H2(aq)"   , { "aqueous", "neutral" }            }),
+        Substance({ "O2"   , "O2(aq)"   , { "aqueous", "neutral" }            }),
+        Substance({ "Na+"  , "Na+(aq)"  , { "aqueous", "charged", "cation"}   }),
+        Substance({ "Cl-"  , "Cl-(aq)"  , { "aqueous", "charged", "anion" }   }),
+        Substance({ "NaCl" , "NaCl(aq)" , { "aqueous", "neutral" }            }),
+        Substance({ "CO2"  , "CO2(aq)"  , { "aqueous", "neutral" }            }),
+        Substance({ "HCO3-", "HCO3-(aq)", { "aqueous", "charged", "anion" }   }),
+        Substance({ "CO3-2", "CO3-2(aq)", { "aqueous", "charged", "anion" }   }),
+        Substance({ "CH4"  , "CH4(aq)"  , { "aqueous", "neutral" }            }),
+        Substance({ "H2O"  , "H2O(g)"   , { "gaseous" }                       }),
+        Substance({ "CO2"  , "CO2(g)"   , { "gaseous" }                       }),
+        Substance({ "CH4"  , "CH4(g)"   , { "gaseous" }                       }),
     });
 
     REQUIRE(substances.size() == 15);
@@ -112,8 +112,35 @@ TEST_CASE("Testing Substances", "[Substances]")
     REQUIRE( filtered[1] == substances.getWithName("HCO3-(aq)")  );
     REQUIRE( filtered[2] == substances.getWithName("CO3-2(aq)") );
 
-    // Test method Substances::withType
-    filtered = substances.withType("aqueous");
+    // Test method Substances::withTag
+    filtered = substances.withTag("charged");
+
+    REQUIRE( filtered.size() == 6 );
+    REQUIRE( filtered[0] == substances.getWithName("H+(aq)")    );
+    REQUIRE( filtered[1] == substances.getWithName("OH-(aq)")   );
+    REQUIRE( filtered[2] == substances.getWithName("Na+(aq)") );
+    REQUIRE( filtered[3] == substances.getWithName("Cl-(aq)") );
+    REQUIRE( filtered[4] == substances.getWithName("HCO3-(aq)") );
+    REQUIRE( filtered[5] == substances.getWithName("CO3-2(aq)") );
+
+    // Test method Substances::withTags
+    filtered = substances.withTags({"cation", "charged"});
+
+    REQUIRE( filtered.size() == 2 );
+    REQUIRE( filtered[0] == substances.getWithName("H+(aq)") );
+    REQUIRE( filtered[1] == substances.getWithName("Na+(aq)") );
+
+    // Test method Substances::withTags
+    filtered = substances.withTags({"anion", "charged"});
+
+    REQUIRE( filtered.size() == 4 );
+    REQUIRE( filtered[0] == substances.getWithName("OH-(aq)")   );
+    REQUIRE( filtered[1] == substances.getWithName("Cl-(aq)")   );
+    REQUIRE( filtered[2] == substances.getWithName("HCO3-(aq)") );
+    REQUIRE( filtered[3] == substances.getWithName("CO3-2(aq)") );
+
+    // Test method Substances::tagged (alias of Substances::withTag)
+    filtered = substances.tagged("aqueous");
 
     REQUIRE( filtered.size() == 12 );
     REQUIRE( filtered[0]  == substances.getWithName("H2O(aq)") );
@@ -129,37 +156,13 @@ TEST_CASE("Testing Substances", "[Substances]")
     REQUIRE( filtered[10] == substances.getWithName("CO3-2(aq)") );
     REQUIRE( filtered[11] == substances.getWithName("CH4(aq)") );
 
-    filtered = substances.withType("gaseous");
+    // Test method Substances::untagged (alias of Substances::withoutTag)
+    filtered = substances.untagged("aqueous");
 
     REQUIRE( filtered.size() == 3 );
     REQUIRE( filtered[0] == substances.getWithName("H2O(g)"));
     REQUIRE( filtered[1] == substances.getWithName("CO2(g)"));
     REQUIRE( filtered[2] == substances.getWithName("CH4(g)"));
-
-    // Test method Substances::withTag/withTags
-    filtered = substances.withTag("charged");
-
-    REQUIRE( filtered.size() == 6 );
-    REQUIRE( filtered[0] == substances.getWithName("H+(aq)")    );
-    REQUIRE( filtered[1] == substances.getWithName("OH-(aq)")   );
-    REQUIRE( filtered[2] == substances.getWithName("Na+(aq)") );
-    REQUIRE( filtered[3] == substances.getWithName("Cl-(aq)") );
-    REQUIRE( filtered[4] == substances.getWithName("HCO3-(aq)") );
-    REQUIRE( filtered[5] == substances.getWithName("CO3-2(aq)") );
-
-    filtered = substances.withTags({"cation", "charged"});
-
-    REQUIRE( filtered.size() == 2 );
-    REQUIRE( filtered[0] == substances.getWithName("H+(aq)") );
-    REQUIRE( filtered[1] == substances.getWithName("Na+(aq)") );
-
-    filtered = substances.withTags({"anion", "charged"});
-
-    REQUIRE( filtered.size() == 4 );
-    REQUIRE( filtered[0] == substances.getWithName("OH-(aq)")   );
-    REQUIRE( filtered[1] == substances.getWithName("Cl-(aq)")   );
-    REQUIRE( filtered[2] == substances.getWithName("HCO3-(aq)") );
-    REQUIRE( filtered[3] == substances.getWithName("CO3-2(aq)") );
 
     // Test method Substances::withElements
     filtered = substances.withElements("H O");
@@ -170,7 +173,8 @@ TEST_CASE("Testing Substances", "[Substances]")
     REQUIRE( filtered[2].name() == substances.getWithName("O2(aq)").name() );
     REQUIRE( filtered[3].name() == substances.getWithName("H2O(g)").name() );
 
-    filtered = substances.withElements("H O Z");
+    // Test method Substances::withElements
+    filtered = substances.containing("H O Z");
 
     REQUIRE( filtered.size() == 6 );
     REQUIRE( filtered[0] == substances.getWithName("H2O(aq)") );
@@ -180,6 +184,7 @@ TEST_CASE("Testing Substances", "[Substances]")
     REQUIRE( filtered[4] == substances.getWithName("O2(aq)") );
     REQUIRE( filtered[5] == substances.getWithName("H2O(g)") );
 
+    // Test method Substances::containing (alias of Substances::withElements)
     filtered = substances.withElements("H O C Z");
 
     REQUIRE( filtered.size() == 12 );

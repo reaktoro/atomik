@@ -30,7 +30,7 @@ TEST_CASE("Testing Element", "[Element]")
         .atomicNumber = 1,
         .atomicWeight = 0.001007940,
         .electronegativity = 2.20,
-        .tags = {"none"}
+        .tags = {}
     });
 
     REQUIRE(element.symbol() == "H");
@@ -38,7 +38,6 @@ TEST_CASE("Testing Element", "[Element]")
     REQUIRE(element.atomicNumber() == 1);
     REQUIRE(element.atomicWeight() == 0.001007940);
     REQUIRE(element.electronegativity() == 2.20);
-    REQUIRE(element.tags().count("none"));
     REQUIRE(element.molarMass() == element.atomicWeight());
 
     element = element.replaceSymbol("Na");
@@ -58,6 +57,6 @@ TEST_CASE("Testing Element", "[Element]")
 
     element = element.replaceTags({"tag1", "tag2"});
     REQUIRE(element.tags().size() == 2);
-    REQUIRE(element.tags().count("tag1"));
-    REQUIRE(element.tags().count("tag2"));
+    REQUIRE(element.hasTag("tag1"));
+    REQUIRE(element.hasTag("tag2"));
 }

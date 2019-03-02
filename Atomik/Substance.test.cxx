@@ -33,7 +33,6 @@ TEST_CASE("Testing Substance class", "[Substance]")
     substance = Substance("H2O");
     REQUIRE(substance.formula() == "H2O");
     REQUIRE(substance.name() == "H2O");
-    REQUIRE(substance.type() == "");
     REQUIRE(substance.tags().empty());
     REQUIRE(substance.molarMass() == Approx(0.01801528));
     REQUIRE(substance.charge() == 0);
@@ -43,13 +42,13 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE(substance.coefficient("O") == 1);
 
     // Test Substance::Substance(attributes) constructor
-    substance = Substance({"Na+", "Na+(aq)", "aqueous", {"cation", "charged"}});
+    substance = Substance({"Na+", "Na+(aq)", {"aqueous", "cation", "charged"}});
     REQUIRE(substance.formula() == "Na+");
     REQUIRE(substance.name() == "Na+(aq)");
-    REQUIRE(substance.type() == "aqueous");
-    REQUIRE(substance.tags().size() == 2);
-    REQUIRE(substance.tags().count("cation"));
-    REQUIRE(substance.tags().count("charged"));
+    REQUIRE(substance.tags().size() == 3);
+    REQUIRE(substance.hasTag("aqueous"));
+    REQUIRE(substance.hasTag("cation"));
+    REQUIRE(substance.hasTag("charged"));
     REQUIRE(substance.molarMass() == Approx(0.022989769));
     REQUIRE(substance.charge() == 1);
     REQUIRE(substance.symbols().size() == 2);
@@ -58,13 +57,13 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE(substance.coefficient("Z") == 1);
 
     // Test Substance::Substance(attributes) constructor
-    substance = Substance({"Cl-", "Cl-(aq)", "aqueous", {"anion", "charged"}});
+    substance = Substance({"Cl-", "Cl-(aq)", {"aqueous", "anion", "charged"}});
     REQUIRE(substance.formula() == "Cl-");
     REQUIRE(substance.name() == "Cl-(aq)");
-    REQUIRE(substance.type() == "aqueous");
-    REQUIRE(substance.tags().size() == 2);
-    REQUIRE(substance.tags().count("anion"));
-    REQUIRE(substance.tags().count("charged"));
+    REQUIRE(substance.tags().size() == 3);
+    REQUIRE(substance.hasTag("aqueous"));
+    REQUIRE(substance.hasTag("anion"));
+    REQUIRE(substance.hasTag("charged"));
     REQUIRE(substance.molarMass() == Approx(0.035453));
     REQUIRE(substance.charge() == -1);
     REQUIRE(substance.symbols().size() == 2);
@@ -73,13 +72,13 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE(substance.coefficient("Z") == -1);
 
     // Test Substance::Substance(attributes) constructor
-    substance = Substance({"CO3--", "CO3--(aq)", "aqueous", {"anion", "charged"}});
+    substance = Substance({"CO3--", "CO3--(aq)", {"aqueous", "anion", "charged"}});
     REQUIRE(substance.formula() == "CO3-2");
     REQUIRE(substance.name() == "CO3--(aq)");
-    REQUIRE(substance.type() == "aqueous");
-    REQUIRE(substance.tags().size() == 2);
-    REQUIRE(substance.tags().count("anion"));
-    REQUIRE(substance.tags().count("charged"));
+    REQUIRE(substance.tags().size() == 3);
+    REQUIRE(substance.hasTag("aqueous"));
+    REQUIRE(substance.hasTag("anion"));
+    REQUIRE(substance.hasTag("charged"));
     REQUIRE(substance.molarMass() == Approx(0.0600092));
     REQUIRE(substance.charge() == -2);
     REQUIRE(substance.symbols().size() == 3);
@@ -92,7 +91,6 @@ TEST_CASE("Testing Substance class", "[Substance]")
     substance = Substance("CaCO3").replaceFormula("Ca(CO3)");
     REQUIRE(substance.formula() == "Ca(CO3)");
     REQUIRE(substance.name() == "CaCO3");
-    REQUIRE(substance.type() == "");
     REQUIRE(substance.tags().empty());
     REQUIRE(substance.molarMass() == Approx(0.1000869));
     REQUIRE(substance.charge() == 0);
@@ -106,7 +104,6 @@ TEST_CASE("Testing Substance class", "[Substance]")
     substance = Substance("H+").replaceName("H+(aq)");
     REQUIRE(substance.formula() == "H+");
     REQUIRE(substance.name() == "H+(aq)");
-    REQUIRE(substance.type() == "");
     REQUIRE(substance.tags().empty());
     REQUIRE(substance.molarMass() == Approx(0.00100794));
     REQUIRE(substance.charge() == 1);
@@ -115,12 +112,12 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE(substance.coefficient("H") == 1);
     REQUIRE(substance.coefficient("Z") == 1);
 
-    // Test Substance::replaceType method with Substance::Substance(formula) constructor
-    substance = Substance("HCO3-").replaceType("aqueous");
+    // Test Substance::replaceTags method with Substance::Substance(formula) constructor
+    substance = Substance("HCO3-").replaceTags({"aqueous"});
     REQUIRE(substance.formula() == "HCO3-");
     REQUIRE(substance.name() == "HCO3-");
-    REQUIRE(substance.type() == "aqueous");
-    REQUIRE(substance.tags().empty());
+    REQUIRE(substance.tags().size() == 1);
+    REQUIRE(substance.hasTag("aqueous"));
     REQUIRE(substance.molarMass() == Approx(0.0610168));
     REQUIRE(substance.charge() == -1);
     REQUIRE(substance.symbols().size() == 4);
@@ -131,14 +128,14 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE(substance.coefficient("Z") == -1);
 
     // Test Substance::replaceTags method with Substance::Substance(formula) constructor
-    substance = Substance("Fe+++").replaceTags({"cation", "charged", "iron"});
+    substance = Substance("Fe+++").replaceTags({"aqueous", "cation", "charged", "iron"});
     REQUIRE(substance.formula() == "Fe+3");
     REQUIRE(substance.name() == "Fe+++");
-    REQUIRE(substance.type() == "");
-    REQUIRE(substance.tags().size() == 3);
-    REQUIRE(substance.tags().count("cation"));
-    REQUIRE(substance.tags().count("charged"));
-    REQUIRE(substance.tags().count("iron"));
+    REQUIRE(substance.tags().size() == 4);
+    REQUIRE(substance.hasTag("aqueous"));
+    REQUIRE(substance.hasTag("cation"));
+    REQUIRE(substance.hasTag("charged"));
+    REQUIRE(substance.hasTag("iron"));
     REQUIRE(substance.molarMass() == Approx(0.055847));
     REQUIRE(substance.charge() == 3);
     REQUIRE(substance.symbols().size() == 2);
@@ -154,7 +151,6 @@ TEST_CASE("Testing Substance class", "[Substance]")
     substance = Substance("AaBb2+", elements);
     REQUIRE(substance.formula() == "AaBb2+");
     REQUIRE(substance.name() == "AaBb2+");
-    REQUIRE(substance.type() == "");
     REQUIRE(substance.tags().empty());
     REQUIRE(substance.molarMass() == Approx(0.0));
     REQUIRE(substance.charge() == 1);
@@ -163,11 +159,4 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE(substance.coefficient("Aa") == 1);
     REQUIRE(substance.coefficient("Bb") == 2);
     REQUIRE(substance.coefficient("Z") == 1);
-
-    // Test Substance::extra() method
-    substance = substance.replaceExtra(100);
-
-    REQUIRE(substance.extra().has_value());
-    REQUIRE(std::any_cast<int>(substance.extra()) == 100);
-    REQUIRE(substance.extra<int>() == 100);
 }

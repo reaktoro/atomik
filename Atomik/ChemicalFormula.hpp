@@ -80,7 +80,7 @@ public:
     auto str() const -> std::string;
 
     /// Convert this ChemicalFormula object into a string.
-    operator std::string() const;
+    explicit operator std::string() const;
 
 private:
     /// The chemical formula as a string.

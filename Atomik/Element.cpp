@@ -17,6 +17,9 @@
 
 #include "Element.hpp"
 
+// Atomik includes
+#include <Atomik/Utils.hpp>
+
 namespace Atomik {
 
 struct Element::Impl
@@ -42,14 +45,14 @@ Element::Element(const ElementAttributes& attributes)
  : pimpl(new Impl(attributes))
 {}
 
-auto Element::replaceSymbol(std::string symbol) const -> Element
+auto Element::replaceSymbol(const std::string& symbol) const -> Element
 {
     auto attributes = pimpl->attributes;
     attributes.symbol = symbol;
     return Element(attributes);
 }
 
-auto Element::replaceName(std::string name) const -> Element
+auto Element::replaceName(const std::string& name) const -> Element
 {
     auto attributes = pimpl->attributes;
     attributes.name = name;
@@ -77,7 +80,7 @@ auto Element::replaceElectronegativity(double electronegativity) const -> Elemen
     return Element(attributes);
 }
 
-auto Element::replaceTags(std::set<std::string> tags) const -> Element
+auto Element::replaceTags(std::vector<std::string> tags) const -> Element
 {
     auto attributes = pimpl->attributes;
     attributes.tags = tags;
@@ -109,7 +112,7 @@ auto Element::electronegativity() const -> double
     return pimpl->attributes.electronegativity;
 }
 
-auto Element::tags() const -> const std::set<std::string>&
+auto Element::tags() const -> const std::vector<std::string>&
 {
     return pimpl->attributes.tags;
 }
@@ -117,6 +120,11 @@ auto Element::tags() const -> const std::set<std::string>&
 auto Element::molarMass() const -> double
 {
     return atomicWeight();
+}
+
+auto Element::hasTag(const std::string& tag) const -> bool
+{
+    return index(tags(), tag) < tags().size();
 }
 
 auto operator<(const Element& lhs, const Element& rhs) -> bool

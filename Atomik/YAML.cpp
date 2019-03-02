@@ -15,10 +15,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this library. If not, see <http://www.gnu.org/licenses/>.
 
-#include "Serialization.hpp"
+#include "YAML.hpp"
 
-// C++ includes
-#include <string>
+// yaml includes
+#include <yaml-cpp/yaml.h>
 
 // Atomik includes
 #include <Atomik/ChemicalFormula.hpp>
@@ -109,6 +109,25 @@ struct convert<Element>
 };
 
 template<>
+struct convert<Elements>
+{
+    static auto encode(const Elements& obj)
+    {
+        Node node;
+        for(auto element : obj)
+            node.push_back(element);
+        return node;
+    }
+
+    static auto decode(const Node& node, Elements& obj)
+    {
+        for(auto child : node)
+            obj.append(child.as<Element>());
+        return true;
+    }
+};
+
+template<>
 struct convert<Substance>
 {
     static auto encode(const Substance& obj)
@@ -128,59 +147,97 @@ struct convert<Substance>
     }
 };
 
+template<>
+struct convert<Substances>
+{
+    static auto encode(const Substances& obj)
+    {
+        Node node;
+        for(auto substance : obj)
+            node.push_back(substance);
+        return node;
+    }
+
+    static auto decode(const Node& node, Substances& obj)
+    {
+        for(auto child : node)
+            obj.append(child.as<Substance>());
+        return true;
+    }
+};
+
 } // namespace YAML
 
 namespace Atomik {
 
+/// Cast an yaml node of type any to YAML::Node
+inline auto cast(const std::any& node)
+{
+    return std::any_cast<YAML::Node>(node);
+}
 
-// auto operator>>(std::istream& is, ChemicalFormula& formula) -> std::istream&
-// {
-//     std::string str;
-//     is >> str;
-//     formula = ChemicalFormula(str);
-//     return is;
-// }
+yaml::yaml()
+: node(YAML::Node())
+{}
 
-// auto operator>>(std::istream& is, Element& element) -> std::istream&
-// {
-//     ElementAttributes data;
-//     is >> data;
-//     element = Element(data);
-//     return is;
-// }
+yaml::yaml(const char* input)
+: node(YAML::Load(input))
+{}
 
-// auto operator>>(std::istream& is, ElementAttributes& element) -> std::istream&
-// {
-//     is
-//     >> element.symbol
-//     >> element.name
-//     >> element.atomic_number
-//     >> element.atomic_weight
-//     >> element.electronegativity;
-//     return is;
-// }
+yaml::yaml(const std::string& input)
+: node(YAML::Load(input))
+{}
 
-// auto operator<<(std::ostream& os, const ChemicalFormula& formula) -> std::ostream&
-// {
-//     os << formula.str();
-//     return os;
-// }
+yaml::yaml(std::istream& input)
+: node(YAML::Load(input))
+{}
 
-// auto operator<<(std::ostream& os, const Element& element) -> std::ostream&
-// {
-//     os << element.data();
-//     return os;
-// }
+yaml::operator Element() const
+{
+    return cast(node).as<Element>();
+}
 
-// auto operator<<(std::ostream& os, const ElementAttributes& element) -> std::ostream&
-// {
-//     os
-//     << element.symbol << " "
-//     << element.name << " "
-//     << element.atomic_number << " "
-//     << element.atomic_weight << " "
-//     << element.electronegativity;
-//     return os;
-// }
+yaml::operator Elements() const
+{
+    return cast(node).as<Elements>();
+}
 
-} // namespace Atomik
+yaml::operator Substance() const
+{
+    return cast(node).as<Substance>();
+}
+
+yaml::operator Substances() const
+{
+    return cast(node).as<Substances>();
+}
+
+auto yaml::operator=(const Element& obj) -> yaml&
+{
+    YAML::Node yamlnode(obj);
+    node = yamlnode;
+    return *this;
+}
+
+auto yaml::operator=(const Elements& obj) -> yaml&
+{
+    YAML::Node yamlnode(obj);
+    node = yamlnode;
+    return *this;
+}
+
+auto yaml::operator=(const Substance& obj) -> yaml&
+{
+    YAML::Node yamlnode(obj);
+    node = yamlnode;
+    return *this;
+}
+
+auto yaml::operator=(const Substances& obj) -> yaml&
+{
+    YAML::Node yamlnode(obj);
+    node = yamlnode;
+    return *this;
+}
+
+} // Atomik

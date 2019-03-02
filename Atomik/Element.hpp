@@ -19,34 +19,34 @@
 
 // C++ includes
 #include <memory>
-#include <set>
 #include <string>
+#include <vector>
 
 namespace Atomik {
 
-/// A type used to define attributes of chemical elements.
+/// A type used to define attributes of elements.
 struct ElementAttributes
 {
-    /// The symbol of the chemical element (e.g., "H", "O", "C", "Na").
+    /// The symbol of the element (e.g., "H", "O", "C", "Na").
     std::string symbol;
 
-    /// The name of the chemical element (e.g., "Hydrogen", "Oxygen").
+    /// The name of the element (e.g., "Hydrogen", "Oxygen").
     std::string name;
 
-    /// The atomic number of the chemical element.
+    /// The atomic number of the element.
     std::size_t atomicNumber;
 
-    /// The atomic weight (or molar mass) of the chemical element (in unit of kg/mol).
+    /// The atomic weight (or molar mass) of the element (in unit of kg/mol).
     double atomicWeight;
 
-    /// The electronegativity of the chemical element.
+    /// The electronegativity of the element.
     double electronegativity;
 
-    /// The tags of the chemical element.
-    std::set<std::string> tags;
+    /// The tags of the element.
+    std::vector<std::string> tags;
 };
 
-/// A type used to define a chemical element and its attributes.
+/// A type used to define a element and its attributes.
 class Element
 {
 public:
@@ -57,10 +57,10 @@ public:
     Element(const ElementAttributes& attributes);
 
     /// Return a duplicate of this Element object with replaced symbol attribute.
-    auto replaceSymbol(std::string symbol) const -> Element;
+    auto replaceSymbol(const std::string& symbol) const -> Element;
 
     /// Return a duplicate of this Element object with replaced name attribute.
-    auto replaceName(std::string name) const -> Element;
+    auto replaceName(const std::string& name) const -> Element;
 
     /// Return a duplicate of this Element object with replaced atomic number attribute.
     auto replaceAtomicNumber(std::size_t atomicNumber) const -> Element;
@@ -72,28 +72,31 @@ public:
     auto replaceElectronegativity(double electronegativity) const -> Element;
 
     /// Return a duplicate of this Element object with replaced tags attribute.
-    auto replaceTags(std::set<std::string> tags) const -> Element;
+    auto replaceTags(std::vector<std::string> tags) const -> Element;
 
-    /// Return the symbol of the chemical element (e.g., "H", "O", "C", "Na").
+    /// Return the symbol of the element (e.g., "H", "O", "C", "Na").
     auto symbol() const -> std::string;
 
-    /// Return the name of the chemical element (e.g., "Hydrogen", "Oxygen").
+    /// Return the name of the element (e.g., "Hydrogen", "Oxygen").
     auto name() const -> std::string;
 
-    /// Return the atomic number of the chemical element.
+    /// Return the atomic number of the element.
     auto atomicNumber() const -> std::size_t;
 
-    /// Return the atomic weight of the chemical element (in unit of kg/mol).
+    /// Return the atomic weight of the element (in unit of kg/mol).
     auto atomicWeight() const -> double;
 
-    /// Return the electronegativity of the chemical element.
+    /// Return the electronegativity of the element.
     auto electronegativity() const -> double;
 
-    /// Return the tags of the chemical element.
-    auto tags() const -> const std::set<std::string>&;
+    /// Return the tags of the element.
+    auto tags() const -> const std::vector<std::string>&;
 
-    /// Return the molar mass of the chemical element (in unit of kg/mol).
+    /// Return the molar mass of the element (in unit of kg/mol).
     auto molarMass() const -> double;
+
+    /// Return true if the element has a given tag.
+    auto hasTag(const std::string& tag) const -> bool;
 
 private:
     struct Impl;

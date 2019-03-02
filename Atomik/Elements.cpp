@@ -161,6 +161,11 @@ Elements::Elements(std::vector<Element> elements)
 : m_elements(std::move(elements))
 {}
 
+auto Elements::append(Element element) -> void
+{
+    m_elements.emplace_back(std::move(element));
+}
+
 auto Elements::data() const -> const std::vector<Element>&
 {
     return m_elements;
@@ -236,11 +241,6 @@ auto Elements::withTags(const StringList& tags) const -> Elements
         return contained(tags, element.tags());
     };
     return Elements(filter(data(), has_tags));
-}
-
-auto Elements::append(Element element) -> void
-{
-    m_elements.emplace_back(std::move(element));
 }
 
 auto Elements::PeriodicTable() -> Elements

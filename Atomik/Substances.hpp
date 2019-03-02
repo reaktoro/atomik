@@ -42,6 +42,9 @@ public:
     /// Construct an Substances object with given substance formulas.
     explicit Substances(StringList formulas);
 
+    /// Append a new substance to the list of substances.
+    auto append(Substance substance) -> void;
+
     /// Return the internal collection of Substance objects.
     auto data() const -> const std::vector<Substance>&;
 
@@ -72,9 +75,6 @@ public:
 
     /// Return the chemical substances with given formulas.
     auto withFormulas(const StringList& names) const -> Substances;
-
-    /// Return the chemical substances with given type.
-    auto withType(std::string type) const -> Substances;
 
     /// Return the chemical substances with a given tag.
     auto withTag(std::string tag) const -> Substances;
@@ -119,8 +119,14 @@ public:
     /// @see Substance::withElements
     auto withElementsOf(const StringList& formulas) const -> Substances;
 
-    /// Append a new substance to the list of substances.
-    auto append(Substance substance) -> void;
+    /// Alias of method Substances::withTag.
+    auto tagged(const std::string& tag) const -> Substances;
+
+    /// Alias of method Substances::withoutTag.
+    auto untagged(const std::string& tag) const -> Substances;
+
+    /// Alias of method Substances::withElements.
+    auto containing(const StringList& elements) const -> Substances;
 
     /// Return begin const iterator of this Substances instance
     inline auto begin() const { return data().begin(); }

@@ -27,7 +27,7 @@
 #include <Atomik/Element.hpp>
 using namespace Atomik;
 
-TEST_CASE("Testing serialization of ChemicalFormula", "[Serialization]")
+TEST_CASE("Testing Serialization", "[Serialization]")
 {
     // ChemicalFormula formula;
 

@@ -39,14 +39,8 @@ struct SubstanceAttributes
     /// The name of the substance such as `H2O(aq)`, `O2(g)`, `H+(aq)`.
     std::string name;
 
-    /// The type of the substance such as `aqueous`, `liquid`, `gaseous`, `solid`, etc..
-    std::string type;
-
     /// The tags of the substance such as `organic`, `mineral`.
-    std::set<std::string> tags;
-
-    /// The extra attributes a substance might have.
-    std::any extra;
+    std::vector<std::string> tags;
 };
 
 /// A type used to represent a chemical substance and its attributes.
@@ -89,12 +83,12 @@ public:
     /// Construct a Substance object with given chemical formula.
     /// A default database of chemical elements is used to construct the elements composing the substance.
     /// @param formula The formula of the substance (e.g., `H2O`, `CaCO3`, `CO3--`, `CO3-2`).
-    Substance(std::string formula);
+    Substance(const std::string& formula);
 
     /// Construct a Substance object with given chemical formula using custom database of elements.
     /// @param formula The formula of the substance (e.g., `H2O`, `CaCO3`, `CO3--`, `CO3-2`).
     /// @param db The database of chemical elements (if the default is insufficient).
-    Substance(std::string formula, const Elements& db);
+    Substance(const std::string& formula, const Elements& db);
 
     /// Construct a Substance object with given attributes.
     /// A default database of chemical elements is used to construct the elements composing the substance.
@@ -107,22 +101,16 @@ public:
     Substance(SubstanceAttributes attributes, const Elements& db);
 
     /// Return a duplicate of this Substance object with replaced formula attribute.
-    auto replaceFormula(std::string formula) -> Substance;
+    auto replaceFormula(const std::string& formula) -> Substance;
 
     /// Return a duplicate of this Substance object with replaced formula attribute using custom database of elements.
-    auto replaceFormula(std::string formula, const Elements& db) -> Substance;
+    auto replaceFormula(const std::string& formula, const Elements& db) -> Substance;
 
     /// Return a duplicate of this Substance object with replaced name attribute.
-    auto replaceName(std::string name) -> Substance;
-
-    /// Return a duplicate of this Substance object with replaced type attribute.
-    auto replaceType(std::string type) -> Substance;
+    auto replaceName(const std::string& name) -> Substance;
 
     /// Return a duplicate of this Substance object with replaced tags attribute.
-    auto replaceTags(std::set<std::string> tags) -> Substance;
-
-    /// Return a duplicate of this Substance object with replaced tags attribute.
-    auto replaceExtra(std::any extra) -> Substance;
+    auto replaceTags(std::vector<std::string> tags) -> Substance;
 
     /// Return the name of the substance if provided, otherwise, its formula.
     auto name() const -> std::string;
@@ -130,18 +118,8 @@ public:
     /// Return the chemical formula of the substance.
     auto formula() const -> const ChemicalFormula&;
 
-    /// Return the type of the substance (e.g., `aqueous`, `liquid`, `gaseous`, `solid`).
-    auto type() const -> std::string;
-
     /// Return the tags of the substance (e.g., `organic`, `mineral`).
-    auto tags() const -> const std::set<std::string>&;
-
-    /// Return the extra attributes a substance might have.
-    auto extra() const -> const std::any&;
-
-    /// Return the extra attributes a substance might have.
-    template <typename Result>
-    auto extra() const { return std::any_cast<Result>(extra()); }
+    auto tags() const -> const std::vector<std::string>&;
 
     /// Return the elements of the substance.
     auto elements() const -> const Elements&;
@@ -153,13 +131,16 @@ public:
     auto coefficients() const -> const std::valarray<double>&;
 
     /// Return the coefficient of an element symbol in the substance.
-    auto coefficient(std::string symbol) const -> double;
+    auto coefficient(const std::string& symbol) const -> double;
 
     /// Return the electric charge of the substance.
     auto charge() const -> double;
 
     /// Return the molar mass of the substance (in unit of kg/mol).
     auto molarMass() const -> double;
+
+    /// Return true if the substance has a given tag.
+    auto hasTag(const std::string& tag) const -> bool;
 
 private:
     struct Impl;

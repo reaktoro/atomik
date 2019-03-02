@@ -25,6 +25,11 @@ set_property(TARGET AtomikObject PROPERTY CXX_STANDARD 17)
 
 # Check if a shared library for Atomik must be built
 add_library(Atomik SHARED $<TARGET_OBJECTS:AtomikObject>)
+
+# Link the library against its dependencies
+target_link_libraries(Atomik yaml-cpp)
+
+# Create an install target for the library
 install(TARGETS Atomik DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries)
 
 # Create an install target for Atomik header files

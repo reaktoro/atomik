@@ -17,43 +17,70 @@
 
 #pragma once
 
-// C++ includes
-#include <istream>
-#include <ostream>
+// yaml and json includes
+#include <yaml-cpp/yaml.h>
+#include <nlohmann/json.hpp>
 
 namespace Atomik {
 
-// // Forward declarations (class)
-// class ChemicalFormula;
-// class Element;
+/// A type alias for YAML::Node
+using yaml = YAML::Node;
 
-// // Forward declarations (struct)
-// struct ElementAttributes;
+/// A type alias for nlohmann::json
+using json = nlohmann::json;
 
-// //=================================================================================================
-// // INPUT STREAM OPERATORS
-// //=================================================================================================
+// Forward declarations (class)
+class Element;
+class Elements;
+class Substance;
+class Substances;
 
-// /// Initialize a ChemicalFormula object from an input stream.
-// auto operator>>(std::istream& is, ChemicalFormula& formula) -> std::istream&;
+// Forward declarations (struct)
+struct ElementAttributes;
+struct SubstanceAttributes;
 
-// /// Initialize an Element object from an input stream.
-// auto operator>>(std::istream& is, Element& element) -> std::istream&;
+//=================================================================================================
+// INPUT OPERATORS
+//=================================================================================================
 
-// /// Initialize an ElementAttributes object from an input stream.
-// auto operator>>(std::istream& is, ElementAttributes& element) -> std::istream&;
+/// Initialize an object of type ElementAttributes from an yaml node.
+auto operator>>(const yaml& node, ElementAttributes& obj);
 
-// //=================================================================================================
-// // OUTPUT STREAM OPERATORS
-// //=================================================================================================
+/// Initialize an object of type SubstanceAttributes from an yaml node.
+auto operator>>(const yaml& node, SubstanceAttributes& obj);
 
-// /// Save a ChemicalFormula object to an output stream.
-// auto operator<<(std::ostream& os, const ChemicalFormula& formula) -> std::ostream&;
+/// Initialize an object of type Element from an yaml node.
+auto operator>>(const yaml& node, Element& obj);
 
-// /// Save an Element object to an output stream.
-// auto operator<<(std::ostream& os, const Element& element) -> std::ostream&;
+/// Initialize an object of type Elements from an yaml node.
+auto operator>>(const yaml& node, Elements& obj);
 
-// /// Save an ElementAttributes object to an output stream.
-// auto operator<<(std::ostream& os, const ElementAttributes& element) -> std::ostream&;
+/// Initialize an object of type Substance from an yaml node.
+auto operator>>(const yaml& node, Substance& obj);
+
+/// Initialize an object of type Substances from an yaml node.
+auto operator>>(const yaml& node, Substances& obj);
+
+//=================================================================================================
+// OUTPUT OPERATORS
+//=================================================================================================
+
+/// Save an object of type ElementAttributes to an yaml node.
+auto operator<<(yaml& node, const ElementAttributes& obj);
+
+/// Save an object of type SubstanceAttributes to an yaml node.
+auto operator<<(yaml& node, const SubstanceAttributes& obj);
+
+/// Save an object of type Element to an yaml node.
+auto operator<<(yaml& node, const Element& obj);
+
+/// Save an object of type Elements to an yaml node.
+auto operator<<(yaml& node, const Elements& obj);
+
+/// Save an object of type Substance to an yaml node.
+auto operator<<(yaml& node, const Substance& obj);
+
+/// Save an object of type Substances to an yaml node.
+auto operator<<(yaml& node, const Substances& obj);
 
 } // namespace Atomik

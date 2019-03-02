@@ -41,6 +41,11 @@ Substances::Substances(StringList formulas)
     transform(formulas, m_substances, [&](std::string formula) { return Substance(formula); });
 }
 
+auto Substances::append(Substance substance) -> void
+{
+    m_substances.emplace_back(std::move(substance));
+}
+
 auto Substances::data() const -> const std::vector<Substance>&
 {
     return m_substances;
@@ -100,14 +105,6 @@ auto Substances::withFormulas(const StringList& formulas) const -> Substances
     return Substances(selected);
 }
 
-auto Substances::withType(std::string type) const -> Substances
-{
-    const auto has_type = [&](const Substance& substance) {
-        return substance.type() == type;
-    };
-    return Substances(filter(data(), has_type));
-}
-
 auto Substances::withTag(std::string tag) const -> Substances
 {
     const auto has_tag = [&](const Substance& substance) {
@@ -156,9 +153,19 @@ auto Substances::withElementsOf(const StringList& formulas) const -> Substances
     return withElements(symbols);
 }
 
-auto Substances::append(Substance substance) -> void
+auto Substances::tagged(const std::string& tag) const -> Substances
 {
-    m_substances.emplace_back(std::move(substance));
+    return withTag(tag);
+}
+
+auto Substances::untagged(const std::string& tag) const -> Substances
+{
+    return withoutTag(tag);
+}
+
+auto Substances::containing(const StringList& elements) const -> Substances
+{
+    return withElements(elements);
 }
 
 } // namespace Atomik

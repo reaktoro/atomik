@@ -21,6 +21,7 @@
 #include <Atomik/ChemicalFormula.hpp>
 #include <Atomik/Elements.hpp>
 #include <Atomik/Extract.hpp>
+#include <Atomik/Utils.hpp>
 
 namespace Atomik {
 namespace internal {
@@ -69,11 +70,11 @@ Substance::Substance()
 : pimpl(new Impl())
 {}
 
-Substance::Substance(std::string formula)
+Substance::Substance(const std::string& formula)
 : pimpl(new Impl({formula}, internal::elementsdb))
 {}
 
-Substance::Substance(std::string formula, const Elements& db)
+Substance::Substance(const std::string& formula, const Elements& db)
 : pimpl(new Impl({formula}, db))
 {}
 
@@ -85,43 +86,29 @@ Substance::Substance(SubstanceAttributes attributes, const Elements& db)
 : pimpl(new Impl(std::move(attributes), db))
 {}
 
-auto Substance::replaceFormula(std::string formula) -> Substance
+auto Substance::replaceFormula(const std::string& formula) -> Substance
 {
     return replaceFormula(formula, elements());
 }
 
-auto Substance::replaceFormula(std::string formula, const Elements& db) -> Substance
+auto Substance::replaceFormula(const std::string& formula, const Elements& db) -> Substance
 {
     auto attributes = pimpl->attributes;
     attributes.formula = formula;
     return Substance(attributes, db);
 }
 
-auto Substance::replaceName(std::string name) -> Substance
+auto Substance::replaceName(const std::string& name) -> Substance
 {
     auto attributes = pimpl->attributes;
     attributes.name = name;
     return Substance(attributes, elements());
 }
 
-auto Substance::replaceType(std::string type) -> Substance
+auto Substance::replaceTags(std::vector<std::string> tags) -> Substance
 {
     auto attributes = pimpl->attributes;
-    attributes.type = type;
-    return Substance(attributes, elements());
-}
-
-auto Substance::replaceTags(std::set<std::string> tags) -> Substance
-{
-    auto attributes = pimpl->attributes;
-    attributes.tags = tags;
-    return Substance(attributes, elements());
-}
-
-auto Substance::replaceExtra(std::any extra) -> Substance
-{
-    auto attributes = pimpl->attributes;
-    attributes.extra = extra;
+    attributes.tags = std::move(tags);
     return Substance(attributes, elements());
 }
 
@@ -135,19 +122,9 @@ auto Substance::formula() const -> const ChemicalFormula&
     return pimpl->formula;
 }
 
-auto Substance::type() const -> std::string
-{
-    return pimpl->attributes.type;
-}
-
-auto Substance::tags() const -> const std::set<std::string>&
+auto Substance::tags() const -> const std::vector<std::string>&
 {
     return pimpl->attributes.tags;
-}
-
-auto Substance::extra() const -> const std::any&
-{
-    return pimpl->attributes.extra;
 }
 
 auto Substance::elements() const -> const Elements&
@@ -165,7 +142,7 @@ auto Substance::coefficients() const -> const std::valarray<double>&
     return formula().coefficients();
 }
 
-auto Substance::coefficient(std::string symbol) const -> double
+auto Substance::coefficient(const std::string& symbol) const -> double
 {
     return formula().coefficient(symbol);
 }
@@ -180,6 +157,11 @@ auto Substance::molarMass() const -> double
     return pimpl->molarMass;
 }
 
+auto Substance::hasTag(const std::string& tag) const -> bool
+{
+    return index(tags(), tag) < tags().size();
+}
+
 auto operator<(const Substance& lhs, const Substance& rhs) -> bool
 {
     return lhs.name() < rhs.name();
@@ -189,7 +171,6 @@ auto operator==(const Substance& lhs, const Substance& rhs) -> bool
 {
     return lhs.name()    == rhs.name()    &&
            lhs.formula() == rhs.formula() &&
-           lhs.type()    == rhs.type()    &&
            lhs.tags()    == rhs.tags()
            ;
 }

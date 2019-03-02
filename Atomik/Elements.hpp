@@ -39,6 +39,9 @@ public:
     /// Construct an Elements object with given data.
     explicit Elements(std::vector<Element> elements);
 
+    /// Append a new element to the list of elements.
+    auto append(Element element) -> void;
+
     /// Return the internal collection of Element objects.
     auto data() const -> const std::vector<Element>&;
 
@@ -73,9 +76,6 @@ public:
 
     /// Return the chemical elements with given tags.
     auto withTags(const StringList& tags) const -> Elements;
-
-    /// Append a new element to the list of elements.
-    auto append(Element element) -> void;
 
     /// Return begin const iterator of this Elements instance
     inline auto begin() const { return data().begin(); }
