@@ -6,3 +6,4 @@ dependencies:
   - ccache  # [unix]
   - catch2
   - nlohmann_json
+  - yaml-cpp
