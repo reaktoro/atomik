@@ -24,25 +24,35 @@
 namespace Atomik {
 namespace internal {
 
-inline auto str(std::stringstream&) -> void
-{}
-
-template <typename T, typename... Args>
-auto str(std::stringstream& ss, const T& item, Args... items) -> void
+template <typename Arg>
+auto stringfy(std::stringstream& ss, const std::string& sep, const Arg& item)
 {
     ss << item;
-    str(ss, items...);
+}
+
+template <typename Arg, typename... Args>
+auto stringfy(std::stringstream& ss, const std::string& sep, const Arg& item, Args... items) -> void
+{
+    ss << item << sep;
+    stringfy(ss, sep, items...);
 }
 
 } // namespace internal
 
-/// Concatenate the arguments into a string.
+/// Concatenate the arguments into a string using a given separator string.
+template <typename... Args>
+auto stringfy(const std::string& sep, Args... items) -> std::string
+{
+    std::stringstream ss;
+    internal::stringfy(ss, sep, items...);
+    return ss.str();
+}
+
+/// Concatenate the arguments into a string without any separator string.
 template <typename... Args>
 auto str(Args... items) -> std::string
 {
-    std::stringstream ss;
-    internal::str(ss, items...);
-    return ss.str();
+    return stringfy("", items...);
 }
 
 } // namespace Atomik
