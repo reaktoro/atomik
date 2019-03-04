@@ -22,38 +22,75 @@
 #include <Atomik/Parameters.hpp>
 using namespace Atomik;
 
+TEST_CASE("Testing ParamValue class", "[ParamValue]")
+{
+    ParamValue param;
+
+    // Testing ParamValue(double) constructor
+    param = ParamValue(1.0);
+
+    REQUIRE( param == 1.0 );
+    REQUIRE( param.value() == 1.0 );
+
+    // Testing operator=(double)
+    param = 1.0;
+
+    REQUIRE( param == 1.0 );
+    REQUIRE( param.value() == 1.0 );
+
+    REQUIRE_THROWS( param.values() );
+
+    // Testing ParamValue(vector<double>) constructor
+    param = ParamValue({1.0, 2.0, 3.0});
+
+    REQUIRE( param.values().size() == 3 );
+    REQUIRE( param.values()[0] == 1.0 );
+    REQUIRE( param.values()[1] == 2.0 );
+    REQUIRE( param.values()[2] == 3.0 );
+
+    // Testing operator=(vector<double>)
+    param = {1.0, 2.0, 3.0};
+
+    REQUIRE( param.values().size() == 3 );
+    REQUIRE( param.values()[0] == 1.0 );
+    REQUIRE( param.values()[1] == 2.0 );
+    REQUIRE( param.values()[2] == 3.0 );
+
+    REQUIRE_THROWS( param.value() );
+}
+
 TEST_CASE("Testing Parameters class", "[Parameters]")
 {
-    Parameters parameters;
+    // Parameters parameters;
 
-    // Testing Parameters::operator=(double)
-    REQUIRE_NOTHROW( parameters = 1.0 );
+    // // Testing Parameters::operator=(double)
+    // REQUIRE_NOTHROW( parameters = 1.0 );
 
-    REQUIRE( parameters == 1.0 );
-    REQUIRE( parameters.value() == 1.0 );
+    // REQUIRE( parameters == 1.0 );
+    // REQUIRE( parameters.value() == 1.0 );
 
-    // Testing Parameters::operator=(vector<double>)
-    REQUIRE_NOTHROW( parameters = {1, 2, 3} );
+    // // Testing Parameters::operator=(vector<double>)
+    // REQUIRE_NOTHROW( parameters = {1, 2, 3} );
 
-    REQUIRE( parameters.values().size() == 3 );
-    REQUIRE( parameters.values().at(0) == 1 );
-    REQUIRE( parameters.values().at(1) == 2 );
-    REQUIRE( parameters.values().at(2) == 3 );
+    // REQUIRE( parameters.values().size() == 3 );
+    // REQUIRE( parameters.values().at(0) == 1 );
+    // REQUIRE( parameters.values().at(1) == 2 );
+    // REQUIRE( parameters.values().at(2) == 3 );
 
-    // Testing method Parameters::insert
-    REQUIRE_NOTHROW( parameters.insert("a").insert("b") );
-    REQUIRE_NOTHROW( parameters.insert("a").insert("d") );
+    // // Testing method Parameters::insert
+    // REQUIRE_NOTHROW( parameters.insert("a").insert("b") );
+    // REQUIRE_NOTHROW( parameters.insert("a").insert("d") );
 
-    REQUIRE_NOTHROW( parameters.get("a").get("b") = 5.0 );
-    REQUIRE_NOTHROW( parameters.get("a").get("d") = {3.0, 2.0, 1.0} );
+    // REQUIRE_NOTHROW( parameters.get("a").get("b") = 5.0 );
+    // REQUIRE_NOTHROW( parameters.get("a").get("d") = {3.0, 2.0, 1.0} );
 
-    REQUIRE( parameters.get("a").get("b") == 5.0 );
-    REQUIRE( parameters.get("a").get("d").values().at(0) == 3.0 );
-    REQUIRE( parameters.get("a").get("d").values().at(1) == 2.0 );
-    REQUIRE( parameters.get("a").get("d").values().at(2) == 1.0 );
+    // REQUIRE( parameters.get("a").get("b") == 5.0 );
+    // REQUIRE( parameters.get("a").get("d").values().at(0) == 3.0 );
+    // REQUIRE( parameters.get("a").get("d").values().at(1) == 2.0 );
+    // REQUIRE( parameters.get("a").get("d").values().at(2) == 1.0 );
 
-    REQUIRE( parameters["a"]["b"] == 5.0 );
-    REQUIRE( parameters["a"]["d"].values().at(0) == 3.0 );
-    REQUIRE( parameters["a"]["d"].values().at(1) == 2.0 );
-    REQUIRE( parameters["a"]["d"].values().at(2) == 1.0 );
+    // REQUIRE( parameters["a"]["b"] == 5.0 );
+    // REQUIRE( parameters["a"]["d"].values().at(0) == 3.0 );
+    // REQUIRE( parameters["a"]["d"].values().at(1) == 2.0 );
+    // REQUIRE( parameters["a"]["d"].values().at(2) == 1.0 );
 }

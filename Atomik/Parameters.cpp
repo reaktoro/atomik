@@ -21,6 +21,91 @@
 #include <Atomik/Exception.hpp>
 
 namespace Atomik {
+
+ParamValue::ParamValue()
+: val(0.0)
+{}
+
+ParamValue::ParamValue(double value)
+: val(value)
+{}
+
+ParamValue::ParamValue(std::vector<double> values)
+: val(std::move(values))
+{}
+
+auto ParamValue::operator=(double value) -> ParamValue&
+{
+    val = value;
+    return *this;
+}
+
+auto ParamValue::operator=(std::vector<double> values) -> ParamValue&
+{
+    val = std::move(values);
+    return *this;
+}
+
+auto ParamValue::value() -> double&
+{
+    error(val.index() == 1, "This parameter consists comprises an array of numeric values, not a single value.");
+    return std::get<0>(val);
+}
+
+auto ParamValue::value() const -> const double&
+{
+    error(val.index() == 1, "This parameter consists comprises an array of numeric values, not a single value.");
+    return std::get<0>(val);
+}
+
+auto ParamValue::values() -> std::vector<double>&
+{
+    error(val.index() == 0, "This parameter consists of a single numeric value, not an array of values.");
+    return std::get<1>(val);
+}
+
+auto ParamValue::values() const -> const std::vector<double>&
+{
+    error(val.index() == 0, "This parameter consists of a single numeric value, not an array of values.");
+    return std::get<1>(val);
+}
+
+ParamValue::operator double& ()
+{
+    return value();
+}
+
+ParamValue::operator const double& () const
+{
+    return value();
+}
+
+ParamValue::operator std::vector<double>& ()
+{
+    return values();
+}
+
+ParamValue::operator const std::vector<double>& () const
+{
+    return values();
+}
+
+auto Parameters::set(const std::string& name) -> ParamValue&
+{
+    auto [iter, success] = index.insert({ name, index.size() });
+
+    return success ? ( values.push_back(0.0), values.back() ) : values[iter->second];
+}
+
+auto Parameters::get(const std::string& name) -> ParamValue&
+{
+    auto iter = index.find(name);
+    error(iter != index.end(), "There is no parameter with name `", name, "`.");
+    return  values[iter->second];
+}
+
+
+/**
 namespace internal {
 
 /// An alias type for the complex variant type used in Parameters class.
@@ -188,5 +273,7 @@ Parameters::operator const std::vector<double>& () const
 {
     return values();
 }
+
+//*/
 
 } // namespace Atomik
