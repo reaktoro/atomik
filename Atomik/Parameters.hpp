@@ -26,23 +26,6 @@
 // Atomik includes
 #include <Atomik/StringUtils.hpp>
 
-
-// // Scenario 1: existing nodes
-// parameters["HKF"]["CO2(aq)"]["Gf"] = 1.0;
-
-// parameters["HKF CO2(aq) Gf"] = 1.0;
-
-
-// double& val = parameters["HKF"]["CO2(aq)"]["Gf"];
-
-// // Scenario 2: inserting nodes
-// parameters.insert("HKF").insert("CO2(aq)").insert("Gf") = 1.0;
-
-// parameters.insert("HKF CO2(aq) Gf") = 1.0;
-// parameters.value("hkf", "CO2(aq)", "Gf")
-// parameters.get("a", "b")
-
-
 namespace Atomik {
 
 /// A type used to represent the possible value types of a parameter.
@@ -83,6 +66,17 @@ public:
     /// Return the numeric values of this ParamValue object.
     /// @throw std::runtime_error In case this ParamValue object currently represents a single value.
     auto values() const -> const std::vector<double>&;
+
+    /// Return the number of numeric values in this parameter.
+    auto size() const -> std::size_t;
+
+    /// Return the numeric value with a given index.
+    /// @throw std::runtime_error In case this ParamValue object currently represents a single value.
+    auto operator[](std::size_t index) const -> const double&;
+
+    /// Return the numeric value with a given index.
+    /// @throw std::runtime_error In case this ParamValue object currently represents a single value.
+    auto operator[](std::size_t index) -> double&;
 
     /// Return (implicitly) the value of this ParamValue object.
     /// @throw std::runtime_error In case this ParamValue object currently represents multiple values.
@@ -127,15 +121,19 @@ public:
     /// Construct a default Parameters object.
     Parameters();
 
-    /// Insert a new parameter child node with given parameter name.
+    /// Set a new parameter with given name.
     auto set(const std::string& name) -> ParamValue&;
 
-    /// Insert a new parameter child node with given parameter name.
+    /// Set a new parameter with given subnames.
     template <typename... Args>
-    auto set(const Args&... subnames) -> ParamValue& { set(stringfy(".", subnames...)); }
+    auto set(const std::string& first, const Args&... others) -> ParamValue& { return set(stringfy(".", first, others...)); }
 
-    /// Insert a new parameter child node with given parameter name.
+    /// Return a parameter with given name.
     auto get(const std::string& name) -> ParamValue&;
+
+    /// Return a parameter with given subnames.
+    template <typename... Args>
+    auto get(const std::string& first, const Args&... others) -> ParamValue& { return get(stringfy(".", first, others...)); }
 
 private:
     /// The values of the parameters.

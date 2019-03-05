@@ -61,36 +61,22 @@ TEST_CASE("Testing ParamValue class", "[ParamValue]")
 
 TEST_CASE("Testing Parameters class", "[Parameters]")
 {
-    // Parameters parameters;
+    Parameters parameters;
 
-    // // Testing Parameters::operator=(double)
-    // REQUIRE_NOTHROW( parameters = 1.0 );
+    parameters.set("a") = 1.0;
+    REQUIRE( parameters.get("a") == 1.0 );
 
-    // REQUIRE( parameters == 1.0 );
-    // REQUIRE( parameters.value() == 1.0 );
+    parameters.set("a", "b") = 2.0;
+    REQUIRE( parameters.get("a", "b") == 2.0 );
+    REQUIRE( parameters.get("a.b") == 2.0 );
 
-    // // Testing Parameters::operator=(vector<double>)
-    // REQUIRE_NOTHROW( parameters = {1, 2, 3} );
+    parameters.set("a", "c") = 2.0;
+    REQUIRE( parameters.get("a", "b") == 2.0 );
+    REQUIRE( parameters.get("a.b") == 2.0 );
 
-    // REQUIRE( parameters.values().size() == 3 );
-    // REQUIRE( parameters.values().at(0) == 1 );
-    // REQUIRE( parameters.values().at(1) == 2 );
-    // REQUIRE( parameters.values().at(2) == 3 );
-
-    // // Testing method Parameters::insert
-    // REQUIRE_NOTHROW( parameters.insert("a").insert("b") );
-    // REQUIRE_NOTHROW( parameters.insert("a").insert("d") );
-
-    // REQUIRE_NOTHROW( parameters.get("a").get("b") = 5.0 );
-    // REQUIRE_NOTHROW( parameters.get("a").get("d") = {3.0, 2.0, 1.0} );
-
-    // REQUIRE( parameters.get("a").get("b") == 5.0 );
-    // REQUIRE( parameters.get("a").get("d").values().at(0) == 3.0 );
-    // REQUIRE( parameters.get("a").get("d").values().at(1) == 2.0 );
-    // REQUIRE( parameters.get("a").get("d").values().at(2) == 1.0 );
-
-    // REQUIRE( parameters["a"]["b"] == 5.0 );
-    // REQUIRE( parameters["a"]["d"].values().at(0) == 3.0 );
-    // REQUIRE( parameters["a"]["d"].values().at(1) == 2.0 );
-    // REQUIRE( parameters["a"]["d"].values().at(2) == 1.0 );
+    parameters.set("a", "b", "c") = { 1.0, 2.0, 3.0 };
+    REQUIRE( parameters.get("a.b.c").size() == 3 );
+    REQUIRE( parameters.get("a.b.c")[0] == 1.0 );
+    REQUIRE( parameters.get("a.b.c")[1] == 2.0 );
+    REQUIRE( parameters.get("a.b.c")[2] == 3.0 );
 }
