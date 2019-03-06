@@ -10,6 +10,9 @@ include(CCache)
 # Set the name of the project
 project(Atomik VERSION 0.1 LANGUAGES CXX)
 
+# The a brief description of the project
+set(PROJECT_BRIEF "A C++ library implementing basic chemical concepts.")
+
 # Include the cmake variables with values for installation directories
 include(GNUInstallDirs)
 
@@ -18,9 +21,6 @@ include(CondaAware)
 
 # Find all public and private dependencies
 include(FindDeps/All)
-
-# Build the dependencies
-add_subdirectory(deps)
 
 # Build the C++ library Atomik
 add_subdirectory(Atomik)
