@@ -44,4 +44,3 @@ environment.yml
 *.exe
 *.out
 *.app
-.vscode/settings.json
