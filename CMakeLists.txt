@@ -16,12 +16,14 @@ include(GNUInstallDirs)
 # Ensure proper configuration if in a conda environment
 include(CondaAware)
 
-# Find dependencies
-find_package(yaml-cpp REQUIRED)
-find_package(Catch2 REQUIRED)
+# Find all public and private dependencies
+include(FindDeps/All)
 
 # Build the dependencies
 add_subdirectory(deps)
 
 # Build the C++ library Atomik
 add_subdirectory(Atomik)
+
+# Install the cmake config files that permit users to use find_package(Atomik)
+include(PackageFinding/Enable)
