@@ -1,6 +1,6 @@
-// Atomik is a library for parsing chemical formulas.
+// Atomik is a library that implements basic chemical concepts such as elements, substances, and reactions.
 //
-// Copyright (C) 2018 Allan Leal
+// Copyright (C) 2014-2019 Allan Leal and Atomik Contributors
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -19,10 +19,10 @@
 #include <catch2/catch.hpp>
 
 // Atomik includes
-#include <Atomik/Utils.hpp>
+#include <Atomik/Algorithms.hpp>
 using namespace Atomik;
 
-TEST_CASE("Testing Utils", "[Utils]")
+TEST_CASE("Testing Algorithms", "[Algorithms]")
 {
     std::vector<int> nums = { 1, 2, 3, 4, 5, 6, 7, 8, 9};
     std::vector<int> res;

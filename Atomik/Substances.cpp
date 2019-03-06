@@ -1,6 +1,6 @@
-// Atomik is a library for parsing chemical formulas.
+// Atomik is a library that implements basic chemical concepts such as elements, substances, and reactions.
 //
-// Copyright (C) 2018 Allan Leal
+// Copyright (C) 2014-2019 Allan Leal and Atomik Contributors
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -17,14 +17,12 @@
 
 #include "Substances.hpp"
 
-// C++ includes
-#include <algorithm>
-
 // Atomik includes
+#include <Atomik/Algorithms.hpp>
 #include <Atomik/ChemicalFormula.hpp>
 #include <Atomik/Exception.hpp>
 #include <Atomik/StringList.hpp>
-#include <Atomik/Utils.hpp>
+#include <Atomik/WithUtils.hpp>
 
 namespace Atomik {
 
@@ -63,18 +61,12 @@ auto Substances::operator[](std::size_t index) const -> const Substance&
 
 auto Substances::indexWithName(std::string name) const -> std::size_t
 {
-    const auto has_name = [&](const Substance& substance) {
-        return substance.name() == name;
-    };
-    return indexfn(data(), has_name);
+    return indexfn(data(), Atomik::withName(name));
 }
 
 auto Substances::indexWithFormula(std::string formula) const -> std::size_t
 {
-    const auto has_formula = [&](const Substance& substance) {
-        return substance.formula() == formula;
-    };
-    return indexfn(data(), has_formula);
+    return indexfn(data(), Atomik::withFormula(formula));
 }
 
 auto Substances::getWithName(std::string name) const -> Substance
@@ -94,55 +86,40 @@ auto Substances::getWithFormula(std::string formula) const -> Substance
 auto Substances::withNames(const StringList& names) const -> Substances
 {
     std::vector<Substance> selected(names.size());
-    transform(names, selected, [&](auto name) { return getWithName(name); });
+    transform(names, selected, [&](auto&& name) { return getWithName(name); });
     return Substances(selected);
 }
 
 auto Substances::withFormulas(const StringList& formulas) const -> Substances
 {
     std::vector<Substance> selected(formulas.size());
-    transform(formulas, selected, [&](auto formula) { return getWithFormula(formula); });
+    transform(formulas, selected, [&](auto&& formula) { return getWithFormula(formula); });
     return Substances(selected);
 }
 
 auto Substances::withTag(std::string tag) const -> Substances
 {
-    const auto has_tag = [&](const Substance& substance) {
-        return contains(substance.tags(), tag);
-    };
-    return Substances(filter(data(), has_tag));
+    return Substances(filter(data(), Atomik::withTag(tag)));
 }
 
 auto Substances::withoutTag(std::string tag) const -> Substances
 {
-    const auto has_tag = [&](const Substance& substance) {
-        return contains(substance.tags(), tag);
-    };
-    return Substances(remove(data(), has_tag));
+    return Substances(remove(data(), Atomik::withTag(tag)));
 }
 
 auto Substances::withTags(const StringList& tags) const -> Substances
 {
-    const auto has_tags = [&](const Substance& substance) {
-        return contained(tags, substance.tags());
-    };
-    return Substances(filter(data(), has_tags));
+    return Substances(filter(data(), Atomik::withTags(tags.data())));
 }
 
 auto Substances::withoutTags(const StringList& tags) const -> Substances
 {
-    const auto has_tags = [&](const Substance& substance) {
-        return contained(tags, substance.tags());
-    };
-    return Substances(remove(data(), has_tags));
+    return Substances(remove(data(), Atomik::withTags(tags.data())));
 }
 
 auto Substances::withElements(const StringList& symbols) const -> Substances
 {
-    const auto has_elements = [&](const Substance& substance) {
-        return contained(substance.symbols(), symbols);
-    };
-    return Substances(filter(data(), has_elements));
+    return Substances(filter(data(), Atomik::withSymbols(symbols.data())));
 }
 
 auto Substances::withElementsOf(const StringList& formulas) const -> Substances

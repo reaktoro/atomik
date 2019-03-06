@@ -1,6 +1,6 @@
-// Atomik is a library for parsing chemical formulas.
+// Atomik is a library that implements basic chemical concepts such as elements, substances, and reactions.
 //
-// Copyright (C) 2018 Allan Leal
+// Copyright (C) 2014-2019 Allan Leal and Atomik Contributors
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -17,13 +17,11 @@
 
 #include "Elements.hpp"
 
-// C++ includes
-#include <algorithm>
-
 // Atomik includes
+#include <Atomik/Algorithms.hpp>
 #include <Atomik/Exception.hpp>
 #include <Atomik/StringList.hpp>
-#include <Atomik/Utils.hpp>
+#include <Atomik/WithUtils.hpp>
 
 namespace Atomik {
 namespace internal {
@@ -183,18 +181,12 @@ auto Elements::operator[](std::size_t index) const -> const Element&
 
 auto Elements::indexWithSymbol(std::string symbol) const -> std::size_t
 {
-    const auto has_symbol = [&](const Element& element) {
-        return element.symbol() == symbol;
-    };
-    return indexfn(data(), has_symbol);
+    return indexfn(data(), Atomik::withSymbol(symbol));
 }
 
 auto Elements::indexWithName(std::string name) const -> std::size_t
 {
-    const auto has_name = [&](const Element& element) {
-        return element.name() == name;
-    };
-    return indexfn(data(), has_name);
+    return indexfn(data(), Atomik::withName(name));
 }
 
 auto Elements::getWithName(std::string name) const -> Element
@@ -213,34 +205,26 @@ auto Elements::getWithSymbol(std::string symbol) const -> Element
 
 auto Elements::withSymbols(const StringList& symbols) const -> Elements
 {
-    const auto has_required_symbol = [&](const Element& element) {
-        return contains(symbols, element.symbol());
-    };
-    return Elements(filter(data(), has_required_symbol));
+    std::vector<Element> selected(symbols.size());
+    transform(symbols, selected, [&](auto&& symbol) { return getWithSymbol(symbol); });
+    return Elements(selected);
 }
 
 auto Elements::withNames(const StringList& names) const -> Elements
 {
-    const auto has_required_name = [&](const Element& element) {
-        return contains(names, element.name());
-    };
-    return Elements(filter(data(), has_required_name));
+    std::vector<Element> selected(names.size());
+    transform(names, selected, [&](auto&& name) { return getWithName(name); });
+    return Elements(selected);
 }
 
 auto Elements::withTag(std::string tag) const -> Elements
 {
-    const auto has_tag = [&](const Element& element) {
-        return contains(element.tags(), tag);
-    };
-    return Elements(filter(data(), has_tag));
+    return Elements(filter(data(), Atomik::withTag(tag)));
 }
 
 auto Elements::withTags(const StringList& tags) const -> Elements
 {
-    const auto has_tags = [&](const Element& element) {
-        return contained(tags, element.tags());
-    };
-    return Elements(filter(data(), has_tags));
+    return Elements(filter(data(), Atomik::withTags(tags.data())));
 }
 
 auto Elements::PeriodicTable() -> Elements
