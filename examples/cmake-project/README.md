@@ -1,34 +1,36 @@
 
-# CMake-Based Project Using autodiff
+# CMake-Based Project Using Atomik
 
 ## Introduction
-This example demonstrates how CMake's command `find_package` can be used to
-resolve the dependency of an executable `app` on **autodiff**, a header-only
-C++17 library.
 
-The source file `main.cpp` includes the header-file `autodiff/forward.hpp` and
-uses a forward mode automatic differentiation algorithm to compute the derivatives of a scalar function.
+This example demonstrates how CMake's command `find_package` can be used to
+resolve the dependency of an executable `app` on **Atomik**, a C++17 library
+implementing basic chemical concepts.
+
+The source file `main.cpp` includes the header-file `Atomik/Atomik.hpp`
+and uses class `ChemicalFormula` to parse the chemical formula `CaCO3`.
 
 The `CMakeLists.txt` file uses the command:
 
 ```cmake
-find_package(autodiff)
+find_package(Atomik REQUIRED)
 ```
 
-to find the **autodiff** header files. The executable target `app` is then
-linked against the imported target `autodiff::autodiff`:
+to find the **Atomik** package. The executable target `app` is then linked
+against the imported target `Atomik::Atomik`:
 
 ```cmake
-target_link_libraries(app autodiff::autodiff)
+target_link_libraries(app Atomik::Atomik)
 ```
 
 ## Building and Executing the Application
+
 To build the application, do:
 
 ```bash
 cd cmake-project
 mkdir build && cd build
-cmake .. -DCMAKE_PREFIX_PATH=/path/to/autodiff/install/dir
+cmake .. -DCMAKE_PREFIX_PATH=/path/to/Atomik/install/dir
 make
 ```
 
@@ -38,18 +40,19 @@ To execute the application, do:
 ./app
 ```
 
-Note: If **autodiff** has been installed system-wide, then the CMake argument
+Note: If **Atomik** has been installed system-wide, then the CMake argument
 `CMAKE_PREFIX_PATH` should not be needed. Otherwise, you will need to specify
-where **autodiff** is installed in your machine. For example:
+where **Atomik** is installed in your machine. For example:
 
 ```cmake
 cmake .. -DCMAKE_PREFIX_PATH=$HOME/local
 ```
 
-assuming directory `$HOME/local` is where **autodiff** was installed to, which should then contain the following directory:
+assuming directory `$HOME/local` is where **Atomik** was installed to, which
+should then contain the following directory:
 
 ```
-$HOME/local/include/autodiff/
+$HOME/local/include/Atomik/
 ```
 
-where the **autodiff** header files are located.
+where the **Atomik** header files are located.
