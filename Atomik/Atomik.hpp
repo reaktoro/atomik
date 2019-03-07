@@ -1,6 +1,6 @@
-// Atomik is a library for parsing chemical formulas.
+// Atomik is a library that implements basic chemical concepts such as elements, substances, and reactions.
 //
-// Copyright (C) 2018 Allan Leal
+// Copyright (C) 2018-2019 Allan Leal and Reaktoro Contributors
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
