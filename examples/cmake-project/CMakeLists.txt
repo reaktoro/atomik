@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 
 project(app)
 
-find_package(Atomik)
+find_package(Atomik REQUIRED)
 
 add_executable(app main.cpp)
 
