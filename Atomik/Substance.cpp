@@ -112,6 +112,13 @@ auto Substance::replaceTags(std::vector<std::string> tags) -> Substance
     return Substance(attributes, elements());
 }
 
+auto Substance::replaceExtra(std::any extra) -> Substance
+{
+    auto attributes = pimpl->attributes;
+    attributes.extra = std::move(extra);
+    return Substance(attributes, elements());
+}
+
 auto Substance::name() const -> std::string
 {
     return pimpl->attributes.name;
@@ -125,6 +132,11 @@ auto Substance::formula() const -> const ChemicalFormula&
 auto Substance::tags() const -> const std::vector<std::string>&
 {
     return pimpl->attributes.tags;
+}
+
+auto Substance::extra() const -> const std::any&
+{
+    return pimpl->attributes.extra;
 }
 
 auto Substance::elements() const -> const Elements&
