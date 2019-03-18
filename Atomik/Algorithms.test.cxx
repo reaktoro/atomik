@@ -31,9 +31,13 @@ TEST_CASE("Testing Algorithms", "[Algorithms]")
     for(auto n : nums)
         REQUIRE( index(nums, n) == n - 1);
 
+    REQUIRE( index(nums, 1000) == -1 );
+
     // Test the function indexfn(container, pred)
     for(auto n : nums)
         REQUIRE( indexfn(nums, [=](auto x) { return x == n; } ) == n - 1);
+
+    REQUIRE( indexfn(nums, [=](auto x) { return x == 1000; } ) == -1 );
 
     // Test the filter function
     res = filter(nums, [](auto x) { return x % 2 == 0; });

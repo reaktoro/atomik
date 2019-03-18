@@ -23,15 +23,17 @@
 namespace Atomik {
 
 template <typename Container, typename T>
-auto index(const Container& c, const T& value)
+auto index(const Container& c, const T& value) -> std::ptrdiff_t
 {
-    return std::find(c.begin(), c.end(), value) - c.begin();
+    auto i = std::find(c.begin(), c.end(), value) - c.begin();
+    return i < c.size() ? i : -1;
 }
 
 template <typename Container, typename Predicate>
-auto indexfn(const Container& c, const Predicate& pred)
+auto indexfn(const Container& c, const Predicate& pred) -> std::ptrdiff_t
 {
-    return std::find_if(c.begin(), c.end(), pred) - c.begin();
+    auto i = std::find_if(c.begin(), c.end(), pred) - c.begin();
+    return i < c.size() ? i : -1;
 }
 
 template <typename Container, typename Predicate>
