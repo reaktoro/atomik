@@ -174,17 +174,17 @@ auto Elements::size() const -> std::size_t
     return data().size();
 }
 
-auto Elements::operator[](std::size_t index) const -> const Element&
+auto Elements::operator[](Index index) const -> const Element&
 {
     return data()[index];
 }
 
-auto Elements::indexWithSymbol(std::string symbol) const -> std::size_t
+auto Elements::indexWithSymbol(std::string symbol) const -> Index
 {
     return indexfn(data(), Atomik::withSymbol(symbol));
 }
 
-auto Elements::indexWithName(std::string name) const -> std::size_t
+auto Elements::indexWithName(std::string name) const -> Index
 {
     return indexfn(data(), Atomik::withName(name));
 }

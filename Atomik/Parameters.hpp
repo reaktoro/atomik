@@ -24,6 +24,7 @@
 #include <vector>
 
 // Atomik includes
+#include <Atomik/Index.hpp>
 #include <Atomik/StringUtils.hpp>
 
 namespace Atomik {
@@ -72,11 +73,11 @@ public:
 
     /// Return the numeric value with a given index.
     /// @throw std::runtime_error In case this ParamValue object currently represents a single value.
-    auto operator[](std::size_t index) const -> const double&;
+    auto operator[](Index index) const -> const double&;
 
     /// Return the numeric value with a given index.
     /// @throw std::runtime_error In case this ParamValue object currently represents a single value.
-    auto operator[](std::size_t index) -> double&;
+    auto operator[](Index index) -> double&;
 
     /// Return (implicitly) the value of this ParamValue object.
     /// @throw std::runtime_error In case this ParamValue object currently represents multiple values.
@@ -140,7 +141,7 @@ private:
     std::vector<ParamValue> values;
 
     /// The mapping from parameters names to their indices.
-    std::unordered_map<std::string, std::size_t> index;
+    std::unordered_map<std::string, Index> index;
 };
 
 } // namespace Atomik

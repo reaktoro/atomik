@@ -23,6 +23,7 @@
 
 // Atomik includes
 #include <Atomik/Element.hpp>
+#include <Atomik/Index.hpp>
 
 namespace Atomik {
 
@@ -49,13 +50,13 @@ public:
     auto size() const -> std::size_t;
 
     /// Return the Element object with given index.
-    auto operator[](std::size_t index) const -> const Element&;
+    auto operator[](Index index) const -> const Element&;
 
     /// Return the index of the first chemical element with given name.
-    auto indexWithName(std::string name) const -> std::size_t;
+    auto indexWithName(std::string name) const -> Index;
 
     /// Return the index of the first chemical element with given symbol.
-    auto indexWithSymbol(std::string symbol) const -> std::size_t;
+    auto indexWithSymbol(std::string symbol) const -> Index;
 
     /// Return the first chemical element with given name.
     /// @throw std::runtime_error When there is no element with given name.

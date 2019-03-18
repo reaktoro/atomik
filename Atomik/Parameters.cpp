@@ -75,12 +75,12 @@ auto ParamValue::size() const -> std::size_t
     return values().size();
 }
 
-auto ParamValue::operator[](std::size_t index) const -> const double&
+auto ParamValue::operator[](Index index) const -> const double&
 {
     return values()[index];
 }
 
-auto ParamValue::operator[](std::size_t index) -> double&
+auto ParamValue::operator[](Index index) -> double&
 {
     return values()[index];
 }
