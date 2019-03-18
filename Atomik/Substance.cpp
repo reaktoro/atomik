@@ -21,6 +21,7 @@
 #include <Atomik/Algorithms.hpp>
 #include <Atomik/ChemicalFormula.hpp>
 #include <Atomik/Elements.hpp>
+#include <Atomik/Exception.hpp>
 #include <Atomik/Extract.hpp>
 
 namespace Atomik {
@@ -59,7 +60,11 @@ struct Substance::Impl
 
         // Initialize the elements of the substance
         for(auto const& symbol : formula.symbols())
-            elements.append(db.getWithSymbol(symbol));
+            if(auto idx = db.indexWithSymbol(symbol); idx >= 0)
+                elements.append(db[idx]);
+            else error(true, "Substance with name ", attributes.name,
+                " and formula ", attributes.formula,
+                " has an unknown element with symbol ", symbol, ".");
 
         // Initialize the molar mass of the substance
         molarMass = (formula.coefficients() * Extract::molarMasses(elements)).sum();
