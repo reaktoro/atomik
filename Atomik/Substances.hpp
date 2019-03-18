@@ -22,6 +22,7 @@
 #include <vector>
 
 // Atomik includes
+#include <Atomik/Index.hpp>
 #include <Atomik/Substance.hpp>
 
 namespace Atomik {
@@ -35,6 +36,9 @@ class Substances
 public:
     /// Construct a default Substances object.
     Substances();
+
+    /// Construct an Substances object with given substances.
+    Substances(std::initializer_list<Substance> substances);
 
     /// Construct an Substances object with given substances.
     explicit Substances(std::vector<Substance> substances);
@@ -52,15 +56,15 @@ public:
     auto size() const -> std::size_t;
 
     /// Return the Substance object with given index.
-    auto operator[](std::size_t index) const -> const Substance&;
+    auto operator[](Index index) const -> const Substance&;
 
     /// Return the index of the first chemical substance with given name.
     /// If there is no chemical substance with given name, return number of substances.
-    auto indexWithName(std::string name) const -> std::size_t;
+    auto indexWithName(std::string name) const -> Index;
 
     /// Return the index of the first chemical substance with given formula.
     /// If there is no chemical substance with given formula, return number of substances.
-    auto indexWithFormula(std::string formula) const -> std::size_t;
+    auto indexWithFormula(std::string formula) const -> Index;
 
     /// Return the first chemical substance with given name.
     /// @throw std::runtime_error When there is no substance with given name.

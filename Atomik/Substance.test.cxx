@@ -172,4 +172,7 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE(substance.coefficient("Aa") == 1);
     REQUIRE(substance.coefficient("Bb") == 2);
     REQUIRE(substance.coefficient("Z") == 1);
+
+
+    REQUIRE_THROWS( Substance("RrGgHh") );
 }

@@ -29,6 +29,10 @@ namespace Atomik {
 Substances::Substances()
 {}
 
+Substances::Substances(std::initializer_list<Substance> substances)
+: m_substances(std::move(substances))
+{}
+
 Substances::Substances(std::vector<Substance> substances)
 : m_substances(std::move(substances))
 {}
@@ -54,17 +58,17 @@ auto Substances::size() const -> std::size_t
     return data().size();
 }
 
-auto Substances::operator[](std::size_t index) const -> const Substance&
+auto Substances::operator[](Index index) const -> const Substance&
 {
     return data()[index];
 }
 
-auto Substances::indexWithName(std::string name) const -> std::size_t
+auto Substances::indexWithName(std::string name) const -> Index
 {
     return indexfn(data(), Atomik::withName(name));
 }
 
-auto Substances::indexWithFormula(std::string formula) const -> std::size_t
+auto Substances::indexWithFormula(std::string formula) const -> Index
 {
     return indexfn(data(), Atomik::withFormula(formula));
 }
