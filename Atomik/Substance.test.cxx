@@ -143,19 +143,6 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE(substance.coefficient("Fe") == 1);
     REQUIRE(substance.coefficient("Z") == 3);
 
-    // Test Substance::replaceExtra method with Substance::Substance(formula) constructor
-    substance = Substance("CO2").replaceExtra(1.0);
-    REQUIRE(substance.formula() == "CO2");
-    REQUIRE(substance.name() == "CO2");
-    REQUIRE(substance.tags().empty());
-    REQUIRE(substance.molarMass() == Approx(0.04401));
-    REQUIRE(substance.charge() == 0);
-    REQUIRE(substance.symbols().size() == 2);
-    REQUIRE(substance.symbols() == Extract::symbols(substance.elements()));
-    REQUIRE(substance.coefficient("C") == 1);
-    REQUIRE(substance.coefficient("O") == 2);
-    REQUIRE(substance.extra<double>() == 1.0);
-
     // Test Substance::Substance(formula, elementsdb) constructor
     Elements elements = Elements::PeriodicTable();
     elements.append( Element({"Aa"}) );
@@ -173,6 +160,6 @@ TEST_CASE("Testing Substance class", "[Substance]")
     REQUIRE(substance.coefficient("Bb") == 2);
     REQUIRE(substance.coefficient("Z") == 1);
 
-
+    // Test Substance constructor fails with a formula containing unknown element symbols
     REQUIRE_THROWS( Substance("RrGgHh") );
 }

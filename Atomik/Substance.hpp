@@ -41,9 +41,6 @@ struct SubstanceAttributes
 
     /// The tags of the substance such as `organic`, `mineral`.
     std::vector<std::string> tags;
-
-    /// The extra data the substance might have (e.g., thermodynamic model parameters).
-    std::any extra;
 };
 
 /// A type used to represent a chemical substance and its attributes.
@@ -115,9 +112,6 @@ public:
     /// Return a duplicate of this Substance object with replaced tags attribute.
     auto replaceTags(std::vector<std::string> tags) -> Substance;
 
-    /// Return a duplicate of this Substance object with replaced extra attribute.
-    auto replaceExtra(std::any extra) -> Substance;
-
     /// Return the name of the substance if provided, otherwise, its formula.
     auto name() const -> std::string;
 
@@ -126,12 +120,6 @@ public:
 
     /// Return the tags of the substance (e.g., `organic`, `mineral`).
     auto tags() const -> const std::vector<std::string>&;
-
-    /// Return the extra data of the substance (e.g., thermodynamic model parameters).
-    auto extra() const -> const std::any&;
-
-    /// Return the extra data of the substance (e.g., thermodynamic model parameters).
-    template <typename Return> auto extra() const { return std::any_cast<Return>(extra()); }
 
     /// Return the elements of the substance.
     auto elements() const -> const Elements&;
