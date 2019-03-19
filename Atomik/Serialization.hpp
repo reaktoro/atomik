@@ -17,17 +17,36 @@
 
 #pragma once
 
+// C++ includes
+#include <istream>
+#include <string>
+
 // Atomik includes
-#include <Atomik/Algorithms.hpp>
-#include <Atomik/Element.hpp>
-#include <Atomik/Elements.hpp>
-#include <Atomik/Exception.hpp>
-#include <Atomik/Extract.hpp>
-#include <Atomik/Formula.hpp>
-#include <Atomik/Parameters.hpp>
-#include <Atomik/StringList.hpp>
-#include <Atomik/StringUtils.hpp>
-#include <Atomik/Substance.hpp>
-#include <Atomik/Substances.hpp>
-#include <Atomik/WithUtils.hpp>
+#include <Atomik/ForwardDecl.hpp>
 #include <Atomik/YAML.hpp>
+
+namespace YAML {
+
+using namespace Atomik;
+
+auto operator<<(Node& node, const Formula& obj) -> Node&;
+
+auto operator<<(Node& node, const Element& obj) -> Node&;
+
+auto operator<<(Node& node, const Elements& obj) -> Node&;
+
+auto operator<<(Node& node, const Substance& obj) -> Node&;
+
+auto operator<<(Node& node, const Substances& obj) -> Node&;
+
+auto operator>>(const Node& node, Formula& obj) -> bool;
+
+auto operator>>(const Node& node, Element& obj) -> bool;
+
+auto operator>>(const Node& node, Elements& obj) -> bool;
+
+auto operator>>(const Node& node, Substance& obj) -> bool;
+
+auto operator>>(const Node& node, Substances& obj) -> bool;
+
+} // namespace YAML

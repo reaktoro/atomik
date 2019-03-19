@@ -19,10 +19,10 @@
 
 // Atomik includes
 #include <Atomik/Algorithms.hpp>
-#include <Atomik/ChemicalFormula.hpp>
 #include <Atomik/Elements.hpp>
 #include <Atomik/Exception.hpp>
 #include <Atomik/Extract.hpp>
+#include <Atomik/Formula.hpp>
 
 namespace Atomik {
 namespace internal {
@@ -35,10 +35,7 @@ const Elements elementsdb = Elements::PeriodicTable();
 struct Substance::Impl
 {
     /// The attributes of the substance.
-    SubstanceAttributes attributes;
-
-    /// The chemical formula of the substance.
-    ChemicalFormula formula;
+    SubstanceData attributes;
 
     /// The elements of the substance.
     Elements elements;
@@ -51,23 +48,27 @@ struct Substance::Impl
     {}
 
     /// Construct a Substance::Impl instance
-    Impl(SubstanceAttributes attribs, const Elements& db)
-    : attributes(std::move(attribs)), formula(attributes.formula)
+    Impl(SubstanceData attribs, const Elements& db)
+    : attributes(std::move(attribs))
     {
+        const auto& formula = attributes.formula;
+
         // Initialize the name of the substance
         if(attributes.name.empty())
-            attributes.name = attributes.formula;
+            attributes.name = formula.label();
 
         // Initialize the elements of the substance
         for(auto const& symbol : formula.symbols())
             if(auto idx = db.indexWithSymbol(symbol); idx >= 0)
                 elements.append(db[idx]);
             else error(true, "Substance with name ", attributes.name,
-                " and formula ", attributes.formula,
+                " and formula ", formula.label(),
                 " has an unknown element with symbol ", symbol, ".");
 
         // Initialize the molar mass of the substance
-        molarMass = (formula.coefficients() * Extract::molarMasses(elements)).sum();
+        molarMass = 0.0;
+        for(auto i = 0u; i < elements.size(); ++i)
+            molarMass += formula.coefficients()[i] * elements[i].molarMass();
     }
 };
 
@@ -83,11 +84,11 @@ Substance::Substance(const std::string& formula, const Elements& db)
 : pimpl(new Impl({formula}, db))
 {}
 
-Substance::Substance(SubstanceAttributes attributes)
+Substance::Substance(SubstanceData attributes)
 : pimpl(new Impl(std::move(attributes), internal::elementsdb))
 {}
 
-Substance::Substance(SubstanceAttributes attributes, const Elements& db)
+Substance::Substance(SubstanceData attributes, const Elements& db)
 : pimpl(new Impl(std::move(attributes), db))
 {}
 
@@ -122,9 +123,9 @@ auto Substance::name() const -> std::string
     return pimpl->attributes.name;
 }
 
-auto Substance::formula() const -> const ChemicalFormula&
+auto Substance::formula() const -> const Formula&
 {
-    return pimpl->formula;
+    return pimpl->attributes.formula;
 }
 
 auto Substance::tags() const -> const std::vector<std::string>&
@@ -142,7 +143,7 @@ auto Substance::symbols() const -> const std::vector<std::string>&
     return formula().symbols();
 }
 
-auto Substance::coefficients() const -> const std::valarray<double>&
+auto Substance::coefficients() const -> const std::vector<double>&
 {
     return formula().coefficients();
 }

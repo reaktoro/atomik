@@ -18,23 +18,24 @@
 #pragma once
 
 // C++ includes
-#include <any>
 #include <memory>
-#include <set>
 #include <string>
 #include <vector>
+
+// Atomik includes
+#include <Atomik/Formula.hpp>
 
 namespace Atomik {
 
 // Forward declarations
-class ChemicalFormula;
+class Formula;
 class Elements;
 
 /// A type used to define basic attributes of chemical substances.
-struct SubstanceAttributes
+struct SubstanceData
 {
     /// The chemical formula of the substance such as `H2O`, `O2`, `H+`.
-    std::string formula;
+    Formula formula;
 
     /// The name of the substance such as `H2O(aq)`, `O2(g)`, `H+(aq)`.
     std::string name;
@@ -93,12 +94,12 @@ public:
     /// Construct a Substance object with given attributes.
     /// A default database of chemical elements is used to construct the elements composing the substance.
     /// @param attributes The basic attributes of the substance.
-    Substance(SubstanceAttributes attributes);
+    Substance(SubstanceData attributes);
 
     /// Construct a Substance object with given attributes using custom database of elements.
     /// @param attributes The basic attributes of the substance.
     /// @param db The database of chemical elements (if the default is insufficient).
-    Substance(SubstanceAttributes attributes, const Elements& db);
+    Substance(SubstanceData attributes, const Elements& db);
 
     /// Return a duplicate of this Substance object with replaced formula attribute.
     auto replaceFormula(const std::string& formula) -> Substance;
@@ -116,7 +117,7 @@ public:
     auto name() const -> std::string;
 
     /// Return the chemical formula of the substance.
-    auto formula() const -> const ChemicalFormula&;
+    auto formula() const -> const Formula&;
 
     /// Return the tags of the substance (e.g., `organic`, `mineral`).
     auto tags() const -> const std::vector<std::string>&;
@@ -128,7 +129,7 @@ public:
     auto symbols() const -> const std::vector<std::string>&;
 
     /// Return the coefficients of the elements in the substance.
-    auto coefficients() const -> const std::valarray<double>&;
+    auto coefficients() const -> const std::vector<double>&;
 
     /// Return the coefficient of an element symbol in the substance.
     auto coefficient(const std::string& symbol) const -> double;

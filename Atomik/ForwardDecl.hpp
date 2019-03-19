@@ -17,17 +17,13 @@
 
 #pragma once
 
-// Atomik includes
-#include <Atomik/Algorithms.hpp>
-#include <Atomik/Element.hpp>
-#include <Atomik/Elements.hpp>
-#include <Atomik/Exception.hpp>
-#include <Atomik/Extract.hpp>
-#include <Atomik/Formula.hpp>
-#include <Atomik/Parameters.hpp>
-#include <Atomik/StringList.hpp>
-#include <Atomik/StringUtils.hpp>
-#include <Atomik/Substance.hpp>
-#include <Atomik/Substances.hpp>
-#include <Atomik/WithUtils.hpp>
-#include <Atomik/YAML.hpp>
+namespace Atomik {
+
+// Forward declarations
+class Element;
+class Elements;
+class Formula;
+class Substance;
+class Substances;
+
+} // namespace Atomik

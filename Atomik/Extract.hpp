@@ -19,7 +19,6 @@
 
 // C++ includes
 #include <string>
-#include <valarray>
 #include <vector>
 
 namespace Atomik {
@@ -58,7 +57,7 @@ struct Extract
     template <typename Container, typename Function>
     static auto values(const Container& items, const Function& f)
     {
-        return extract<std::valarray<double>>(items, f);
+        return extract<std::vector<double>>(items, f);
     }
 
     /// Return a vector of strings from objects using an extractor function.

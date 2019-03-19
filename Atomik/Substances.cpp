@@ -19,8 +19,8 @@
 
 // Atomik includes
 #include <Atomik/Algorithms.hpp>
-#include <Atomik/ChemicalFormula.hpp>
 #include <Atomik/Exception.hpp>
+#include <Atomik/Formula.hpp>
 #include <Atomik/StringList.hpp>
 #include <Atomik/WithUtils.hpp>
 
@@ -130,7 +130,7 @@ auto Substances::withElementsOf(const StringList& formulas) const -> Substances
 {
     std::vector<std::string> symbols;
     for(auto formula : formulas)
-        symbols = merge(symbols, ChemicalFormula(formula).symbols());
+        symbols = merge(symbols, Formula(formula).symbols());
     return withElements(symbols);
 }
 

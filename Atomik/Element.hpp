@@ -25,7 +25,7 @@
 namespace Atomik {
 
 /// A type used to define attributes of elements.
-struct ElementAttributes
+struct ElementData
 {
     /// The symbol of the element (e.g., "H", "O", "C", "Na").
     std::string symbol;
@@ -54,7 +54,7 @@ public:
     Element();
 
     /// Construct an Element object with given attributes.
-    Element(const ElementAttributes& attributes);
+    Element(const ElementData& attributes);
 
     /// Return a duplicate of this Element object with replaced symbol attribute.
     auto replaceSymbol(const std::string& symbol) const -> Element;

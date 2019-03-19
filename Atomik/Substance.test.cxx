@@ -19,9 +19,9 @@
 #include <catch2/catch.hpp>
 
 // Atomik includes
-#include <Atomik/ChemicalFormula.hpp>
 #include <Atomik/Elements.hpp>
 #include <Atomik/Extract.hpp>
+#include <Atomik/Formula.hpp>
 #include <Atomik/Substance.hpp>
 using namespace Atomik;
 
@@ -31,7 +31,7 @@ TEST_CASE("Testing Substance class", "[Substance]")
 
     // Test Substance::Substance(formula) constructor
     substance = Substance("H2O");
-    REQUIRE(substance.formula() == "H2O");
+    REQUIRE(substance.formula().equivalent("H2O"));
     REQUIRE(substance.name() == "H2O");
     REQUIRE(substance.tags().empty());
     REQUIRE(substance.molarMass() == Approx(0.01801528));
@@ -43,7 +43,7 @@ TEST_CASE("Testing Substance class", "[Substance]")
 
     // Test Substance::Substance(attributes) constructor
     substance = Substance({"Na+", "Na+(aq)", {"aqueous", "cation", "charged"}});
-    REQUIRE(substance.formula() == "Na+");
+    REQUIRE(substance.formula().equivalent("Na+"));
     REQUIRE(substance.name() == "Na+(aq)");
     REQUIRE(substance.tags().size() == 3);
     REQUIRE(substance.hasTag("aqueous"));
@@ -58,7 +58,7 @@ TEST_CASE("Testing Substance class", "[Substance]")
 
     // Test Substance::Substance(attributes) constructor
     substance = Substance({"Cl-", "Cl-(aq)", {"aqueous", "anion", "charged"}});
-    REQUIRE(substance.formula() == "Cl-");
+    REQUIRE(substance.formula().equivalent("Cl-"));
     REQUIRE(substance.name() == "Cl-(aq)");
     REQUIRE(substance.tags().size() == 3);
     REQUIRE(substance.hasTag("aqueous"));
@@ -73,7 +73,7 @@ TEST_CASE("Testing Substance class", "[Substance]")
 
     // Test Substance::Substance(attributes) constructor
     substance = Substance({"CO3--", "CO3--(aq)", {"aqueous", "anion", "charged"}});
-    REQUIRE(substance.formula() == "CO3-2");
+    REQUIRE(substance.formula().equivalent("CO3-2"));
     REQUIRE(substance.name() == "CO3--(aq)");
     REQUIRE(substance.tags().size() == 3);
     REQUIRE(substance.hasTag("aqueous"));
@@ -89,7 +89,7 @@ TEST_CASE("Testing Substance class", "[Substance]")
 
     // Test Substance::replaceFormula method with Substance::Substance(formula) constructor
     substance = Substance("CaCO3").replaceFormula("Ca(CO3)");
-    REQUIRE(substance.formula() == "Ca(CO3)");
+    REQUIRE(substance.formula().equivalent("Ca(CO3)"));
     REQUIRE(substance.name() == "CaCO3");
     REQUIRE(substance.tags().empty());
     REQUIRE(substance.molarMass() == Approx(0.1000869));
@@ -102,7 +102,7 @@ TEST_CASE("Testing Substance class", "[Substance]")
 
     // Test Substance::replaceName method with Substance::Substance(formula) constructor
     substance = Substance("H+").replaceName("H+(aq)");
-    REQUIRE(substance.formula() == "H+");
+    REQUIRE(substance.formula().equivalent("H+"));
     REQUIRE(substance.name() == "H+(aq)");
     REQUIRE(substance.tags().empty());
     REQUIRE(substance.molarMass() == Approx(0.00100794));
@@ -114,7 +114,7 @@ TEST_CASE("Testing Substance class", "[Substance]")
 
     // Test Substance::replaceTags method with Substance::Substance(formula) constructor
     substance = Substance("HCO3-").replaceTags({"aqueous"});
-    REQUIRE(substance.formula() == "HCO3-");
+    REQUIRE(substance.formula().equivalent("HCO3-"));
     REQUIRE(substance.name() == "HCO3-");
     REQUIRE(substance.tags().size() == 1);
     REQUIRE(substance.hasTag("aqueous"));
@@ -129,7 +129,7 @@ TEST_CASE("Testing Substance class", "[Substance]")
 
     // Test Substance::replaceTags method with Substance::Substance(formula) constructor
     substance = Substance("Fe+++").replaceTags({"aqueous", "cation", "charged", "iron"});
-    REQUIRE(substance.formula() == "Fe+3");
+    REQUIRE(substance.formula().equivalent("Fe+3"));
     REQUIRE(substance.name() == "Fe+++");
     REQUIRE(substance.tags().size() == 4);
     REQUIRE(substance.hasTag("aqueous"));
@@ -149,7 +149,7 @@ TEST_CASE("Testing Substance class", "[Substance]")
     elements.append( Element({"Bb"}) );
 
     substance = Substance("AaBb2+", elements);
-    REQUIRE(substance.formula() == "AaBb2+");
+    REQUIRE(substance.formula().equivalent("AaBb2+"));
     REQUIRE(substance.name() == "AaBb2+");
     REQUIRE(substance.tags().empty());
     REQUIRE(substance.molarMass() == Approx(0.0));

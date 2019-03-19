@@ -10,14 +10,14 @@
 # Atomik
 
 Atomik is a C++17 library that implements classes such as `Element`,
-`Elements`, `Substance`, `Substances`, `ChemicalFormula`, and others to be used
+`Elements`, `Substance`, `Substances`, `Formula`, and others to be used
 in libraries of the [Reaktoro Project].
 
 ## Overview
 
 Below we present a few use cases in which Atomik library can be helpful.
 
-### Using class `ChemicalFormula` to parse chemical formulas
+### Using class `Formula` to parse chemical formulas
 
 Given chemical formulas such as `H2O`, `CO2`, `CaCO3`, `(CaMg)(CO3)2`, Atomik
 can help you parsing them into lists of element symbols and coefficients. See
@@ -34,7 +34,7 @@ using namespace Atomik;
 
 int main()
 {
-    ChemicalFormula formula("CaCO3");
+    Formula formula("CaCO3");
 
     cout << "The elemental composition of CaCO3 is:" << endl;
     for(auto symbol : formula.symbols())
@@ -42,7 +42,7 @@ int main()
 }
 ~~~
 
-**Note**: `ChemicalFormula` can parse any chemical formula and the elements might not
+**Note**: `Formula` can parse any chemical formula and the elements might not
 even exist, such as `AaBb2`. The requirements are that the element symbols in
 your formula:
 
@@ -54,7 +54,7 @@ your formula:
 
 ### Using class `Substance` to obtain certain properties from their chemical formulas
 
-A `ChemicalFormula` object only has element symbols, which are strings such as `"H"`, `"O"`, `"Ca"`, and so forth. A `Substance` object, on the other hand, will use a given chemical formula to create `Element` objects from a default `Elements` object (a collection of `Element` objects initialized based on 120 elements of the )  be incontain   We can also create `Substance` objects from given chemical formulas and compute their molar masses, determine their electric charges, the elements that compose it, and so forth:
+A `Formula` object only has element symbols, which are strings such as `"H"`, `"O"`, `"Ca"`, and so forth. A `Substance` object, on the other hand, will use a given chemical formula to create `Element` objects from a default `Elements` object (a collection of `Element` objects initialized based on 120 elements of the )  be incontain   We can also create `Substance` objects from given chemical formulas and compute their molar masses, determine their electric charges, the elements that compose it, and so forth:
 
 ~~~cpp
 Substance substance("CO3--"); // or CO3-2 if you prefer!
@@ -189,7 +189,7 @@ Do you have a question or want to report a bug or any other issue? Please create
 
 The table below shows the attributes of the elements that are used in the static member method `Elements::PeriodicTable()`.
 
-**Note**: The only difference from the standard periodic table is the addition of element Z, which denotes an element representative of *electric charges*. This has been added for convenience reasons, to allow, for example, `ChemicalFormula` to determine the charge of chemical formulas such as `HCO3-` or `Fe+3` (alternatively `Fe+++`).
+**Note**: The only difference from the standard periodic table is the addition of element Z, which denotes an element representative of *electric charges*. This has been added for convenience reasons, to allow, for example, `Formula` to determine the charge of chemical formulas such as `HCO3-` or `Fe+3` (alternatively `Fe+++`).
 
 | Symbol | Name | Atomic Number | Atomic Weight (kg/mol) | Electronegativity |
 |:-:|:-:|:-:|:-:|:-:|

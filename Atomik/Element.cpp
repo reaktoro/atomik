@@ -25,14 +25,14 @@ namespace Atomik {
 struct Element::Impl
 {
     /// The attributes of the element.
-    ElementAttributes attributes;
+    ElementData attributes;
 
     /// Construct a default Element::Impl object.
     Impl()
     {}
 
     /// Construct an Element::Impl object with given attributes.
-    Impl(const ElementAttributes& attributes)
+    Impl(const ElementData& attributes)
     : attributes(attributes)
     {}
 };
@@ -41,7 +41,7 @@ Element::Element()
 : pimpl(new Impl())
 {}
 
-Element::Element(const ElementAttributes& attributes)
+Element::Element(const ElementData& attributes)
  : pimpl(new Impl(attributes))
 {}
 

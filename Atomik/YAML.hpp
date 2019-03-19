@@ -18,20 +18,16 @@
 #pragma once
 
 // C++ includes
-#include <any>
 #include <istream>
 #include <string>
 
+// yaml-cpp includes
+#include <yaml-cpp/yaml.h>
+
 namespace Atomik {
 
-// Forward declarations
-class Element;
-class Elements;
-class Substance;
-class Substances;
-
-/// A type used to serialize/deserialize Atomik types based on yaml format.
-class yaml
+/// A class used to serialize/deserialize other types based on yaml format.
+class yaml : public YAML::Node
 {
 public:
     /// Construct an object of type yaml.
@@ -46,33 +42,28 @@ public:
     /// Construct an object of type yaml from a given input stream.
     yaml(std::istream& input);
 
-    /// Convert this yaml object into an object of type Element.
-    operator Element() const;
-
-    /// Convert this yaml object into an object of type Elements.
-    operator Elements() const;
-
-    /// Convert this yaml object into an object of type Substance.
-    operator Substance() const;
-
-    /// Convert this yaml object into an object of type Substances.
-    operator Substances() const;
-
-    /// Convert an object of type Element into this object of type yaml.
-    auto operator=(const Element& obj) -> yaml&;
-
-    /// Convert an object of type Elements into this object of type yaml.
-    auto operator=(const Elements& obj) -> yaml&;
-
-    /// Convert an object of type Substance into this object of type yaml.
-    auto operator=(const Substance& obj) -> yaml&;
-
-    /// Convert an object of type Substances into this object of type yaml.
-    auto operator=(const Substances& obj) -> yaml&;
-
-private:
-    /// The abstracted YAML node
-    std::any node;
+    /// Implicitly convert this yaml object into another type.
+    template <typename T> operator T() { return as<T>(); }
 };
 
 } // namespace Atomik
+
+namespace YAML {
+
+template <typename Type>
+struct convert
+{
+    static auto encode(const Type& obj)
+    {
+        Node node;
+        node << obj;
+        return node;
+    }
+
+    static auto decode(const Node& node, Type& obj)
+    {
+        return node >> obj;
+    }
+};
+
+} // namespace YAML

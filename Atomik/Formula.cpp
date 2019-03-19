@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this library. If not, see <http://www.gnu.org/licenses/>.
 
-#include "ChemicalFormula.hpp"
+#include "Formula.hpp"
 
 // C++ includes
 #include <exception>
@@ -202,75 +202,114 @@ auto parseFormula(std::string formula) -> std::unordered_map<std::string, double
 
 } // namespace internal
 
-ChemicalFormula::ChemicalFormula()
-{}
-
-ChemicalFormula::ChemicalFormula(const char* formula)
-: m_formula(formula)
+struct Formula::Impl
 {
-    // Initialize the element symbols and coefficients
-    const auto pairs = internal::parseFormula(formula);
-    m_symbols.reserve(pairs.size());
-    m_coefficients.resize(pairs.size());
+    /// The attributes of the chemical formula.
+    FormulaData attributes;
 
-    for(auto&& [symbol, coeff] : pairs)
+    /// Construct a default Element::Impl object.
+    Impl()
+    {}
+
+    /// Construct a Formula::Impl object with given string representation.
+    Impl(const std::string& formula)
     {
-        m_coefficients[m_symbols.size()] = coeff;
-        m_symbols.push_back(symbol);
+        auto& symbols = attributes.symbols;
+        auto& coefficients = attributes.coefficients;
+        auto& label = attributes.label;
+
+        // Initialize the string representation of the formula
+        label = formula;
+
+        // Initialize the element symbols and coefficients
+        const auto pairs = internal::parseFormula(formula);
+        symbols.reserve(pairs.size());
+        coefficients.resize(pairs.size());
+
+        for(auto&& [symbol, coeff] : pairs)
+        {
+            coefficients[symbols.size()] = coeff;
+            symbols.push_back(symbol);
+        }
     }
 
-    // Initialize the charge of the formula
-    m_charge = internal::parseCharge(formula);
-}
+    /// Construct a Formula::Impl object with given attributes.
+    Impl(const FormulaData& attributes)
+    : attributes(attributes)
+    {}
+};
 
-ChemicalFormula::ChemicalFormula(std::string formula)
-: ChemicalFormula(formula.c_str())
+
+Formula::Formula()
+: pimpl(new Impl())
 {}
 
-auto ChemicalFormula::symbols() const -> const std::vector<std::string>&
+Formula::Formula(const char* formula)
+: pimpl(new Impl(formula))
+{}
+
+Formula::Formula(const std::string& formula)
+: pimpl(new Impl(formula))
+{}
+
+Formula::Formula(const FormulaData& attributes)
+: pimpl(new Impl(attributes))
+{}
+
+auto Formula::label() const -> const std::string&
 {
-    return m_symbols;
+    return pimpl->attributes.label;
 }
 
-auto ChemicalFormula::coefficients() const -> const std::valarray<double>&
+auto Formula::symbols() const -> const std::vector<std::string>&
 {
-    return m_coefficients;
+    return pimpl->attributes.symbols;
 }
 
-auto ChemicalFormula::charge() const -> double
+auto Formula::coefficients() const -> const std::vector<double>&
 {
-    return m_charge;
+    return pimpl->attributes.coefficients;
 }
 
-auto ChemicalFormula::coefficient(std::string symbol) const -> double
+auto Formula::coefficient(const std::string& symbol) const -> double
 {
-    auto i = index(m_symbols, symbol);
-    return i < m_symbols.size() ? m_coefficients[i] : 0.0;
+    auto i = index(symbols(), symbol);
+    return i >= 0 ? coefficients()[i] : 0.0;
 }
 
-auto ChemicalFormula::str() const -> std::string
+auto Formula::charge() const -> double
 {
-    return m_formula;
+    return coefficient("Z");
 }
 
-ChemicalFormula::operator std::string() const
+auto Formula::equivalent(const Formula& other) const -> bool
 {
-    return m_formula;
+    return symbols().size() == other.symbols().size() &&
+           coefficients().size() == other.coefficients().size() &&
+           contained(symbols(), other.symbols()) &&
+           contained(coefficients(), other.coefficients());
 }
 
-auto operator<(const ChemicalFormula& lhs, const ChemicalFormula& rhs) -> bool
+Formula::operator std::string() const
 {
-    return lhs.str() < rhs.str();
+    return label();
 }
 
-auto operator==(const ChemicalFormula& lhs, const ChemicalFormula& rhs) -> bool
+auto operator<(const Formula& lhs, const Formula& rhs) -> bool
 {
-    return lhs.symbols() == rhs.symbols() && (lhs.coefficients() == rhs.coefficients()).min();
+    return lhs.label() < rhs.label();
 }
 
-auto equivalent(const ChemicalFormula& lhs, const ChemicalFormula& rhs) -> bool
+auto operator==(const Formula& lhs, const Formula& rhs) -> bool
 {
-    return lhs.symbols() == rhs.symbols() && (lhs.coefficients() == rhs.coefficients()).min();
+    return lhs.label() == rhs.label() &&
+           lhs.symbols() == rhs.symbols() &&
+           lhs.coefficients() == rhs.coefficients();
+}
+
+auto equivalent(const Formula& lhs, const Formula& rhs) -> bool
+{
+    return lhs.equivalent(rhs);
 }
 
 } // namespace Atomik

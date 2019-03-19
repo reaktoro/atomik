@@ -8,7 +8,7 @@ resolve the dependency of an executable `app` on **Atomik**, a C++17 library
 implementing basic chemical concepts.
 
 The source file `main.cpp` includes the header-file `Atomik/Atomik.hpp`
-and uses class `ChemicalFormula` to parse the chemical formula `CaCO3`.
+and uses class `Formula` to parse the chemical formula `CaCO3`.
 
 The `CMakeLists.txt` file uses the command:
 
