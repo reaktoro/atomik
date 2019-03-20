@@ -15,10 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this library. If not, see <http://www.gnu.org/licenses/>.
 
-#include "YAML.hpp"
-
-// yaml includes
-#include <yaml-cpp/yaml.h>
+#include "Serialization.hpp"
 
 // Atomik includes
 #include <Atomik/Element.hpp>
@@ -30,39 +27,6 @@
 namespace YAML {
 
 using namespace Atomik;
-
-template <typename T, std::enable_if_t<std::is_arithmetic_v<T>>...>
-auto operator>>(const Node& node, T& val) -> bool
-{
-    if(node && node.IsScalar())
-    {
-        val = node.as<T>();
-        return true;
-    }
-    return false;
-}
-
-auto operator>>(const Node& node, std::string& val) -> bool
-{
-    if(node)
-    {
-        val = node.as<std::string>();
-        return true;
-    }
-    return false;
-}
-
-template <typename T>
-auto operator>>(const Node& node, std::vector<T>& val) -> bool
-{
-    if(node && node.IsSequence())
-    {
-        val = node.as<std::vector<T>>();
-        return true;
-    }
-
-    return false;
-}
 
 auto operator<<(Node& node, const Formula& obj) -> Node&
 {
@@ -107,9 +71,10 @@ auto operator<<(Node& node, const Substances& obj) -> Node&
 
 auto operator>>(const Node& node, FormulaData& obj) -> bool
 {
-    return node["label"] >> obj.label &&
-           node["symbols"] >> obj.symbols &&
-           node["coefficients"] >> obj.coefficients;
+    return
+    node["label"] >> obj.label &&
+    node["symbols"] >> obj.symbols &&
+    node["coefficients"] >> obj.coefficients;
 }
 
 auto operator>>(const Node& node, Formula& obj) -> bool
@@ -122,12 +87,13 @@ auto operator>>(const Node& node, Formula& obj) -> bool
 
 auto operator>>(const Node& node, ElementData& obj) -> bool
 {
-    return node["symbol"] >> obj.symbol &&
-           node["name"] >> obj.name &&
-           node["atomicNumber"] >> obj.atomicNumber &&
-           node["atomicWeight"] >> obj.atomicWeight &&
-           node["electronegativity"] >> obj.electronegativity &&
-           node["tags"] >> obj.tags;
+    return
+    node["symbol"] >> obj.symbol &&
+    node["name"] >> obj.name &&
+    node["atomicNumber"] >> obj.atomicNumber &&
+    node["atomicWeight"] >> obj.atomicWeight &&
+    node["electronegativity"] >> obj.electronegativity &&
+    node["tags"] >> obj.tags;
 }
 
 auto operator>>(const Node& node, Element& obj) -> bool
@@ -150,9 +116,10 @@ auto operator>>(const Node& node, Elements& obj) -> bool
 
 auto operator>>(const Node& node, SubstanceData& obj) -> bool
 {
-    return node["formula"] >> obj.formula &&
-           node["name"] >> obj.name &&
-           node["tags"] >> obj.tags;
+    return
+    node["formula"] >> obj.formula &&
+    node["name"] >> obj.name &&
+    node["tags"] >> obj.tags;
 }
 
 auto operator>>(const Node& node, Substance& obj) -> bool

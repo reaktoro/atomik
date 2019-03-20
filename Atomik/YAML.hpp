@@ -50,6 +50,38 @@ public:
 
 namespace YAML {
 
+template <typename T, std::enable_if_t<std::is_arithmetic_v<T>>...>
+auto operator>>(const Node& node, T& val) -> bool
+{
+    if(node && node.IsScalar())
+    {
+        val = node.as<T>();
+        return true;
+    }
+    return false;
+}
+
+inline auto operator>>(const Node& node, std::string& val) -> bool
+{
+    if(node)
+    {
+        val = node.as<std::string>();
+        return true;
+    }
+    return false;
+}
+
+template <typename T>
+auto operator>>(const Node& node, std::vector<T>& val) -> bool
+{
+    if(node && node.IsSequence())
+    {
+        val = node.as<std::vector<T>>();
+        return true;
+    }
+    return false;
+}
+
 template <typename Type>
 struct convert
 {
