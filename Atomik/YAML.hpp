@@ -24,6 +24,9 @@
 // yaml-cpp includes
 #include <yaml-cpp/yaml.h>
 
+// Atomik includes
+#include <Atomik/Exception.hpp>
+
 namespace Atomik {
 
 /// A class used to serialize/deserialize other types based on yaml format.
@@ -94,7 +97,9 @@ struct convert
 
     static auto decode(const Node& node, Type& obj)
     {
-        return node >> obj;
+        bool success = node >> obj;
+        Atomik::error(!success, "Could not understand YAML node:\n", node, "Check if there is any missing entry.");
+        return success;
     }
 };
 
