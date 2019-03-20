@@ -140,4 +140,95 @@ auto operator>>(const Node& node, Substances& obj) -> bool
     return true;
 }
 
+} // YAML
+
+namespace Atomik {
+
+auto to_json(json& j, const Formula& obj)
+{
+    j["label"] = obj.label();
+    j["symbols"] = obj.symbols();
+    j["coefficients"] = obj.coefficients();
+}
+
+auto to_json(json& j, const Element& obj)
+{
+    j["symbol"] = obj.symbol();
+    j["name"] = obj.name();
+    j["atomicNumber"] = obj.atomicNumber();
+    j["atomicWeight"] = obj.atomicWeight();
+    j["electronegativity"] = obj.electronegativity();
+    j["tags"] = obj.tags();
+}
+
+auto to_json(json& j, const Elements& obj)
+{
+    for (const auto& element : obj)
+        j.push_back(element);
+}
+
+auto to_json(json& j, const Substance& obj)
+{
+    j["formula"] = obj.formula();
+    j["name"] = obj.name();
+    j["tags"] = obj.tags();
+}
+
+auto to_json(json& j, const Substances& obj)
+{
+    for (const auto& substance : obj)
+        j.push_back(substance);
+}
+
+auto from_json(const json& j, FormulaData& obj) -> void
+{
+    j.at("label").get_to(obj.label);
+    j.at("symbols").get_to(obj.symbols);
+    j.at("coefficients").get_to(obj.coefficients);
+}
+
+auto from_json(const json& j, Formula& obj) -> void
+{
+    obj = Formula(j.get<FormulaData>());
+}
+
+auto from_json(const json& j, ElementData& obj) -> void
+{
+    j.at("symbol").get_to(obj.symbol);
+    j.at("name").get_to(obj.name);
+    j.at("atomicNumber").get_to(obj.atomicNumber);
+    j.at("atomicWeight").get_to(obj.atomicWeight);
+    j.at("electronegativity").get_to(obj.electronegativity);
+    j.at("tags").get_to(obj.tags);
+}
+
+auto from_json(const json& j, Element& obj) -> void
+{
+    obj = Element(j.get<ElementData>());
+}
+
+auto from_json(const json& j, Elements& obj) -> void
+{
+    for(const auto& item : j)
+        obj.append(item.get<Element>());
+}
+
+auto from_json(const json& j, SubstanceData& obj) -> void
+{
+    j.at("formula").get_to(obj.formula);
+    j.at("name").get_to(obj.name);
+    j.at("tags").get_to(obj.tags);
+}
+
+auto from_json(const json& j, Substance& obj) -> void
+{
+    obj = Substance(j.get<SubstanceData>());
+}
+
+auto from_json(const json& j, Substances& obj) -> void
+{
+    for(const auto& item : j)
+        obj.append(item.get<Substance>());
+}
+
 } // Atomik

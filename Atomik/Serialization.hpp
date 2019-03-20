@@ -23,6 +23,7 @@
 
 // Atomik includes
 #include <Atomik/ForwardDecl.hpp>
+#include <Atomik/JSON.hpp>
 #include <Atomik/YAML.hpp>
 
 namespace YAML {
@@ -42,3 +43,21 @@ auto operator>>(const Node& node, Substance& obj) -> bool;
 auto operator>>(const Node& node, Substances& obj) -> bool;
 
 } // namespace YAML
+
+namespace Atomik {
+
+using Json::json;
+
+auto to_json(json& j, const Formula& obj);
+auto to_json(json& j, const Element& obj);
+auto to_json(json& j, const Elements& obj);
+auto to_json(json& j, const Substance& obj);
+auto to_json(json& j, const Substances& obj);
+
+auto from_json(const json& j, Formula& obj) -> void;
+auto from_json(const json& j, Element& obj) -> void;
+auto from_json(const json& j, Elements& obj) -> void;
+auto from_json(const json& j, Substance& obj) -> void;
+auto from_json(const json& j, Substances& obj) -> void;
+
+} // namespace Atomik
