@@ -30,44 +30,42 @@ using namespace Atomik;
 
 auto operator<<(Node& node, const Formula& obj) -> void
 {
-    node["label"] = obj.label();
-    node["symbols"] = obj.symbols();
+    node["label"]        = obj.label();
+    node["symbols"]      = obj.symbols();
     node["coefficients"] = obj.coefficients();
 }
 
 auto operator<<(Node& node, const Element& obj) -> void
 {
-    node["symbol"] = obj.symbol();
-    node["name"] = obj.name();
-    node["atomicNumber"] = obj.atomicNumber();
-    node["atomicWeight"] = obj.atomicWeight();
+    node["symbol"]            = obj.symbol();
+    node["name"]              = obj.name();
+    node["atomicNumber"]      = obj.atomicNumber();
+    node["atomicWeight"]      = obj.atomicWeight();
     node["electronegativity"] = obj.electronegativity();
-    node["tags"] = obj.tags();
+    node["tags"]              = obj.tags();
 }
 
 auto operator<<(Node& node, const Elements& obj) -> void
 {
-    for (auto element : obj)
-        node.push_back(element);
+    node = obj.data();
 }
 
 auto operator<<(Node& node, const Substance& obj) -> void
 {
     node["formula"] = obj.formula();
-    node["name"] = obj.name();
-    node["tags"] = obj.tags();
+    node["name"]    = obj.name();
+    node["tags"]    = obj.tags();
 }
 
 auto operator<<(Node& node, const Substances& obj) -> void
 {
-    for (auto substance : obj)
-        node.push_back(substance);
+    node = obj.data();
 }
 
 auto operator>>(const Node& node, FormulaData& obj) -> void
 {
-    set(node, "label", obj.label);
-    set(node, "symbols", obj.symbols);
+    set(node, "label"       , obj.label);
+    set(node, "symbols"     , obj.symbols);
     set(node, "coefficients", obj.coefficients);
 }
 
@@ -78,12 +76,12 @@ auto operator>>(const Node& node, Formula& obj) -> void
 
 auto operator>>(const Node& node, ElementData& obj) -> void
 {
-    set(node, "symbol", obj.symbol);
-    set(node, "name", obj.name);
-    set(node, "atomicNumber", obj.atomicNumber);
-    set(node, "atomicWeight", obj.atomicWeight);
+    set(node, "symbol"           , obj.symbol);
+    set(node, "name"             , obj.name);
+    set(node, "atomicNumber"     , obj.atomicNumber);
+    set(node, "atomicWeight"     , obj.atomicWeight);
     set(node, "electronegativity", obj.electronegativity);
-    set(node, "tags", obj.tags);
+    set(node, "tags"             , obj.tags);
 }
 
 auto operator>>(const Node& node, Element& obj) -> void
@@ -93,15 +91,14 @@ auto operator>>(const Node& node, Element& obj) -> void
 
 auto operator>>(const Node& node, Elements& obj) -> void
 {
-    for(auto child : node)
-        obj.append(child.as<Element>());
+    obj = Elements(node.as<std::vector<Element>>());
 }
 
 auto operator>>(const Node& node, SubstanceData& obj) -> void
 {
     set(node, "formula", obj.formula);
-    set(node, "name", obj.name);
-    set(node, "tags", obj.tags);
+    set(node, "name"   , obj.name);
+    set(node, "tags"   , obj.tags);
 }
 
 auto operator>>(const Node& node, Substance& obj) -> void
@@ -111,8 +108,7 @@ auto operator>>(const Node& node, Substance& obj) -> void
 
 auto operator>>(const Node& node, Substances& obj) -> void
 {
-    for(auto child : node)
-        obj.append(child.as<Substance>());
+    obj = Substances(node.as<std::vector<Substance>>());
 }
 
 } // YAML
@@ -121,19 +117,19 @@ namespace Atomik {
 
 auto to_json(json& j, const Formula& obj)
 {
-    j["label"] = obj.label();
-    j["symbols"] = obj.symbols();
+    j["label"]        = obj.label();
+    j["symbols"]      = obj.symbols();
     j["coefficients"] = obj.coefficients();
 }
 
 auto to_json(json& j, const Element& obj)
 {
-    j["symbol"] = obj.symbol();
-    j["name"] = obj.name();
-    j["atomicNumber"] = obj.atomicNumber();
-    j["atomicWeight"] = obj.atomicWeight();
+    j["symbol"]            = obj.symbol();
+    j["name"]              = obj.name();
+    j["atomicNumber"]      = obj.atomicNumber();
+    j["atomicWeight"]      = obj.atomicWeight();
     j["electronegativity"] = obj.electronegativity();
-    j["tags"] = obj.tags();
+    j["tags"]              = obj.tags();
 }
 
 auto to_json(json& j, const Elements& obj)
@@ -145,8 +141,8 @@ auto to_json(json& j, const Elements& obj)
 auto to_json(json& j, const Substance& obj)
 {
     j["formula"] = obj.formula();
-    j["name"] = obj.name();
-    j["tags"] = obj.tags();
+    j["name"]    = obj.name();
+    j["tags"]    = obj.tags();
 }
 
 auto to_json(json& j, const Substances& obj)
