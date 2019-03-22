@@ -28,15 +28,14 @@ namespace YAML {
 
 using namespace Atomik;
 
-auto operator<<(Node& node, const Formula& obj) -> Node&
+auto operator<<(Node& node, const Formula& obj) -> void
 {
     node["label"] = obj.label();
     node["symbols"] = obj.symbols();
     node["coefficients"] = obj.coefficients();
-    return node;
 }
 
-auto operator<<(Node& node, const Element& obj) -> Node&
+auto operator<<(Node& node, const Element& obj) -> void
 {
     node["symbol"] = obj.symbol();
     node["name"] = obj.name();
@@ -44,100 +43,76 @@ auto operator<<(Node& node, const Element& obj) -> Node&
     node["atomicWeight"] = obj.atomicWeight();
     node["electronegativity"] = obj.electronegativity();
     node["tags"] = obj.tags();
-    return node;
 }
 
-auto operator<<(Node& node, const Elements& obj) -> Node&
+auto operator<<(Node& node, const Elements& obj) -> void
 {
     for (auto element : obj)
         node.push_back(element);
-    return node;
 }
 
-auto operator<<(Node& node, const Substance& obj) -> Node&
+auto operator<<(Node& node, const Substance& obj) -> void
 {
     node["formula"] = obj.formula();
     node["name"] = obj.name();
     node["tags"] = obj.tags();
-    return node;
 }
 
-auto operator<<(Node& node, const Substances& obj) -> Node&
+auto operator<<(Node& node, const Substances& obj) -> void
 {
     for (auto substance : obj)
         node.push_back(substance);
-    return node;
 }
 
-auto operator>>(const Node& node, FormulaData& obj) -> bool
+auto operator>>(const Node& node, FormulaData& obj) -> void
 {
-    return
-    node["label"] >> obj.label &&
-    node["symbols"] >> obj.symbols &&
-    node["coefficients"] >> obj.coefficients;
+    set(node, "label", obj.label);
+    set(node, "symbols", obj.symbols);
+    set(node, "coefficients", obj.coefficients);
 }
 
-auto operator>>(const Node& node, Formula& obj) -> bool
+auto operator>>(const Node& node, Formula& obj) -> void
 {
-    FormulaData data;
-    bool res = node >> data;
-    obj = Formula(data);
-    return res;
+    obj = Formula(node.as<FormulaData>());
 }
 
-auto operator>>(const Node& node, ElementData& obj) -> bool
+auto operator>>(const Node& node, ElementData& obj) -> void
 {
-    return
-    node["symbol"] >> obj.symbol &&
-    node["name"] >> obj.name &&
-    node["atomicNumber"] >> obj.atomicNumber &&
-    node["atomicWeight"] >> obj.atomicWeight &&
-    node["electronegativity"] >> obj.electronegativity &&
-    node["tags"] >> obj.tags;
+    set(node, "symbol", obj.symbol);
+    set(node, "name", obj.name);
+    set(node, "atomicNumber", obj.atomicNumber);
+    set(node, "atomicWeight", obj.atomicWeight);
+    set(node, "electronegativity", obj.electronegativity);
+    set(node, "tags", obj.tags);
 }
 
-auto operator>>(const Node& node, Element& obj) -> bool
+auto operator>>(const Node& node, Element& obj) -> void
 {
-    ElementData data;
-    bool res = node >> data;
-    obj = Element(data);
-    return res;
+    obj = Element(node.as<ElementData>());
 }
 
-auto operator>>(const Node& node, Elements& obj) -> bool
+auto operator>>(const Node& node, Elements& obj) -> void
 {
-    Element elem;
     for(auto child : node)
-        if(child >> elem)
-            obj.append(elem);
-        else return false;
-    return true;
+        obj.append(child.as<Element>());
 }
 
-auto operator>>(const Node& node, SubstanceData& obj) -> bool
+auto operator>>(const Node& node, SubstanceData& obj) -> void
 {
-    return
-    node["formula"] >> obj.formula &&
-    node["name"] >> obj.name &&
-    node["tags"] >> obj.tags;
+    set(node, "formula", obj.formula);
+    set(node, "name", obj.name);
+    set(node, "tags", obj.tags);
 }
 
-auto operator>>(const Node& node, Substance& obj) -> bool
+auto operator>>(const Node& node, Substance& obj) -> void
 {
-    SubstanceData data;
-    bool res = node >> data;
-    obj = Substance(data);
-    return res;
+    obj = Substance(node.as<SubstanceData>());
 }
 
-auto operator>>(const Node& node, Substances& obj) -> bool
+auto operator>>(const Node& node, Substances& obj) -> void
 {
-    Substance subs;
     for(auto child : node)
-        if(child >> subs)
-            obj.append(subs);
-        else return false;
-    return true;
+        obj.append(child.as<Substance>());
 }
 
 } // YAML

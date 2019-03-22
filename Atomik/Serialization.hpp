@@ -30,17 +30,17 @@ namespace YAML {
 
 using namespace Atomik;
 
-auto operator<<(Node& node, const Formula& obj) -> Node&;
-auto operator<<(Node& node, const Element& obj) -> Node&;
-auto operator<<(Node& node, const Elements& obj) -> Node&;
-auto operator<<(Node& node, const Substance& obj) -> Node&;
-auto operator<<(Node& node, const Substances& obj) -> Node&;
+auto operator<<(Node& node, const Formula& obj) -> void;
+auto operator<<(Node& node, const Element& obj) -> void;
+auto operator<<(Node& node, const Elements& obj) -> void;
+auto operator<<(Node& node, const Substance& obj) -> void;
+auto operator<<(Node& node, const Substances& obj) -> void;
 
-auto operator>>(const Node& node, Formula& obj) -> bool;
-auto operator>>(const Node& node, Element& obj) -> bool;
-auto operator>>(const Node& node, Elements& obj) -> bool;
-auto operator>>(const Node& node, Substance& obj) -> bool;
-auto operator>>(const Node& node, Substances& obj) -> bool;
+auto operator>>(const Node& node, Formula& obj) -> void;
+auto operator>>(const Node& node, Element& obj) -> void;
+auto operator>>(const Node& node, Elements& obj) -> void;
+auto operator>>(const Node& node, Substance& obj) -> void;
+auto operator>>(const Node& node, Substances& obj) -> void;
 
 } // namespace YAML
 

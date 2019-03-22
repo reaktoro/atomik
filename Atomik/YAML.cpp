@@ -17,7 +17,7 @@
 
 #include "YAML.hpp"
 
-namespace Atomik {
+namespace YAML {
 
 yaml::yaml()
 : YAML::Node()
@@ -39,4 +39,4 @@ yaml::yaml(const Node& node)
 : YAML::Node(node)
 {}
 
-} // Atomik
+} // namespace YAML

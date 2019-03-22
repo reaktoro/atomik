@@ -27,10 +27,10 @@
 // Atomik includes
 #include <Atomik/Exception.hpp>
 
-namespace Atomik {
+namespace YAML {
 
 /// A class used to serialize/deserialize other types based on yaml format.
-class yaml : public YAML::Node
+class yaml : public Node
 {
 public:
     /// Construct an object of type yaml.
@@ -48,74 +48,29 @@ public:
     /// Construct an object of type yaml from a given Node object.
     yaml(const Node& node);
 
-    /// Return the node at given key. Runtime error if key does not exist.
-    template <typename Key>
-    auto at(const Key& key) -> yaml
-    {
-        auto node = Node::operator[](key);
-        error(!node, "Could not get YAML node with key ", key, ".");
-        return node;
-    }
-
-    /// Return the node at given key. Runtime error if key does not exist.
-    template <typename Key>
-    auto at(const Key& key) const -> const yaml { return yaml::at(key); }
-
-    /// Return the node at given key. No check is made to assert whether if key exists.
-    template <typename Key>
-    auto operator[](const Key& key) -> yaml { return Node::operator[](key); }
-
-    /// Return the node at given key. No check is made to assert whether if key exists.
-    template <typename Key>
-    auto operator[](const Key& key) const -> const yaml { return Node::operator[](key); }
-
-    /// Get the node's value casted to a given type.
-    template <typename T>
-    auto get() const -> T { return as<T>(); }
-
-    /// Get the node's value and set to a given argument.
-    template <typename T>
-    auto get_to(T& val) const { val = as<T>(); }
-
     /// Implicitly convert this yaml object into another type.
     template <typename T>
     operator T() { return as<T>(); }
 };
 
-} // namespace Atomik
-
-namespace YAML {
-
-template <typename T, std::enable_if_t<std::is_arithmetic_v<T>>...>
-auto operator>>(const Node& node, T& val) -> bool
+/// Return a child node with given key. Check if key exists and raises error if it does not.
+inline auto operator&(const Node& node, const std::string& key)
 {
-    if(node && node.IsScalar())
-    {
-        val = node.as<T>();
-        return true;
-    }
-    return false;
-}
-
-inline auto operator>>(const Node& node, std::string& val) -> bool
-{
-    if(node)
-    {
-        val = node.as<std::string>();
-        return true;
-    }
-    return false;
+    auto child = node[key];
+    Atomik::error(!child, "Could not get YAML node with key ", key, " .");
+    return child;
 }
 
 template <typename T>
-auto operator>>(const Node& node, std::vector<T>& val) -> bool
+auto set(const Node& node, const std::string& key, T& value) -> void
 {
-    if(node && node.IsSequence())
-    {
-        val = node.as<std::vector<T>>();
-        return true;
+    auto child = node & key;
+    try {
+        value = child.as<T>();
     }
-    return false;
+    catch(...) {
+        Atomik::error(true, "Could not convert YAML node with key ", key, " to requested value type.");
+    }
 }
 
 template <typename Type>
@@ -130,10 +85,16 @@ struct convert
 
     static auto decode(const Node& node, Type& obj)
     {
-        bool success = node >> obj;
-        Atomik::error(!success, "Could not understand YAML node:\n", node, "Check if there is any missing entry.");
-        return success;
+        node >> obj;
+        return true;
     }
 };
 
 } // namespace YAML
+
+namespace Atomik {
+
+// Ensure YAML namespace is resolved when using Atomik namespace.
+using namespace YAML;
+
+} // namespace Atomik
