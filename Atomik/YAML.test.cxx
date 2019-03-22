@@ -35,12 +35,14 @@ TEST_CASE("Testing YAML", "[YAML]")
 {
     yaml y(element);
 
-    CHECK( y["symbol"].as<std::string>() == "H" );
-    CHECK( y["name"].as<std::string>() == "Hydrogen" );
-    CHECK( y["atomicNumber"].as<int>() == 1 );
-    CHECK( y["atomicWeight"].as<double>() == 0.001007940 );
-    CHECK( y["electronegativity"].as<double>() == 2.20 );
+    CHECK( y["symbol"].get<std::string>() == "H" );
+    CHECK( y["name"].get<std::string>() == "Hydrogen" );
+    CHECK( y["atomicNumber"].get<int>() == 1 );
+    CHECK( y["atomicWeight"].get<double>() == 0.001007940 );
+    CHECK( y["electronegativity"].get<double>() == 2.20 );
     CHECK( y["tags"].size() == 1 );
-    CHECK( y["tags"][0].as<std::string>() == "group1" );
+    CHECK( y["tags"][0].get<std::string>() == "group1" );
+
+    CHECK_THROWS( y.at("KeyThatDoesNotExist") );
 }
 

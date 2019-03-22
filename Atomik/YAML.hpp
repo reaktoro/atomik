@@ -45,8 +45,41 @@ public:
     /// Construct an object of type yaml from a given input stream.
     yaml(std::istream& input);
 
+    /// Construct an object of type yaml from a given Node object.
+    yaml(const Node& node);
+
+    /// Return the node at given key. Runtime error if key does not exist.
+    template <typename Key>
+    auto at(const Key& key) -> yaml
+    {
+        auto node = Node::operator[](key);
+        error(!node, "Could not get YAML node with key ", key, ".");
+        return node;
+    }
+
+    /// Return the node at given key. Runtime error if key does not exist.
+    template <typename Key>
+    auto at(const Key& key) const -> const yaml { return yaml::at(key); }
+
+    /// Return the node at given key. No check is made to assert whether if key exists.
+    template <typename Key>
+    auto operator[](const Key& key) -> yaml { return Node::operator[](key); }
+
+    /// Return the node at given key. No check is made to assert whether if key exists.
+    template <typename Key>
+    auto operator[](const Key& key) const -> const yaml { return Node::operator[](key); }
+
+    /// Get the node's value casted to a given type.
+    template <typename T>
+    auto get() const -> T { return as<T>(); }
+
+    /// Get the node's value and set to a given argument.
+    template <typename T>
+    auto get_to(T& val) const { val = as<T>(); }
+
     /// Implicitly convert this yaml object into another type.
-    template <typename T> operator T() { return as<T>(); }
+    template <typename T>
+    operator T() { return as<T>(); }
 };
 
 } // namespace Atomik

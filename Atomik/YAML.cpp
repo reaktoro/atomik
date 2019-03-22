@@ -35,4 +35,8 @@ yaml::yaml(std::istream& input)
 : YAML::Node(YAML::Load(input))
 {}
 
+yaml::yaml(const Node& node)
+: YAML::Node(node)
+{}
+
 } // Atomik
