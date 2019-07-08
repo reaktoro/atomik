@@ -121,7 +121,7 @@ TEST_CASE("Testing SerializationYAML", "[SerializationYAML]")
 {
     Formula formula = yaml(strings::formula);
 
-    CHECK( formula.label() == "CO2" );
+    CHECK( formula.str() == "CO2" );
     CHECK( formula.symbols().size() == 2 );
     CHECK( formula.coefficient("C") == 1 );
     CHECK( formula.coefficient("O") == 2 );
@@ -312,7 +312,7 @@ TEST_CASE("Testing SerializationJSON", "[SerializationJSON]")
 {
     Formula formula = j_formula.get<Formula>();
 
-    CHECK( formula.label() == "CO2" );
+    CHECK( formula.str() == "CO2" );
     CHECK( formula.symbols().size() == 2 );
     CHECK( formula.coefficient("C") == 1 );
     CHECK( formula.coefficient("O") == 2 );

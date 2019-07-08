@@ -21,63 +21,40 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 // Atomik includes
-#include <Atomik/Formula.hpp>
 
 namespace Atomik {
 
 // Forward declarations
-class Formula;
 class Elements;
-
-/// A type used to define basic attributes of chemical substances.
-struct SubstanceData
-{
-    /// The chemical formula of the substance such as `H2O`, `O2`, `H+`.
-    Formula formula;
-
-    /// The name of the substance such as `H2O(aq)`, `O2(g)`, `H+(aq)`.
-    std::string name;
-
-    /// The tags of the substance such as `organic`, `mineral`.
-    std::vector<std::string> tags;
-};
+class SubstanceElements;
+class SubstanceFormula;
 
 /// A type used to represent a chemical substance and its attributes.
-/// The following examples demonstrate how different water substances can be created:
-/// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/// Substance water1("H2O");
-/// Substance water2("H2O").name("WATER");
-/// Substance water3("H2O").name("WATER").uid("H2O(aq)");
-/// Substance water4("H2O").name("WATER").uid("H2O(g)");
-/// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/// Substance `water1` is initialized with its name and unique identifier (uid) equal
-/// to its formula, `H2O`. Substance `water2` also has its uid set to `H2O` by default,
-/// but its name is modified to `WATER`. For substances `water3` and `water4`, both their
-/// names and uid have been specified. In this case, the uid is used to distinguish these
-/// two water substances, with same formula and name, based on their aggregate states,
-/// with suffix (aq) denoting an aqueous state, and suffix (g) a gaseous state.
-///
-/// By default, the chemical elements of the previous four water substances were obtained
-/// from an internal Elements object with default state. This database object is
-/// initialized with all existing chemical elements in the periodic table. The example below
-/// shows how to use a customized database of elements when constructing substances. It assumes
-/// two elements `Aa` and `Bb` have been defined an appended to the database of elements.
-/// The substance has chemical formula `AaBb2`.
-/// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/// Elements elements;
-/// elements.append({"Aa"});
-/// elements.append({"Bb"});
-///
-/// Substance substance("AaBb2", elements);
-///
-/// std::cout << substance.coefficient("Aa") == 1 << std::endl;
-/// std::cout << substance.coefficient("Bb") == 2 << std::endl;
-/// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class Substance
 {
 public:
+    /// A type used to represent the arguments to construct a Substance object.
+    struct Args
+    {
+        /// The name of the substance such as `H2O(aq)`, `O2(g)`, `H+(aq)`.
+        const std::string& name;
+
+        /// The chemical formula of the substance such as `H2O`, `O2`, `H+`.
+        const SubstanceFormula& formula;
+
+        /// The elements of the substance.
+        const SubstanceElements& elements;
+
+        /// The type of the substance such as `aqueous`, `gaseous`, `liquid`, "mineral", etc..
+        const std::string& type;
+
+        /// The tags of the substance such as `organic`, `mineral`.
+        const std::vector<std::string>& tags;
+    };
+
     /// Construct a default Substance object.
     Substance();
 
@@ -91,15 +68,9 @@ public:
     /// @param db The database of chemical elements (if the default is insufficient).
     Substance(const std::string& formula, const Elements& db);
 
-    /// Construct a Substance object with given attributes.
-    /// A default database of chemical elements is used to construct the elements composing the substance.
-    /// @param attributes The basic attributes of the substance.
-    Substance(SubstanceData attributes);
-
-    /// Construct a Substance object with given attributes using custom database of elements.
-    /// @param attributes The basic attributes of the substance.
-    /// @param db The database of chemical elements (if the default is insufficient).
-    Substance(SubstanceData attributes, const Elements& db);
+    /// Construct a Substance object with given data.
+    /// @param args The arguments to construct the substance.
+    Substance(const Args& args);
 
     /// Return a duplicate of this Substance object with replaced formula attribute.
     auto replaceFormula(const std::string& formula) -> Substance;
@@ -114,25 +85,16 @@ public:
     auto replaceTags(std::vector<std::string> tags) -> Substance;
 
     /// Return the name of the substance if provided, otherwise, its formula.
-    auto name() const -> std::string;
+    auto name() const -> const std::string&;
 
     /// Return the chemical formula of the substance.
-    auto formula() const -> const Formula&;
+    auto formula() const -> const SubstanceFormula&;
+
+    /// Return the elements of the substance.
+    auto elements() const -> const SubstanceElements&;
 
     /// Return the tags of the substance (e.g., `organic`, `mineral`).
     auto tags() const -> const std::vector<std::string>&;
-
-    /// Return the elements of the substance.
-    auto elements() const -> const Elements&;
-
-    /// Return the symbols of the elements in the substance.
-    auto symbols() const -> const std::vector<std::string>&;
-
-    /// Return the coefficients of the elements in the substance.
-    auto coefficients() const -> const std::vector<double>&;
-
-    /// Return the coefficient of an element symbol in the substance.
-    auto coefficient(const std::string& symbol) const -> double;
 
     /// Return the electric charge of the substance.
     auto charge() const -> double;

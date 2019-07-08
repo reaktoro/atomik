@@ -20,7 +20,7 @@
 // Atomik includes
 #include <Atomik/Element.hpp>
 #include <Atomik/Elements.hpp>
-#include <Atomik/Formula.hpp>
+#include <Atomik/SubstanceFormula.hpp>
 #include <Atomik/Substance.hpp>
 #include <Atomik/Substances.hpp>
 
@@ -28,9 +28,9 @@ namespace YAML {
 
 using namespace Atomik;
 
-auto operator<<(Node& node, const Formula& obj) -> void
+auto operator<<(Node& node, const SubstanceFormula& obj) -> void
 {
-    node["label"]        = obj.label();
+    node["formula"]      = obj.formula();
     node["symbols"]      = obj.symbols();
     node["coefficients"] = obj.coefficients();
 }
@@ -62,16 +62,13 @@ auto operator<<(Node& node, const Substances& obj) -> void
     node = obj.data();
 }
 
-auto operator>>(const Node& node, FormulaData& obj) -> void
+auto operator>>(const Node& node, SubstanceFormula& obj) -> void
 {
-    set(node, "label"       , obj.label);
-    set(node, "symbols"     , obj.symbols);
-    set(node, "coefficients", obj.coefficients);
-}
-
-auto operator>>(const Node& node, Formula& obj) -> void
-{
-    obj = Formula(node.as<FormulaData>());
+    SubstanceFormula::Data data;
+    set(node, "formula"     , data.formula);
+    set(node, "symbols"     , data.symbols);
+    set(node, "coefficients", data.coefficients);
+    obj = SubstanceFormula(data);
 }
 
 auto operator>>(const Node& node, ElementData& obj) -> void
@@ -94,16 +91,13 @@ auto operator>>(const Node& node, Elements& obj) -> void
     obj = Elements(node.as<std::vector<Element>>());
 }
 
-auto operator>>(const Node& node, SubstanceData& obj) -> void
-{
-    set(node, "formula", obj.formula);
-    set(node, "name"   , obj.name);
-    set(node, "tags"   , obj.tags);
-}
-
 auto operator>>(const Node& node, Substance& obj) -> void
 {
-    obj = Substance(node.as<SubstanceData>());
+    Substance::Data data;
+    set(node, "formula", data.formula);
+    set(node, "name"   , data.name);
+    set(node, "tags"   , data.tags);
+    obj = Substance(data);
 }
 
 auto operator>>(const Node& node, Substances& obj) -> void
@@ -115,9 +109,9 @@ auto operator>>(const Node& node, Substances& obj) -> void
 
 namespace Atomik {
 
-auto to_json(json& j, const Formula& obj)
+auto to_json(json& j, const SubstanceFormula& obj)
 {
-    j["label"]        = obj.label();
+    j["formula"]      = obj.formula();
     j["symbols"]      = obj.symbols();
     j["coefficients"] = obj.coefficients();
 }
@@ -151,16 +145,13 @@ auto to_json(json& j, const Substances& obj)
         j.push_back(substance);
 }
 
-auto from_json(const json& j, FormulaData& obj) -> void
+auto from_json(const json& j, SubstanceFormula& obj) -> void
 {
-    j.at("label").get_to(obj.label);
-    j.at("symbols").get_to(obj.symbols);
-    j.at("coefficients").get_to(obj.coefficients);
-}
-
-auto from_json(const json& j, Formula& obj) -> void
-{
-    obj = Formula(j.get<FormulaData>());
+    SubstanceFormula::Data data;
+    j.at("formula").get_to(data.formula);
+    j.at("symbols").get_to(data.symbols);
+    j.at("coefficients").get_to(data.coefficients);
+    obj = SubstanceFormula(data);
 }
 
 auto from_json(const json& j, ElementData& obj) -> void
@@ -184,16 +175,13 @@ auto from_json(const json& j, Elements& obj) -> void
         obj.append(item.get<Element>());
 }
 
-auto from_json(const json& j, SubstanceData& obj) -> void
-{
-    j.at("formula").get_to(obj.formula);
-    j.at("name").get_to(obj.name);
-    j.at("tags").get_to(obj.tags);
-}
-
 auto from_json(const json& j, Substance& obj) -> void
 {
-    obj = Substance(j.get<SubstanceData>());
+    Substance::Data data;
+    j.at("formula").get_to(data.formula);
+    j.at("name").get_to(data.name);
+    j.at("tags").get_to(data.tags);
+    obj = Substance(data);
 }
 
 auto from_json(const json& j, Substances& obj) -> void

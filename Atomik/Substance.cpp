@@ -22,53 +22,61 @@
 #include <Atomik/Elements.hpp>
 #include <Atomik/Exception.hpp>
 #include <Atomik/Extract.hpp>
-#include <Atomik/Formula.hpp>
+#include <Atomik/StringList.hpp>
+#include <Atomik/SubstanceElements.hpp>
+#include <Atomik/SubstanceFormula.hpp>
 
 namespace Atomik {
-namespace internal {
+namespace {
 
 /// The default database of elements
-const Elements elementsdb = Elements::PeriodicTable();
+const Elements periodicElements = Elements::PeriodicTable();
 
-} // namespace internal
+} // namespace
 
 struct Substance::Impl
 {
-    /// The attributes of the substance.
-    SubstanceData attributes;
+    /// The name of the substance such as `H2O(aq)`, `O2(g)`, `H+(aq)`.
+    std::string name;
+
+    /// The chemical formula of the substance such as `H2O`, `O2`, `H+`.
+    SubstanceFormula formula;
 
     /// The elements of the substance.
-    Elements elements;
+    SubstanceElements elements;
 
-    /// The molar mass of the substance (in unit of kg/mol).
-    double molarMass;
+    /// The type of the substance such as `aqueous`, `gaseous`, `liquid`, "mineral", etc..
+    std::string type;
+
+    /// The tags of the substance such as `organic`, `mineral`.
+    std::vector<std::string> tags;
 
     /// Construct a default Substance::Impl instance
     Impl()
     {}
 
     /// Construct a Substance::Impl instance
-    Impl(SubstanceData attribs, const Elements& db)
-    : attributes(std::move(attribs))
+    Impl(const std::string& formulaStr, const Elements& db)
+    : name(formulaStr),
+      formula(formulaStr),
+      elements({
+          .elements = db.withSymbols(formula.symbols()),
+          .coefficients = formula.coefficients(),
+          .oxidationStates = {}
+      }),
+      type(),
+      tags()
     {
-        const auto& formula = attributes.formula;
+    }
 
-        // Initialize the name of the substance
-        if(attributes.name.empty())
-            attributes.name = formula.label();
-
-        // Initialize the elements of the substance
-        for(auto const& symbol : formula.symbols())
-            if(auto idx = db.indexWithSymbol(symbol); idx >= 0)
-                elements.append(db[idx]);
-            else error(true, "Substance with name ", attributes.name,
-                " and formula ", formula.label(),
-                " has an unknown element with symbol ", symbol, ".");
-
-        // Initialize the molar mass of the substance
-        molarMass = 0.0;
-        for(auto i = 0u; i < elements.size(); ++i)
-            molarMass += formula.coefficients()[i] * elements[i].molarMass();
+    /// Construct a Substance::Impl instance
+    Impl(const Args& args)
+    : name(args.name),
+      formula(args.formula),
+      elements(args.elements),
+      type(args.type),
+      tags(args.tags)
+    {
     }
 };
 
@@ -77,19 +85,15 @@ Substance::Substance()
 {}
 
 Substance::Substance(const std::string& formula)
-: pimpl(new Impl({formula}, internal::elementsdb))
+: pimpl(new Impl(formula, periodicElements))
 {}
 
 Substance::Substance(const std::string& formula, const Elements& db)
-: pimpl(new Impl({formula}, db))
+: pimpl(new Impl(formula, db))
 {}
 
-Substance::Substance(SubstanceData attributes)
-: pimpl(new Impl(std::move(attributes), internal::elementsdb))
-{}
-
-Substance::Substance(SubstanceData attributes, const Elements& db)
-: pimpl(new Impl(std::move(attributes), db))
+Substance::Substance(const Args& args)
+: pimpl(new Impl(args))
 {}
 
 auto Substance::replaceFormula(const std::string& formula) -> Substance
@@ -106,9 +110,13 @@ auto Substance::replaceFormula(const std::string& formula, const Elements& db) -
 
 auto Substance::replaceName(const std::string& name) -> Substance
 {
-    auto attributes = pimpl->attributes;
-    attributes.name = name;
-    return Substance(attributes, elements());
+    Substance res;
+    res.pimpl = std::make_shared<Impl>(*pimpl);
+    res.pimpl->name = name;
+    return res;
+    // auto attributes = pimpl->attributes;
+    // attributes.name = name;
+    // return Substance(attributes, elements());
 }
 
 auto Substance::replaceTags(std::vector<std::string> tags) -> Substance

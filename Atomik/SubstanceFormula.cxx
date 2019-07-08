@@ -19,7 +19,7 @@
 #include <catch2/catch.hpp>
 
 // Atomik includes
-#include <Atomik/Atomik.hpp>
+#include <Atomik/SubstanceFormula.hpp>
 using namespace Atomik;
 
 TEST_CASE("Testing ChemicalFormula class", "[ChemicalFormula]")
@@ -27,14 +27,14 @@ TEST_CASE("Testing ChemicalFormula class", "[ChemicalFormula]")
     ChemicalFormula formula;
 
     formula = ChemicalFormula("H2O");
-    REQUIRE(formula.label() == "H2O");
+    REQUIRE(formula.str() == "H2O");
     REQUIRE(formula.charge() == 0);
     REQUIRE(formula.symbols().size() == 2);
     REQUIRE(formula.coefficient("H") == 2);
     REQUIRE(formula.coefficient("O") == 1);
 
     formula = ChemicalFormula("CaCO3");
-    REQUIRE(formula.label() == "CaCO3");
+    REQUIRE(formula.str() == "CaCO3");
     REQUIRE(formula.charge() == 0);
     REQUIRE(formula.symbols().size() == 3);
     REQUIRE(formula.coefficient("C") == 1);
@@ -42,7 +42,7 @@ TEST_CASE("Testing ChemicalFormula class", "[ChemicalFormula]")
     REQUIRE(formula.coefficient("O") == 3);
 
     formula = ChemicalFormula("HCO3-");
-    REQUIRE(formula.label() == "HCO3-");
+    REQUIRE(formula.str() == "HCO3-");
     REQUIRE(formula.charge() == -1);
     REQUIRE(formula.symbols().size() == 4);
     REQUIRE(formula.coefficient("C") == 1);
@@ -51,28 +51,28 @@ TEST_CASE("Testing ChemicalFormula class", "[ChemicalFormula]")
     REQUIRE(formula.coefficient("Z") == -1);
 
     formula = ChemicalFormula("H+");
-    REQUIRE(formula.label() == "H+");
+    REQUIRE(formula.str() == "H+");
     REQUIRE(formula.charge() == 1);
     REQUIRE(formula.symbols().size() == 2);
     REQUIRE(formula.coefficient("H") == 1);
     REQUIRE(formula.coefficient("Z") == 1);
 
     formula = ChemicalFormula("Na+");
-    REQUIRE(formula.label() == "Na+");
+    REQUIRE(formula.str() == "Na+");
     REQUIRE(formula.charge() == 1);
     REQUIRE(formula.symbols().size() == 2);
     REQUIRE(formula.coefficient("Na") == 1);
     REQUIRE(formula.coefficient("Z") == 1);
 
     formula = ChemicalFormula("Cl-");
-    REQUIRE(formula.label() == "Cl-");
+    REQUIRE(formula.str() == "Cl-");
     REQUIRE(formula.charge() == -1);
     REQUIRE(formula.symbols().size() == 2);
     REQUIRE(formula.coefficient("Cl") == 1);
     REQUIRE(formula.coefficient("Z") == -1);
 
     formula = ChemicalFormula("CO3--");
-    REQUIRE(formula.label() == "CO3--");
+    REQUIRE(formula.str() == "CO3--");
     REQUIRE(formula.charge() == -2);
     REQUIRE(formula.symbols().size() == 3);
     REQUIRE(formula.coefficient("C") == 1);
@@ -80,7 +80,7 @@ TEST_CASE("Testing ChemicalFormula class", "[ChemicalFormula]")
     REQUIRE(formula.coefficient("Z") == -2);
 
     formula = ChemicalFormula("CO3-2");
-    REQUIRE(formula.label() == "CO3-2");
+    REQUIRE(formula.str() == "CO3-2");
     REQUIRE(formula.charge() == -2);
     REQUIRE(formula.symbols().size() == 3);
     REQUIRE(formula.coefficient("C") == 1);
@@ -88,21 +88,21 @@ TEST_CASE("Testing ChemicalFormula class", "[ChemicalFormula]")
     REQUIRE(formula.coefficient("Z") == -2);
 
     formula = ChemicalFormula("Fe+++");
-    REQUIRE(formula.label() == "Fe+++");
+    REQUIRE(formula.str() == "Fe+++");
     REQUIRE(formula.charge() == 3);
     REQUIRE(formula.symbols().size() == 2);
     REQUIRE(formula.coefficient("Fe") == 1);
     REQUIRE(formula.coefficient("Z") == 3);
 
     formula = ChemicalFormula("Fe+3");
-    REQUIRE(formula.label() == "Fe+3");
+    REQUIRE(formula.str() == "Fe+3");
     REQUIRE(formula.charge() == 3);
     REQUIRE(formula.symbols().size() == 2);
     REQUIRE(formula.coefficient("Fe") == 1);
     REQUIRE(formula.coefficient("Z") == 3);
 
     formula = ChemicalFormula("(CaMg)(CO3)2");
-    REQUIRE(formula.label() == "(CaMg)(CO3)2");
+    REQUIRE(formula.str() == "(CaMg)(CO3)2");
     REQUIRE(formula.charge() == 0);
     REQUIRE(formula.symbols().size() == 4);
     REQUIRE(formula.coefficient("C") == 2);
@@ -111,7 +111,7 @@ TEST_CASE("Testing ChemicalFormula class", "[ChemicalFormula]")
     REQUIRE(formula.coefficient("O") == 6);
 
     formula = ChemicalFormula("CH3COOH");
-    REQUIRE(formula.label() == "CH3COOH");
+    REQUIRE(formula.str() == "CH3COOH");
     REQUIRE(formula.charge() == 0);
     REQUIRE(formula.symbols().size() == 3);
     REQUIRE(formula.coefficient("C") == 2);
@@ -119,7 +119,7 @@ TEST_CASE("Testing ChemicalFormula class", "[ChemicalFormula]")
     REQUIRE(formula.coefficient("O") == 2);
 
     formula = ChemicalFormula("Al2.5Si0.5O4.75");
-    REQUIRE(formula.label() == "Al2.5Si0.5O4.75");
+    REQUIRE(formula.str() == "Al2.5Si0.5O4.75");
     REQUIRE(formula.charge() == 0);
     REQUIRE(formula.symbols().size() == 3);
     REQUIRE(formula.coefficient("Al") == 2.5);
@@ -127,7 +127,7 @@ TEST_CASE("Testing ChemicalFormula class", "[ChemicalFormula]")
     REQUIRE(formula.coefficient("O") == 4.75);
 
     formula = ChemicalFormula("Fe4Al18Si7.5O48H4");
-    REQUIRE(formula.label() == "Fe4Al18Si7.5O48H4");
+    REQUIRE(formula.str() == "Fe4Al18Si7.5O48H4");
     REQUIRE(formula.charge() == 0);
     REQUIRE(formula.symbols().size() == 5);
     REQUIRE(formula.coefficient("Fe") == 4);
@@ -137,7 +137,7 @@ TEST_CASE("Testing ChemicalFormula class", "[ChemicalFormula]")
     REQUIRE(formula.coefficient("H") == 4);
 
     formula = ChemicalFormula("Mg4Al18Si7.5O48H4");
-    REQUIRE(formula.label() == "Mg4Al18Si7.5O48H4");
+    REQUIRE(formula.str() == "Mg4Al18Si7.5O48H4");
     REQUIRE(formula.charge() == 0);
     REQUIRE(formula.symbols().size() == 5);
     REQUIRE(formula.coefficient("Mg") == 4);
@@ -147,7 +147,7 @@ TEST_CASE("Testing ChemicalFormula class", "[ChemicalFormula]")
     REQUIRE(formula.coefficient("H") == 4);
 
     formula = ChemicalFormula("Mn4Al18Si7.5O48H4");
-    REQUIRE(formula.label() == "Mn4Al18Si7.5O48H4");
+    REQUIRE(formula.str() == "Mn4Al18Si7.5O48H4");
     REQUIRE(formula.charge() == 0);
     REQUIRE(formula.symbols().size() == 5);
     REQUIRE(formula.coefficient("Mn") == 4);
@@ -157,7 +157,7 @@ TEST_CASE("Testing ChemicalFormula class", "[ChemicalFormula]")
     REQUIRE(formula.coefficient("H") == 4);
 
     formula = ChemicalFormula("Ca0.5Al1Si2O6");
-    REQUIRE(formula.label() == "Ca0.5Al1Si2O6");
+    REQUIRE(formula.str() == "Ca0.5Al1Si2O6");
     REQUIRE(formula.charge() == 0);
     REQUIRE(formula.symbols().size() == 4);
     REQUIRE(formula.coefficient("Ca") == 0.5);
@@ -166,7 +166,7 @@ TEST_CASE("Testing ChemicalFormula class", "[ChemicalFormula]")
     REQUIRE(formula.coefficient("O") == 6);
 
     formula = ChemicalFormula("K0.5Fe5Al2Si8O30.5H12.5");
-    REQUIRE(formula.label() == "K0.5Fe5Al2Si8O30.5H12.5");
+    REQUIRE(formula.str() == "K0.5Fe5Al2Si8O30.5H12.5");
     REQUIRE(formula.charge() == 0);
     REQUIRE(formula.symbols().size() == 6);
     REQUIRE(formula.coefficient("K") == 0.5);
@@ -177,7 +177,7 @@ TEST_CASE("Testing ChemicalFormula class", "[ChemicalFormula]")
     REQUIRE(formula.coefficient("H") == 12.5);
 
     formula = ChemicalFormula("K0.5Mg5Al2Si8O30.5H12.5");
-    REQUIRE(formula.label() == "K0.5Mg5Al2Si8O30.5H12.5");
+    REQUIRE(formula.str() == "K0.5Mg5Al2Si8O30.5H12.5");
     REQUIRE(formula.charge() == 0);
     REQUIRE(formula.symbols().size() == 6);
     REQUIRE(formula.coefficient("K") == 0.5);
@@ -188,7 +188,7 @@ TEST_CASE("Testing ChemicalFormula class", "[ChemicalFormula]")
     REQUIRE(formula.coefficient("H") == 12.5);
 
     formula = ChemicalFormula("Mg3.5Al9Si1.5O20");
-    REQUIRE(formula.label() == "Mg3.5Al9Si1.5O20");
+    REQUIRE(formula.str() == "Mg3.5Al9Si1.5O20");
     REQUIRE(formula.charge() == 0);
     REQUIRE(formula.symbols().size() == 4);
     REQUIRE(formula.coefficient("Mg") == 3.5);
@@ -197,7 +197,7 @@ TEST_CASE("Testing ChemicalFormula class", "[ChemicalFormula]")
     REQUIRE(formula.coefficient("O") == 20);
 
     formula = ChemicalFormula("Fe3.5Al9Si1.5O20");
-    REQUIRE(formula.label() == "Fe3.5Al9Si1.5O20");
+    REQUIRE(formula.str() == "Fe3.5Al9Si1.5O20");
     REQUIRE(formula.charge() == 0);
     REQUIRE(formula.symbols().size() == 4);
     REQUIRE(formula.coefficient("Fe") == 3.5);
@@ -206,7 +206,7 @@ TEST_CASE("Testing ChemicalFormula class", "[ChemicalFormula]")
     REQUIRE(formula.coefficient("O") == 20);
 
     formula = ChemicalFormula("Fe0.875S1");
-    REQUIRE(formula.label() == "Fe0.875S1");
+    REQUIRE(formula.str() == "Fe0.875S1");
     REQUIRE(formula.charge() == 0);
     REQUIRE(formula.symbols().size() == 2);
     REQUIRE(formula.coefficient("Fe") == 0.875);
