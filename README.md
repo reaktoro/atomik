@@ -9,6 +9,9 @@
 
 # Atomik
 
+**Note:** This library is no longer developed nor maintained. 
+Use Reaktoro instead (https://reaktoro.org).
+
 Atomik is a C++17 library that implements classes such as `Element`,
 `Elements`, `Substance`, `Substances`, `Formula`, and others to be used
 in libraries of the [Reaktoro Project].
